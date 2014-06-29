@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <QtHelpProject version="1.0">
+     <namespace>sesimula-1.0</namespace>
+     <virtualFolder>doc</virtualFolder>
+     <filterSection>
+         <toc>
+             <section title="Documentación de Simulación" ref="index.html">
+                <section title="Indice" ref="indice.html"></section>
+                <section title="Conferencias" ref="">
+                    <section title="Conferencia 1" ref="Conferencia_1.html">
+                        <section title="Definición de simulación" ref="Conferencia_1.html#definicion-simulacion"></section>
+                        <section title="Ventajas y desventajas de la simulación" ref="Conferencia_1.html#ventajas-desventajas"></section>
+                        <section title="Definición de sistemas" ref="Conferencia_1.html#definicion-sistema"></section>
+                        <section title="Sistemas discretos y continuos. Sistemas estocásticos y determinísticos" ref="Conferencia_1.html#sistema-discreto-continuos"></section>
+                        <section title="Modelos de sistemas" ref="Conferencia_1.html#modelo-sistema"></section>
+                        <section title="Como trabaja y se usa la simulación" ref="Conferencia_1.html#trabajo-uso"></section>
+                    </section >
+                    <section title="Conferencia 2" ref="Conferencia_2.html">
+						<section title="Enfoque general del procedimiento" ref="Conferencia_2.html#enfoque-procedimiento"></section>
+                        <section title="Análisis preliminar y formulación del problema" ref="Conferencia_2.html#analisis-formulacion"></section>
+                        <section title="Primeros modelos" ref="Conferencia_2.html#primeros-modelos"></section>
+                        <section title="Recolección y anlaisis de datos" ref="Conferencia_2.html#recolecion-analisis"></section>
+                        <section title="Refinamiento del modelo, programación y validación" ref="Conferencia_2.html#refinamiento-programacion-validacion"></section>
+                        <section title="El trabajo en grupos" ref="Conferencia_2.html#trabajo-grupo"></section>
+						<section title="Resumen de tareas por etapas en el proceso general" ref="Conferencia_2.html#resumen-tareas"></section>
+						<section title="Conclusiones" ref="Conferencia_2.html#conclusiones"></section>
+					</section>
+                    <section title="Conferencia 3" ref="Conferencia_3.html">
+						<section title="Ideas básicas" ref="Conferencia_3.html#ideas-basicas"></section>
+                        <section title="Tests para validar sucesiones de números pseudoaleatorios con distribución uniforme" ref="Conferencia_3.html#ventajas-desventajas"></section>
+                        <section title="Métodos de generación basados en congruencias" ref="Conferencia_3.html#metodos-generacion"></section>
+                        <section title="Generadores congruenciales aditivos" ref="Conferencia_3.html#generadores-aditivos"></section>
+                        <section title="Otros generadores de números pseudoaleatorios" ref="Conferencia_3.html#otros-generadores"></section>
+                        <section title="Conclusiones" ref="Conferencia_3.html#conclusiones"></section>
+					</section>
+                    <section title="Conferencia 4" ref="Conferencia_4.html">
+						<section title="El Teorema fundamental de la transformación integral" ref="Conferencia_4.html#teorema-fundamental"></section>
+                        <section title="Otros métodos generales de generación de números aleatorios con distribución no uniforme" ref="Conferencia_4.html#otros-generales"></section>
+                        <section title="Algunos métodos para distribuciones específicas" ref="Conferencia_4.html#distribuciones-especificas"></section>
+                        <section title="Generación de números aleatorios con distribuciones empíricas" ref="Conferencia_4.html#distribuciones-empiricas"></section>
+                        <section title="Disponibilidad de métodos de generación y prueba en paquetes" ref="Conferencia_4.html#disponibilidad-metodos"></section>
+                        <section title="Conclusiones" ref="Conferencia_4.html#conclusiones"></section>
+					</section>
+                    <section title="Conferencia 5" ref="Conferencia_5.html">
+						<section title="Simulación de un proceso discreto sencillo. Simulación síncrona" ref="Conferencia_5.html#simulacion-discreto"></section>
+					</section>
+                    <section title="Conferencia 6" ref="Conferencia_6.html">
+						<section title="Formulación de un problema. Definición inicial de las variables a considerar" ref="Conferencia_6.html#formulacion-definicion"></section>
+                        <section title="Recolección y análisis de la información pertinente" ref="Conferencia_6.html#recoleccion-analisis"></section>
+                        <section title="Construcción del Modelo" ref="Conferencia_6.html#construccion-modelo"></section>
+                        <section title="Conclusiones" ref="Conferencia_6.html#conclusiones"></section>
+					</section>
+                    <section title="Conferencia 7" ref="Conferencia_7.html">
+						<section title="Conceptos generales de la simulación	mediante eventos discretos" ref="Conferencia_7.html#conceptos-eventos"></section>
+                        <section title="Sistema compuesto por un servidor con cola" ref="Conferencia_7.html#sistema-compuesto"></section>
+                        <section title="Sistema compuestos de dos servidores en serie con sendas colas" ref="Conferencia_7.html#sistema-colas"></section>
+                        <section title="Sistema de dos servidores en paralelo con una cola común y otras posibilidades" ref="Conferencia_7.html#sistema-paralelo"></section>
+                        <section title="Modelo de inventario" ref="Conferencia_7.html#modelo-inventario"></section>
+                        <section title="Un problema de reparación" ref="Conferencia_7.html#problema-reparacion"></section>
+					</section>
+                    <section title="Conferencia 8" ref="Conferencia_8.html">
+						<section title="Ventajas y Desventajas de la estrategia de Simulación orientada a bloques de entrada salida" ref="Conferencia_8.html#ventajas-desventajas"></section>
+                        <section title="Un segundo ejemplo para mostrar la ESOE: “Simulación de un Supermercado”" ref="Conferencia_8.html#segundo-ejemplo"></section>
+                        <section title="Descripción general del modelo y la ESOE" ref="Conferencia_8.html#descripcion-modelo"></section>
+                        <section title="Descripción del Algoritmo para el Ejemplo del supermercado" ref="Conferencia_8.html#descricion-supermercado"></section>
+					</section>
+                    <section title="Conferencia 9" ref="Conferencia_9.html">
+						<section title="Planteamiento de un problema ejemplo" ref="Conferencia_9.html#planteamiento-problema"></section>
+                        <section title="Solución mediante la estrategia clásica de simulación orientada a eventos (OE)" ref="Conferencia_9.html#estrategia-simulacion"></section>
+                        <section title="Ideas básicas de la estrategia OE con rastreo de actividades RA" ref="Conferencia_9.html#ideas-oe"></section>
+                        <section title="Estructura general del modelo OE con RA" ref="Conferencia_9.html#estructura-general"></section>
+                        <section title="Aplicación al ejemplo. Programa General" ref="Conferencia_9.html#aplicacion-ejemplo"></section>
+                        <section title="Conclusiones" ref="Conferencia_9.html#conclusiones"></section>
+					</section>
+                    <section title="Conferencia 10" ref="Conferencia_10.html">
+						<section title="Concepción general del modelo. Implementación en un programa" ref="Conferencia_10.html#concepcion-implementacion"></section>
+                        <section title="Ejemplo particular en el modelo usuarios-computadora" ref="Conferencia_10.html#ejemplo-modelo"></section>
+                        <section title="Comparación de las estrategias de modelación y simulación basadas en eventos" ref="Conferencia_10.html#comparacion-estrategias"></section>
+                        <section title="Propiedades de las estrategias para la construcción y utilización de modelos" ref="Conferencia_10.html#propiedades-estrategias"></section>
+                        <section title="Conclusiones" ref="Conferencia_10.html#conclusiones"></section>
+					</section>
+                    <section title="Conferencia 11 y 12" ref="Conferencia_11y12.html">
+						<section title="Redes de Petri" ref="Conferencia_11y12.html#redes-petri"></section>
+                        <section title="Modelación con Redes de Petri" ref="Conferencia_11y12.html#modelacion-petri"></section>
+                        <section title="Problemas de análisis en Redes de Petri" ref="Conferencia_11y12.html#analisis-petri"></section>
+                        <section title="Análisis de redes de Petri. El árbol de alcanzabilidad" ref="Conferencia_11y12.html#arbol-alacanzabilidad"></section>
+                        <section title="Extensiones del concepto de Red de Petri" ref="Conferencia_11y12.html#extensiones-petri"></section>
+					</section>
+                </section >
+                <section title="Clases Practicas" ref="">
+                </section >
+                <section title="Complementaria" ref="">
+                </section >
+             </section>
+         </toc>
+         <keywords>
+			<keyword name="simulacion" ref="Conferencia_1.html#definicion-simulacion"/>
+			<keyword name="sistema" ref="Conferencia_1.html#definicion-sistema"/>
+			<keyword name="modelo" ref="Conferencia_1.html#modelo-sistema"/>
+			<keyword name="Conferencia 1" ref="Conferencia_1.html"/>
+			<keyword name="Definición de simulación" ref="Conferencia_1.html#definicion-simulacion"/>
+			<keyword name="Ventajas y desventajas de la simulación" ref="Conferencia_1.html#ventajas-desventajas"/>
+			<keyword name="Definición de sistemas" ref="Conferencia_1.html#definicion-sistema"/>
+			<keyword name="Sistemas discretos y continuos. Sistemas estocásticos y determinísticos" ref="Conferencia_1.html#sistema-discreto-continuos"/>
+			<keyword name="Modelos de sistemas" ref="Conferencia_1.html#modelo-sistema"/>
+			<keyword name="Como trabaja y se usa la simulación" ref="Conferencia_1.html#trabajo-uso"/>
+			<keyword name="Conferencia 2" ref="Conferencia_2.html"/>
+			<keyword name="Enfoque general del procedimiento" ref="Conferencia_2.html#enfoque-procedimiento"/>
+			<keyword name="Análisis preliminar y formulación del problema" ref="Conferencia_2.html#analisis-formulacion"/>
+			<keyword name="Primeros modelos" ref="Conferencia_2.html#primeros-modelos"/>
+			<keyword name="Recolección y anlaisis de datos" ref="Conferencia_2.html#recolecion-analisis"/>
+			<keyword name="Refinamiento del modelo, programación y validación" ref="Conferencia_2.html#refinamiento-programacion-validacion"/>
+			<keyword name="El trabajo en grupos" ref="Conferencia_2.html#trabajo-grupo"/>
+			<keyword name="Resumen de tareas por etapas en el proceso general" ref="Conferencia_2.html#resumen-tareas"/>
+			<keyword name="Conclusiones" ref="Conferencia_2.html#conclusiones"/>
+			<keyword name="Conferencia 3" ref="Conferencia_3.html"/>
+			<keyword name="Ideas básicas" ref="Conferencia_3.html#ideas-basicas"/>
+			<keyword name="Tests para validar sucesiones de números pseudoaleatorios con distribución uniforme" ref="Conferencia_3.html#ventajas-desventajas"/>
+			<keyword name="Métodos de generación basados en congruencias" ref="Conferencia_3.html#metodos-generacion"/>
+			<keyword name="Generadores congruenciales aditivos" ref="Conferencia_3.html#generadores-aditivos"/>
+			<keyword name="Otros generadores de números pseudoaleatorios" ref="Conferencia_3.html#otros-generadores"/>
+			<keyword name="Conclusiones" ref="Conferencia_3.html#conclusiones"/>
+			<keyword name="Conferencia 4" ref="Conferencia_4.html"/>
+			<keyword name="El Teorema fundamental de la transformación integral" ref="Conferencia_4.html#teorema-fundamental"/>
+			<keyword name="Otros métodos generales de generación de números aleatorios con distribución no uniforme" ref="Conferencia_4.html#otros-generales"/>
+			<keyword name="Algunos métodos para distribuciones específicas" ref="Conferencia_4.html#distribuciones-especificas"/>
+			<keyword name="Generación de números aleatorios con distribuciones empíricas" ref="Conferencia_4.html#distribuciones-empiricas"/>
+			<keyword name="Disponibilidad de métodos de generación y prueba en paquetes" ref="Conferencia_4.html#disponibilidad-metodos"/>
+			<keyword name="Conclusiones" ref="Conferencia_4.html#conclusiones"/>
+			<keyword name="Conferencia 5" ref="Conferencia_5.html"/>
+			<keyword name="Simulación de un proceso discreto sencillo. Simulación síncrona" ref="Conferencia_5.html#simulacion-discreto"/>
+			<keyword name="Conferencia 6" ref="Conferencia_6.html"/>
+			<keyword name="Formulación de un problema. Definición inicial de las variables a considerar" ref="Conferencia_6.html#formulacion-definicion"/>
+			<keyword name="Recolección y análisis de la información pertinente" ref="Conferencia_6.html#recoleccion-analisis"/>
+			<keyword name="Construcción del Modelo" ref="Conferencia_6.html#construccion-modelo"/>
+			<keyword name="Conclusiones" ref="Conferencia_6.html#conclusiones"/>
+			<keyword name="Conferencia 7" ref="Conferencia_7.html"/>
+			<keyword name="Conceptos generales de la simulación	mediante eventos discretos" ref="Conferencia_7.html#conceptos-eventos"/>
+			<keyword name="Sistema compuesto por un servidor con cola" ref="Conferencia_7.html#sistema-compuesto"/>
+			<keyword name="Sistema compuestos de dos servidores en serie con sendas colas" ref="Conferencia_7.html#sistema-colas"/>
+			<keyword name="Sistema de dos servidores en paralelo con una cola común y otras posibilidades" ref="Conferencia_7.html#sistema-paralelo"/>
+			<keyword name="Modelo de inventario" ref="Conferencia_7.html#modelo-inventario"/>
+			<keyword name="Un problema de reparación" ref="Conferencia_7.html#problema-reparacion"/>
+			<keyword name="Conferencia 8" ref="Conferencia_8.html"/>
+			<keyword name="Ventajas y Desventajas de la estrategia de Simulación orientada a bloques de entrada salida" ref="Conferencia_8.html#ventajas-desventajas"/>
+			<keyword name="Un segundo ejemplo para mostrar la ESOE: “Simulación de un Supermercado”" ref="Conferencia_8.html#segundo-ejemplo"/>
+			<keyword name="Descripción general del modelo y la ESOE" ref="Conferencia_8.html#descripcion-modelo"/>
+			<keyword name="Descripción del Algoritmo para el Ejemplo del supermercado" ref="Conferencia_8.html#descricion-supermercado"/>
+			<keyword name="Conferencia 9" ref="Conferencia_9.html"/>
+			<keyword name="Planteamiento de un problema ejemplo" ref="Conferencia_9.html#planteamiento-problema"/>
+			<keyword name="Solución mediante la estrategia clásica de simulación orientada a eventos (OE)" ref="Conferencia_9.html#estrategia-simulacion"/>
+			<keyword name="Ideas básicas de la estrategia OE con rastreo de actividades RA" ref="Conferencia_9.html#ideas-oe"/>
+			<keyword name="Estructura general del modelo OE con RA" ref="Conferencia_9.html#estructura-general"/>
+			<keyword name="Aplicación al ejemplo. Programa General" ref="Conferencia_9.html#aplicacion-ejemplo"/>
+			<keyword name="Conclusiones" ref="Conferencia_9.html#conclusiones"/>
+			<keyword name="Conferencia 10" ref="Conferencia_10.html"/>
+			<keyword name="Concepción general del modelo. Implementación en un programa" ref="Conferencia_10.html#concepcion-implementacion"/>
+			<keyword name="Ejemplo particular en el modelo usuarios-computadora" ref="Conferencia_10.html#ejemplo-modelo"/>
+			<keyword name="Comparación de las estrategias de modelación y simulación basadas en eventos" ref="Conferencia_10.html#comparacion-estrategias"/>
+			<keyword name="Propiedades de las estrategias para la construcción y utilización de modelos" ref="Conferencia_10.html#propiedades-estrategias"/>
+			<keyword name="Conclusiones" ref="Conferencia_10.html#conclusiones"/>
+			<keyword name="Conferencia 11 y 12" ref="Conferencia_11y12.html"/>
+			<keyword name="Redes de Petri" ref="Conferencia_11y12.html#redes-petri"/>
+			<keyword name="Modelación con Redes de Petri" ref="Conferencia_11y12.html#modelacion-petri"/>
+			<keyword name="Problemas de análisis en Redes de Petri" ref="Conferencia_11y12.html#analisis-petri"/>
+			<keyword name="Análisis de redes de Petri. El árbol de alcanzabilidad" ref="Conferencia_11y12.html#arbol-alacanzabilidad"/>
+			<keyword name="Extensiones del concepto de Red de Petri" ref="Conferencia_11y12.html#extensiones-petri"/>
+         </keywords>
+         <files>
+             <file>style/*.css</file>
+             <file>images/*.png</file>
+             <file>images/Conf_1/*.gif</file>
+			 <file>images/Conf_2/*.gif</file>
+			 <file>images/Conf_3/*.gif</file>
+			 <file>images/Conf_4/*.gif</file>
+			 <file>images/Conf_5/*.gif</file>
+			 <file>images/Conf_6/*.gif</file>
+			 <file>images/Conf_8/*.gif</file>
+			 <file>images/Conf_9/*.gif</file>
+			 <file>images/Conf_10/*.gif</file>
+			 <file>images/Conf_11y12/*.png</file>
+             <file>*.html</file>
+         </files>
+     </filterSection>
+ </QtHelpProject>

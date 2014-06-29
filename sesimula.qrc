@@ -1,0 +1,56 @@
+<RCC>
+    <qresource prefix="/imagenes">
+        <file>interfaz/addtab.png</file>
+        <file>interfaz/arrow-curve-left.png</file>
+        <file>interfaz/arrow-curve-recycle.png</file>
+        <file>interfaz/arrow-curve-right.png</file>
+        <file>interfaz/arrow-up-bold-round.png</file>
+        <file>interfaz/assistant.png</file>
+        <file>interfaz/background1.png</file>
+        <file>interfaz/background2.png</file>
+        <file>interfaz/background3.png</file>
+        <file>interfaz/background4.png</file>
+        <file>interfaz/bold.png</file>
+        <file>interfaz/bringtofront.png</file>
+        <file>interfaz/button-add.png</file>
+        <file>interfaz/button-minus.png</file>
+        <file>interfaz/button-question.png</file>
+        <file>interfaz/closetab.png</file>
+        <file>interfaz/copy-document.png</file>
+        <file>interfaz/delete.png</file>
+        <file>interfaz/document.png</file>
+        <file>interfaz/documentacion.png</file>
+        <file>interfaz/documents.png</file>
+        <file>interfaz/dot-line.png</file>
+        <file>interfaz/download.png</file>
+        <file>interfaz/filesave.png</file>
+        <file>interfaz/floodfill.png</file>
+        <file>interfaz/generador.png</file>
+        <file>interfaz/italic.png</file>
+        <file>interfaz/linecolor.png</file>
+        <file>interfaz/linepointer.png</file>
+        <file>interfaz/number-one.png</file>
+        <file>interfaz/pointer.png</file>
+        <file>interfaz/print.png</file>
+        <file>interfaz/search.png</file>
+        <file>interfaz/sendtoback.png</file>
+        <file>interfaz/sign-male.png</file>
+        <file>interfaz/simulador.png</file>
+        <file>interfaz/sos.png</file>
+        <file>interfaz/test.png</file>
+        <file>interfaz/textpointer.png</file>
+        <file>interfaz/underline.png</file>
+        <file>interfaz/upload.png</file>
+        <file>SESimula.ico</file>
+        <file>interfaz/next.png</file>
+        <file>interfaz/previous.png</file>
+        <file>interfaz/wrap.png</file>
+        <file>interfaz/Save.png</file>
+    </qresource>
+    <qresource prefix="/tablas">
+        <file>tablas/chi_cuadrado.txt</file>
+        <file>tablas/kolomogorov_smirnox.txt</file>
+        <file>tablas/normal_estandar.txt</file>
+        <file>tablas/t-student.txt</file>
+    </qresource>
+</RCC>

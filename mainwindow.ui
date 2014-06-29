@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>608</width>
+    <height>495</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>SESimula</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="sesimula.qrc">
+    <normaloff>:/imagenes/SESimula.ico</normaloff>:/imagenes/SESimula.ico</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>2</number>
+    </property>
+    <property name="rightMargin">
+     <number>2</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item row="0" column="0">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="whatsThis">
+       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QTabWidget::tab-bar {
+    alignment: center;
+}
+</string>
+      </property>
+      <property name="tabPosition">
+       <enum>QTabWidget::West</enum>
+      </property>
+      <property name="tabShape">
+       <enum>QTabWidget::Rounded</enum>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>40</width>
+        <height>40</height>
+       </size>
+      </property>
+      <property name="usesScrollButtons">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="tab_1">
+       <attribute name="icon">
+        <iconset resource="sesimula.qrc">
+         <normaloff>:/imagenes/interfaz/documentacion.png</normaloff>:/imagenes/interfaz/documentacion.png</iconset>
+       </attribute>
+       <attribute name="title">
+        <string/>
+       </attribute>
+       <attribute name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Documentación:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Muestra en un agradable ambiente&lt;/p&gt;&lt;p&gt;la documentacion de la asignatura&lt;/p&gt;&lt;p&gt;de &lt;span style=&quot; font-style:italic;&quot;&gt;Simulación.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_1"/>
+      </widget>
+      <widget class="QWidget" name="tab_2">
+       <property name="minimumSize">
+        <size>
+         <width>552</width>
+         <height>0</height>
+        </size>
+       </property>
+       <attribute name="icon">
+        <iconset resource="sesimula.qrc">
+         <normaloff>:/imagenes/interfaz/generador.png</normaloff>:/imagenes/interfaz/generador.png</iconset>
+       </attribute>
+       <attribute name="title">
+        <string/>
+       </attribute>
+       <attribute name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Generador:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Muestra en un ambiente amigable&lt;/p&gt;&lt;p&gt;generadores y ditribuciones los &lt;/p&gt;&lt;p&gt;cuales generara en una tablas segun elija.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_2"/>
+      </widget>
+      <widget class="QWidget" name="tab_3">
+       <attribute name="icon">
+        <iconset resource="sesimula.qrc">
+         <normaloff>:/imagenes/interfaz/test.png</normaloff>:/imagenes/interfaz/test.png</iconset>
+       </attribute>
+       <attribute name="title">
+        <string/>
+       </attribute>
+       <attribute name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Test:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Muestra en un agradable ambiente&lt;/p&gt;&lt;p&gt;diferentes tipo de test para la &lt;/p&gt;&lt;p&gt;comprobacion de aleatoriedad.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_3"/>
+      </widget>
+      <widget class="QWidget" name="tab_4">
+       <attribute name="icon">
+        <iconset resource="sesimula.qrc">
+         <normaloff>:/imagenes/interfaz/simulador.png</normaloff>:/imagenes/interfaz/simulador.png</iconset>
+       </attribute>
+       <attribute name="title">
+        <string/>
+       </attribute>
+       <attribute name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Simulador:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Muestra en un agradable ambiente&lt;/p&gt;&lt;p&gt;distintos componentes para diseñar&lt;/p&gt;&lt;p&gt;un modelo para la simulacion.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <property name="leftMargin">
+         <number>9</number>
+        </property>
+        <property name="rightMargin">
+         <number>9</number>
+        </property>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>608</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="action_Sobre">
+   <property name="icon">
+    <iconset resource="sesimula.qrc">
+     <normaloff>:/imagenes/SESimula.ico</normaloff>:/imagenes/SESimula.ico</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Acerca de &amp;SESimula</string>
+   </property>
+  </action>
+  <action name="action_Sobre_Qt">
+   <property name="icon">
+    <iconset resource="sesimula.qrc">
+     <normaloff>:/imagenes/interfaz/assistant.png</normaloff>:/imagenes/interfaz/assistant.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Acerca de &amp;Qt</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="sesimula.qrc"/>
+ </resources>
+ <connections/>
+</ui>

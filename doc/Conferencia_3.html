@@ -1,0 +1,1421 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- qalgorithms.qdoc -->
+  <title>SESimula - Sistema, Modelación y Simulación</title>
+  <link rel="stylesheet" type="text/css" href="style/offline.css" />
+</head>
+<body>
+<div class="header" id="qtdocheader">
+  <div class="content">
+    <a href="index.html" class="qtref"><span>Documentación de Simulación</span></a>
+  </div>
+  <div class="breadcrumb toolblock">
+    <ul>
+      <li class="first"><a href="index.html">Home</a></li>
+      <li>Conferencia 3</li>
+    </ul>
+  </div>
+</div>
+<div class="content mainContent">
+    <p class="naviNextPrevious headerNavi">
+          [Anterior: <a href="Conferencia_2.html">Conferencia 2</a> ]
+          [Siguiente: <a href="Conferencia_4.html">Conferencia 4</a> ]
+    </p>
+    <div class="toc">
+        <h3><a name="toc">Contenido</a></h3>
+        <ul>
+        <li class="level1"><a href="#ideas-basicas">Ideas básicas</a></li>
+        <li class="level2"><a href="#ventajas-desventajas">Tests para validar sucesiones de números pseudoaleatorios con distribución uniforme</a></li>
+        <li class="level2"><a href="#metodos-generacion">Métodos de generación basados en congruencias</a></li>
+        <li class="level2"><a href="#generadores-aditivos">Generadores congruenciales aditivos</a></li>
+        <li class="level2"><a href="#otros-generadores">Otros generadores de números pseudoaleatorios</a></li>
+        <li class="level2"><a href="#conclusiones">Conclusiones</a></li>
+        </ul>
+    </div>
+
+    <h1 class="title">Números Aleatorios Uniformemente Distribuidos</h1>
+
+	
+	<h3 style='text-align:justify'><span lang=ES-TRAD>Introducción</span></h3>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>En el lenguaje técnico informal se habla de “números
+	aleatorios” (sin precisar distribución) a números que tienen la misma
+	probabilidad de aparecer en un intervalo dado. Realmente cuando se habla así,
+	se está hablando de una muestra de una variable aleatoria con distribución <u>uniforme</u>
+	en ese intervalo. El intervalo en cuestión no es lo más importante, porque a
+	partir de una sucesión o muestra de números aleatorios con distribución
+	uniforme en [0,1] es posible conseguir una muestra de números aleatorios con
+	distribución uniforme en cualquier intervalo [a, b], simplemente por una
+	transformación lineal. Lo interesante es que también a partir de una muestra de
+	números aleatorios con distribución <u>uniforme</u> en [0,1] se pueden
+	conseguir muestras de números aleatorios con <u>cualquier distribución
+	especificada</u>. Es por eso que nuestro tratamiento del tema comienza
+	estudiando la generación de números aleatorios con distribución uniforme y en
+	particular, con distribución uniforme en [0,1]. </span></p>
+
+	
+
+	<p class=MsoBodyText><span lang=ES-TRAD style='font-size:11.0pt'>Los llamados
+	“generadores de números aleatorios” realmente producen una sucesión de números
+	que por diversas razones no pueden ser exactamente aleatorios y de hecho, el
+	proceso de generación puede reproducirse en ciclo o en momentos diferentes si
+	se parten de las mismas condiciones iniciales. Por esta razón resulta
+	importante conocer las mejores técnicas para generar números aleatorios y
+	conocer también un conjunto de técnicas para chequear la validez de tales
+	números. </span></p>
+
+	
+	<a name="ideas-basicas"></a>
+	<h2>Ideas básicas. Números
+	pseudoaleatorios con distribución uniforme. Ciclo del generador. Semilla
+	inicial.</h2>
+
+
+	<p class=MsoBodyText><span lang=ES-TRAD style='font-size:11.0pt'>Se llaman
+	“generadores” digitales de números aleatorios a los “procedimientos o
+	algoritmos” que permiten generar números aleatorios con una distribución
+	especificada. Hablamos en esta conferencia, de números con distribución
+	uniforme en [0,1]. Los “generadores” digitales de números aleatorios utilizan
+	un conjunto de cálculos más o menos complicados para la generación de una
+	secuencia de números. Dada un conjunto de condiciones iniciales, tales
+	generadores producirán siempre la misma secuencia de números. Por otra parte,
+	cuando se generan números en una computadora, los cálculos están limitados
+	esencialmente por una aritmética finita (que puede ser variable, pero acotada
+	en última instancia por las capacidades de la computadora). Esto hace
+	necesariamente que las secuencias de tales números caigan en un “ciclo” o
+	“período” determinado en última instancia por la cantidad posible de números a
+	generar. Por último, para que un método de generación sea suficientemente
+	eficiente, debe basar la generación de cada número en los anteriores y por
+	tanto es recursivo. Ello hace necesario establecer una “semilla” o conjunto de
+	condiciones iniciales. Esta “semilla” a su vez debería ser aleatoria. </span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Por todas estas razones, la sucesión de números
+	generada no es realmente una muestra de una variable aleatoria con distribución
+	uniforme en [0,1]. Decimos que estos números son <i>pseudoaleatorios</i>. Los
+	paquetes de software de Estadística y Simulación contienen en general
+	generadores de números aleatorios bastante bien probado; pero no todos de la
+	misma potencia. Por ejemplo, el generador de números aleatorios del paquete
+	Mathematica supera en mucho al del MathLab, al del SPSS y al del Excel. Para
+	muchos fines los generadores de estos paquetes pueden ser suficientes; pero
+	para otros no y puede ser necesario implementar un generador específico en un
+	programa o sistema de simulación que se esté elaborando. </span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Así,  resulta de interés de una parte, conocer un
+	conjunto de pruebas que permitan validar un generador de números aleatorios. Y
+	por otra resulta también importante para el Cibernético conocer los algoritmos
+	más potentes de generación de tales números para su eventual implementación. </span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>A manera de ejemplo simple, y para ilustrar
+	posteriormente las pruebas de aleatoriedad, citamos uno de los primeros
+	generadores o procedimientos de generación elaborado por J. von Neumann en 1946
+	y conocido hoy método del <i>medio-cuadrático</i> (mid-square method). Por
+	supuesto que apenas 5 años después había sido ampliamente estudiado y
+	criticado. Hoy en día tiene solamente interés histórico y metodológico.</span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>El método usa como próximo número aleatorio los
+	dígitos centrales del cuadrado del número precedente. Supongamos por ejemplo
+	que queremos generar números aleatorios (entre 0 y 1) con cuatro cifras
+	decimales de precisión. Trabajaremos realmente con el número entero de 4
+	dígitos y finalmente, añadiremos un punto a la izquierda del primer dígito para
+	considerarlo en el intervalo [0,1]. Suponga que el “primer número” o semilla es
+	3187.  Entonces, para generar el siguiente número se calcula (3187)<sup>2</sup>
+	= 10156969, y se toman los dígitos centrales de dicho número, esto es 1569 (o
+	0.1569 si se lleva a [0,1]). Para el siguiente, calculamos (1569)<sup>2</sup>=
+	2461761  y resulta el siguiente número de la secuencia: 4617  (observe que
+	convenimos en dejar siempre dos cifras a la derecha).</span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>La crítica más fuerte a este procedimiento es que
+	tiende a tener períodos o ciclos muy cortos. Más adelante en esta misma
+	conferencia, se extiende esta sucesión como material de estudio de los test de
+	aleatoriedad. En la clase práctica se extenderá a 100 números y se observará
+	entonces el ciclo. La longitud del ciclo depende naturalmente de la semilla,
+	pero incluso está demostrado que cuando se logran sucesiones con períodos
+	bastante largos, ellos difícilmente pasan las pruebas estadísticas de
+	aleatoriedad. </span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Antes de ver otros generadores mucho más modernos y
+	eficientes, veamos los test para validar la aleatoriedad, que son en definitiva
+	tests de hipótesis para medir ajuste de un conjunto de datos a la distribución
+	uniforme.</span></p>
+	
+	<a name="test-validar"></a>
+	<h2>Tests para validar 
+	sucesiones de números pseudoaleatorios con distribución uniforme</h2>
+
+
+	<p class=MsoBodyText><span lang=ES-TRAD style='font-size:11.0pt'>Entre los
+	tests para probar el ajuste de un conjunto de números a la distribución
+	uniforme (digamos entre 0 y 1) mencionamos en primer lugar el Test de
+	Kolmogorov-Smirnov que para esta distribución resulta particularmente simple.
+	En esencia el test de Kolmogorov-Smirnov parte de dividir la muestra en
+	subintervalos:</span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify;text-indent:35.4pt'><span
+	lang=ES-TRAD style='font-size:11.0pt'><sub><img width=155 height=24
+	src="images/Conf_3/image001.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>calcular la frecuencia <i>f<sub>i</sub> </i> de
+	valores observados en cada intervalo [0,<i> xi</i>] y compararla con la
+	frecuencia esperada bajo el supuesto de la distribución uniforme. La frecuencia
+	esperada se obtiene en general a partir de la función de distribución que se
+	prueba, multiplicando la probabilidad de que el valor se encuentre en el
+	intervalo [0,<i> xi</i>] por el volumen <i>N</i> de la muestra. En el caso de
+	la distribución uniforme, resulta <i>x<sub>i</sub></i>*<i>N</i>, donde.  El
+	estadístico de Kolmogorov-Smirnov se construye a partir del valor máximo de</span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <sub><img width=77 height=27
+	src="images/Conf_3/image002.gif"></sub> </span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>El cálculo de la máxima diferencia absoluta y su
+	significación aparecen implementados en paquetes como el SPSS. El inconveniente
+	del test de Kolmogorov-Smirnov es que requiere de una cadena de números
+	aleatorios relativamente grande, para reducir la probabilidad de aceptar erróneamente
+	la aleatoriedad. Hoy en día, esta desventaja puede aliviarse utilizando pruebas
+	exactas al menos cuando los volúmenes de muestra son pequeños, o el método de
+	Monte Carlo cuando no son tan pequeños; pero este último conlleva en sí un
+	proceso de generación aleatorio de muestras que debe estar previamente validado
+	también. </span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>En el texto [1] hay descritos con cierto detalle
+	varios test alternativos. Hablemos en particular del test de series, el test de
+	distancia cuadrática y el test de “gap”.</span></p>
+
+	
+
+	<h3 style='text-align:justify'><u><span lang=ES-TRAD style='font-size:10.0pt'>Test
+	de series</span></u></h3>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Esta prueba se basa en aplicar el test Chi-cuadrado a
+	pares de números sucesivos. En la sucesión de números supuestamente aleatorio
+	se asocia el primero y el segundo, el tercero y el cuarto, el quinto y el
+	sexto, y así sucesivamente. Si la computadora o el algoritmo generador, trabaja
+	con una aritmética finita, puede generar solamente un número finito de números
+	diferentes. Por ejemplo, si tales números están limitados por la longitud de la
+	palabra, digamos 16 bits en una aritmética binaria, entonces solamente pueden
+	ser representados 65536 números enteros (sin signo). </span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Si en general, la cantidad máxima de números
+	representables es “d”, entonces, el número posible de pares consecutivos es “d<sup>2</sup>” 
+	y si la distribución de la sucesión es realmente uniforme, cada uno de estos
+	pares tiene una probabilidad de aparecer igual a 1/d<sup>2</sup>.  Con esta
+	frecuencia esperada y con las observadas en la muestra, se conforma un test
+	chi-cuadrado, aplicable también con paquetes. </span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Aunque parece simple, esta prueba tiene inconvenientes,
+	especialmente si el número “d” es grande, como ocurre fácilmente hoy en día,
+	por el crecimiento del hardware y el software (recuérdese por ejemplo que el
+	paquete <i>Mathematica</i> es capaz de trabajar con una aritmética de cualquier
+	nivel de precisión). De hecho para generar “n” pares independientes deben
+	generarse por lo menos “2n” números aleatorios y para aplicar el test
+	chi-cuadrado “n”  tiene que ser por lo menos “5d<sup>2</sup>” para que la
+	frecuencia esperada en cada combinación no sea menor que 5. El test pudiera
+	generalizarse para “tríos”, “cuartetos” etc., en lugar de, o además de, “pares”
+	consecutivos; pero la dificultad anterior se acentúa. Por último, cuando se
+	genera con bastante rigor una sucesión de números pseudoaleatorios, no resulta
+	difícil que “apruebe” este test, de manera que no es “tan fuerte”; pero como
+	resulta fácil de implementar, puede servir para rechazar la aleatoriedad en
+	sucesiones grandes de números aleatorios con pocas cifras de precisión y no muy
+	rigurosamente construidas.</span></p>
+
+	
+
+	<h3 style='text-align:justify'><u><span lang=ES-TRAD style='font-size:10.0pt'>Test
+	de distancias cuadráticas</span></u></h3>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Este test trabaja también con cuartetos de números
+	aleatorios sucesivos; interpretando cada par como un punto en el rectángulo
+	[0,1] x [0,1]. Así, los números aleatorios <i>r<sub>1</sub>, r<sub>2</sub>, r<sub>3</sub>,
+	r<sub>4</sub></i>  se interpretan como la pareja de puntos <i>(r<sub>1</sub>, r<sub>2</sub>)  
+	(r<sub>3</sub>, r<sub>4</sub>) </i>y tiene sentido calcular la distancia
+	cuadrática entre tales pares:</span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <sub><img width=161 height=25
+	src="images/Conf_3/image003.gif"></sub></span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Con cálculo de probabilidades no resulta difícil
+	demostrar que si los números están distribuidos aleatoriamente, <i>D<sup>2</sup>
+	</i>tiene una distribución conocida y dada por:</span></p>
+
+	
+
+	
+
+	<p class=MsoNormal style='text-align:justify;text-indent:35.4pt'><span
+	lang=ES-TRAD style='font-size:11.0pt'><sub><img width=351 height=125
+	src="images/Conf_3/image004.gif"></sub></span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Utilizando esta distribución, se puede estimar las
+	probabilidades o frecuencias esperadas de valores de <i>D<sup>2</sup></i> en
+	ciertos intervalos que determinen una partición de [0,2] en <i>n</i>
+	subintervalos, digamos:</span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>             <sub><img width=249 height=24
+	src="images/Conf_3/image005.gif"></sub></span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify;text-indent:35.4pt'><span
+	lang=ES-TRAD style='font-size:11.0pt'><sub><img width=421 height=25
+	src="images/Conf_3/image006.gif"></sub></span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>y comparar entonces  las frecuencias esperadas <i>p<sub>i</sub></i>*<i>n</i>
+	con las frecuencias <i>f<sub>i</sub>  </i>de valores observados de <i>D<sup>2</sup>,
+	</i>utilizando un test Chi-cuadrado. </span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Este test es mucho más potente que el test serial,
+	esto es, el es capaz de detectar más fácilmente violaciones de la uniformidad
+	en la distribución de la sucesión y por tanto, sus conclusiones sobre aceptar
+	aleatoriedad son más fidedignas.</span></p>
+
+	<h3 style='text-align:justify'><u><span lang=ES-TRAD style='font-size:10.0pt'>Tests
+	de “gaps”</span></u></h3>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Este tipo de tests se basa en la longitud de un “gap”
+	(gap puede ser traducido como &quot;vacío&quot; o &quot;espacio
+	intermedio&quot;), medido en número de ocurrencias de un evento, entre la
+	aparición de un resultado particular y la próxima aparición del mismo
+	resultado. Se habla de tests de “gap” en plural porque la misma idea puede aplicarse
+	en varios sentidos [1]. Una de ellas es la siguiente:</span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Suponga que el conjunto de números aleatorios es
+	tratado como una secuencia de dígitos (descontando el 0 y el punto decimal que
+	preceden a cada número). Por ejemplo, si la sucesión de números generados fuera</span></p>
+
+	
+
+	<table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0
+	 style='border-collapse:collapse;border:none'>
+	 <tr>
+	  <td width=75 valign=top style='width:56.1pt;border:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.3187</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border:solid windowtext 1.0pt;
+	  border-left:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.1569</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border:solid windowtext 1.0pt;
+	  border-left:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.4617</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border:solid windowtext 1.0pt;
+	  border-left:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.3166</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border:solid windowtext 1.0pt;
+	  border-left:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.0235</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border:solid windowtext 1.0pt;
+	  border-left:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.0552</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border:solid windowtext 1.0pt;
+	  border-left:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.3047</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border:solid windowtext 1.0pt;
+	  border-left:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.2842</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=75 valign=top style='width:56.1pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.0769</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.5913</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.9635</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.8332</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.4222</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.8252</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.0955</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.9120</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=75 valign=top style='width:56.1pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.1744</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.0415</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.1722</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.9652</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.1611</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.5953</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.4382</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.2019</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=75 valign=top style='width:56.1pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.0763</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.5281</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.8840</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.1456</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.1199</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.4376</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.1493</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.2290</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=75 valign=top style='width:56.1pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.2441</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.9584</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.8530</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.7609</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.8968</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.4250</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.0625</span></p>
+	  </td>
+	  <td width=75 valign=top style='width:56.1pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.3960</span></p>
+	  </td>
+	 </tr>
+	</table>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>entonces, la interpretaríamos como la sucesión de
+	dígitos:</span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify;text-indent:35.4pt'><span
+	lang=ES-TRAD style='font-size:11.0pt'>318715694617316602350552304728420769...3960</span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Ahora en esta técnica se escoge un dígito probador,
+	digamos por ejemplo el 2, que es el dígito más frecuente en la serie. Consideramos
+	un &quot;gap&quot; el espacio entre la aparición de un 2 y el próximo y como
+	longitud del &quot;gap&quot; el número de dígitos intermedios. Entonces
+	resultan 21 “gaps” cuyas longitudes son: 5, 4, 2, 15, 1, 0, 0, 1, 1, 6, 11, 0,
+	3, 11, 0, 9, 21, 0, 2, 20, y 4. La longitud “k” de un gap equivale a la
+	aparición de &quot;k dígitos diferentes de 2&quot; y a continuación un 2. Por
+	tanto  tiene probabilidad (0.1) (0.9)<sup>k</sup>. Entonces se pueden comparar
+	frecuencias observadas con esperadas, de ser necesario uniendo valores
+	consecutivos de k para no tener frecuencias esperadas menores que 5 y utilizar
+	un test Chi-cuadrado. Por ejemplo:</span></p>
+
+	
+
+	<table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0
+	 style='border-collapse:collapse;border:none'>
+	 <tr>
+	  <td width=227 valign=top style='width:170.0pt;border:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Longitud de un “gap”</span></p>
+	  </td>
+	  <td width=108 valign=top style='width:81.0pt;border:solid windowtext 1.0pt;
+	  border-left:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0, 1 o 2</span></p>
+	  </td>
+	  <td width=145 valign=top style='width:109.0pt;border:solid windowtext 1.0pt;
+	  border-left:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>3, 4, 5 o 6</span></p>
+	  </td>
+	  <td width=96 valign=top style='width:72.0pt;border:solid windowtext 1.0pt;
+	  border-left:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Mayor que 6</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=227 valign=top style='width:170.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Probabilidad teórica</span></p>
+	  </td>
+	  <td width=108 valign=top style='width:81.0pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.1+0.09+0.081</span></p>
+	  </td>
+	  <td width=145 valign=top style='width:109.0pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.0729+0.06561+</span></p>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.059049+0.0531441</span></p>
+	  </td>
+	  <td width=96 valign=top style='width:72.0pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.4783</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=227 valign=top style='width:170.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Frecuencia esperada (Probabilidad*21)</span></p>
+	  </td>
+	  <td width=108 valign=top style='width:81.0pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>5.691</span></p>
+	  </td>
+	  <td width=145 valign=top style='width:109.0pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>5.265</span></p>
+	  </td>
+	  <td width=96 valign=top style='width:72.0pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>10.044</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=227 valign=top style='width:170.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Frecuencia observada</span></p>
+	  </td>
+	  <td width=108 valign=top style='width:81.0pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>10</span></p>
+	  </td>
+	  <td width=145 valign=top style='width:109.0pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>5</span></p>
+	  </td>
+	  <td width=96 valign=top style='width:72.0pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>6</span></p>
+	  </td>
+	 </tr>
+	</table>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'><img width=384 height=275
+	src="images/Conf_3/image007.gif"></span></p>
+
+	<p class=MsoBodyText><span lang=ES-TRAD style='font-size:11.0pt'>La
+	significación del test es el &quot;peor caso para aceptar aleatoriedad&quot;
+	es  0.077, aun mayor que 0.05. Por tanto con estos resultados no podemos
+	descartar la aleatoriedad de los números con probabilidad de error menor que el
+	5%; pero si resulta sospechosa porque podemos descartarla con probabilidad de
+	error menor que el 10% (la significación del test en el &quot;peor caso para
+	rechazar aleatoriedad&quot; es 0.92, menor que 0.10). Si se incrementa el número
+	de datos en la serie, probablemente se rechace la aleatoriedad; pero lo cierto
+	es que con estos datos, dicha serie &quot;pasa&quot; esta prueba. </span></p>
+
+
+
+	<p class=MsoBodyText><span lang=ES-TRAD style='font-size:11.0pt'>Como se verá
+	en la Clase Práctica, esta serie ha sido obtenida con el método generador del
+	medio-cuadrático de Von Neumann y es de esperar que no responda realmente a una
+	distribución uniforme. De hecho, si se repiten los cálculos de generación antes
+	de 100 números aparece un ciclo; pero con 40 datos esta falta de  aleatoriedad
+	no es tan fácilmente apreciable. La misma serie de 40 números pasaría (aunque
+	dudosamente también) el test de Kolmogorov Smirnov, e incluso,  este test no
+	detecta violación de la aleatoriedad si se generan hasta 100 números en la
+	muestra.  El test de series sería inadmisible porque la significación del
+	chi-cuadrado estaría enormemente exagerada por el reducido número de casos y
+	para obtener suficientes habría que extender la sucesión  excesivamente, cuando
+	ya sería obvio el ciclo.  La misma serie pasaría también el test de las
+	distancias cuadráticas, como se verá en la clase práctica. </span></p>
+
+	
+
+	<p class=MsoBodyText><span lang=ES-TRAD style='font-size:11.0pt'>El  test de
+	&quot;gaps&quot; es, en general, uno de los más potentes para validar la
+	distribución uniforme; pero el propio ejemplo demuestra también que no es
+	&quot;tan bueno&quot;.  Knuth defiende el llamado “test espectral” como el “más
+	discriminante” hasta entonces  formulado (téngase presente que [2] fue escrito
+	en 1969). Tal test, enunciado por Coveyou y MacPherson mide la independencia de
+	conjuntos de “<i>n</i>” números adyacentes y sería capaz de detectar la
+	violación de la uniformidad en esta serie. Su descripción en [2] incluye un
+	algoritmo para implementarlo. En la
+	 Clase Práctica veremos como con un criterio muy simple podremos descartar la
+	aleatoriedad de esta serie, incluso, desde los primeros 20 datos.</span></p>
+
+	<a name="metodos-generacion"></a>
+	<h2>Métodos de generación basados
+	en congruencias. Generadores congruenciales multiplicativos, aditivos y mixtos</h2>
+
+
+	<p class=MsoBodyText><span lang=ES-TRAD style='font-size:11.0pt'>Discutimos a
+	continuación los algoritmos más conocidos para generar números con distribución
+	uniforme en [0,1]. Se llaman métodos congruenciales a los métodos iterativos que
+	basan en la generación en una fórmula recurrente del tipo:</span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <sub><img width=161 height=24
+	src="images/Conf_3/image008.gif"></sub></span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>donde son seleccionados previamente los 4 números no
+	negativos:</span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <i>m</i>         (el módulo de
+	congruencia)</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <i>a</i>          (el multiplicador)</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <i>c</i>          (el incremento, que
+	puede ser mayor o igual a 0)</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><i><span lang=ES-TRAD
+	style='font-size:11.0pt'>            x</span></i><sub><span lang=ES-TRAD
+	style='font-size:11.0pt'>0</span></sub><span lang=ES-TRAD style='font-size:
+	11.0pt'>         (la semilla o valor inicial)</span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>con la restricción en principio de que <i> <u>m</u></i><u>
+	debe ser estrictamente mayor que <i>a</i> y <i>c</i></u><i>.</i> Realmente, la
+	sucesión obtenida así es de números enteros, pero se convierten en números en
+	el intervalo [0,1] añadiendo simplemente un punto a la izquierda del primer
+	dígito.</span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Con independencia de la selección de los parámetros,
+	tales números siempre forman un ciclo pues a lo sumo se recorren las <i>m</i>
+	clases módulo <i>m</i>; así el ciclo es siempre menor o igual a <i>m</i>. Por
+	otra parte debe estar claro que en principio, siempre es posible obtener una
+	combinación de parámetros que genere una secuencia de ciclo máximo <i>m</i>. De
+	hecho, la sucesión trivial que se obtiene con <i>a</i>=<i>c</i>=1: <i>x</i><sub>0</sub>,
+	<i>x</i><sub>0</sub>+1, <i>x</i><sub>0</sub>+2, <i>m-</i>1, 0, 1,2,…,<i> x</i><sub>0</sub>-1,
+	<i>x</i><sub>0</sub>, <i>x</i><sub>0</sub>+1,… tiene un ciclo <i>m</i>, pero es
+	trivial porque está lejos de tener la aleatoriedad deseada. Además si <i>m </i> no
+	es primo, es posible conseguir también por esta vía sucesiones con ciclo <i>k</i>
+	donde <i>k </i>divide a m. Otras muchas situaciones son posibles poniendo
+	valores no triviales de <i>a</i> y <i>c </i>y debe estar claro que selecciones
+	no adecuadas de estos parámetros pueden producir ciclos mucho más reducidos.
+	Por ejemplo, si se selecciona <i>x</i><sub>0</sub>=3, <i>a</i>=7; <i>c</i>=3; y
+	<i>m</i>=10, resulta la sucesión: 3, 4, 1, 0, 3, 4, 1,0,…que tiene un ciclo
+	sólo de 4 números.</span></p>
+
+
+	<h3 style='text-align:justify'><u><span lang=ES-TRAD style='font-size:10.0pt'>Generadores
+	congruenciales multiplicativos y mixtos</span></u></h3>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Podrían llamarse generadores “puramente aditivos”, a
+	aquellos en los que se selecciona <i>a</i>=1, pero ya comprendemos porqué ellos
+	son triviales y reservaremos el nombre de generadores aditivos para otro tipo
+	de generadores congruenciales que analizaremos posteriormente.</span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Se llaman generadores “multiplicativos” a aquellos en
+	los que se selecciona c=0 y generadores “mixtos” a aquellos en los que <i>a</i>
+	es diferente de 1 y <i>c</i> es diferente de cero. La teoría de los generadores
+	congruenciales multiplicativos y mixtos discute las propiedades de la sucesión
+	de números  generados por la fórmula de congruencia con diferentes valores de
+	los parámetros valores  <i>m</i>, <i>a</i>, <i>c </i>y <i>x</i><sub>0 </sub>y
+	pretende emitir recomendaciones para la mejor selección de los mismos, esto es
+	para alcanzar una distribución cercana a la uniforme y lograr ciclos grandes. </span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify;text-indent:35.4pt'><u><span
+	lang=ES-TRAD style='font-size:11.0pt'>La elección de los parámetros <i>m, c</i>,
+	<i>a</i>, y <i>x</i></span></u><sub><span lang=ES-TRAD style='font-size:11.0pt'>0</span></sub><u><span
+	lang=ES-TRAD style='font-size:11.0pt'> en los generadores mixtos. </span></u></p>
+
+
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-align:justify'><u><span
+	lang=ES-TRAD style='font-size:11.0pt'>El parámetro <i>m</i></span></u><i><span
+	lang=ES-TRAD style='font-size:11.0pt'> </span></i><span lang=ES-TRAD
+	style='font-size:11.0pt'> debe ser suficientemente grande para posibilitar
+	ciclos largos (hoy en día las operaciones modulares incluso por números grandes
+	no son difíciles computacionalmente). En todo caso la cota superior de <i>m </i> la
+	impone la longitud de palabra con que trabaja la máquina, la precisión del
+	programa generador, o el número de cifras decimales con que queremos a los
+	números aleatorios. Si cualquiera de estos parámetros determina que el número
+	máximo de números aleatorios generables es <i>d</i>, no vale la pena <i>m</i>
+	mayor que este valor. Si el valor de <i>d</i> se determina por ejemplo, por la
+	longitud de palabra binaria, <i>d</i>=2<i><sup>w</sup></i> (con <i>w=</i>16,
+	24, 32, 48, 64...), la teoría demuestra que la elección <i>m</i>=2<i><sup>w</sup></i>
+	puede producir en particular ciclos mucho más cortos. Entonces se ha
+	recomendado tradicionalmente, tomar:</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:72.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>·<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><i><span lang=ES-TRAD style='font-size:11.0pt'>m=</span></i><span
+	lang=ES-TRAD style='font-size:11.0pt'>2<i><sup>w-</sup></i><sup>1</sup>,    
+	por  ejemplo <i>m=</i>2<sup>31</sup>, o</span></p>
+
+	<p class=MsoNormal style='margin-left:72.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>·<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><i><span lang=ES-TRAD style='font-size:11.0pt'>m</span></i><span
+	lang=ES-TRAD style='font-size:11.0pt'>=2<i><sup>e</sup></i>   con <i>e</i>&lt;<i>w</i>, 
+	por ejemplo <i>m=</i>2<sup>25</sup></span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>Cualquiera que sea el límite <i>d</i> en
+	general puede ser una buena idea tomar  <i>m </i> cercano a <i>d</i>; pero <i>m</i>&lt;<i>d.</i></span></p>
+
+	<p class=MsoNormal style='text-align:justify;text-indent:35.4pt'><u><span
+	lang=ES-TRAD style='font-size:11.0pt'><span style='text-decoration:none'>&nbsp;</span></span></u></p>
+
+	
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-align:justify'><u><span
+	lang=ES-TRAD style='font-size:11.0pt'>El incremento <i>c</i></span></u><span
+	lang=ES-TRAD style='font-size:11.0pt'> debe cumplir en primer lugar que sea
+	menor que <i>m</i>; y debe ser estrictamente positivo en los modelos mixtos. En
+	este caso, una condición necesaria para que el ciclo alcance a ser <i>m</i>, es
+	que <i>c</i> sea primo con <i>m</i>, esto es que el máximo común divisor de <i>c</i>
+	y <i>m</i> sea 1. Hay resultados de Greenberger sobre la acotación de las
+	correlaciones de números aleatorios sucesivos en dependencia de los valores de <i>c</i>,
+	<i>m</i>,  y también de <i>a</i>; pero estos resultados no parecen ser muy
+	útiles como criterios prácticos para elegir <i>c</i>. </span></p>
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>En resumen, en un modelo <i>mixto</i>
+	tómese</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:72.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>·<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><i><span lang=ES-TRAD style='font-size:11.0pt'>c </span></i><span
+	lang=ES-TRAD style='font-size:11.0pt'>de manera que<i>     0&lt;c&lt;m   </i>y<i>  
+	MCD(c,m)=</i>1</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>La elección de <i>a</i> es quizás la
+	cuestión más interesante en aras de obtener el máximo período o ciclo de la
+	sucesión de números generados. Aparte de que <i>a</i> debe ser estrictamente
+	positivo y menor que <i>m</i>, si se parte de <i>c</i> diferente de cero, puede
+	demostrarse que el ciclo alcanza el valor máximo potencial igual a <i>m</i> si
+	y solo si se cumplen las tres condiciones siguientes:</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:106.5pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><i><span lang=ES-TRAD style='font-size:11.0pt'>c</span></i><span
+	lang=ES-TRAD style='font-size:11.0pt'> es relativamente primo con <i>m</i>,
+	como antes se estableció</span></p>
+
+	<p class=MsoNormal style='margin-left:106.5pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>2.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><i><span lang=ES-TRAD style='font-size:11.0pt'>a</span></i><span
+	lang=ES-TRAD style='font-size:11.0pt'>-1  es múltiplo de cada primo que divide
+	a <i>m</i></span></p>
+
+	<p class=MsoNormal style='margin-left:106.5pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>3.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><i><span lang=ES-TRAD style='font-size:11.0pt'>a-</span></i><span
+	lang=ES-TRAD style='font-size:11.0pt'>1 es múltiplo además de 4, si 4 divide a <i>m</i>.</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:35.4pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>Así, por ejemplo, se recomiendan valores
+	de <i>a</i> como los siguientes:</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:88.8pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>·<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>si        <i>m=</i> 2<i><sup>e</sup></i> 
+	y c es diferente de cero y primo con <i>m</i>, tomar    <i>a-1=</i> 2<i><sup>k</sup></i>  
+	con 2</span><span lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>£</span><i><span
+	lang=ES-TRAD style='font-size:11.0pt'>k</span></i><span lang=ES-TRAD
+	style='font-size:11.0pt'>&lt;<i>e</i>,  por ejemplo <i>m=</i>2<sup>31</sup>, y <i>a=</i>2<sup>15</sup>+1</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:35.4pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>pero Knuth [2] discute argumentos para
+	usar multiplicadores más complicados, por ejemplo:</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:88.8pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>·<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>con        <i>m=</i>
+	2<i><sup>35</sup></i>   , usar     <i>a=</i> 2<sup>23</sup>  +2<sup>14</sup>+2<sup>2</sup>+1.</span></p>
+
+
+
+
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-align:justify'><u><span
+	lang=ES-TRAD style='font-size:11.0pt'>La selección de <i>x</i><sub>0 </sub></span></u><span
+	lang=ES-TRAD style='font-size:11.0pt'>en un generador mixto no es tan
+	importante si ya se ha garantizado que el ciclo alcanza a ser <i>m</i> con los
+	criterios anteriores. En definitiva se van a recorrer todos los posibles
+	números. En generaciones de diferentes conjunto de series, como se hace en
+	simulación, un buen hábito puede ser utilizar como semilla inicial el número
+	final generado en la corrida anterior; pero como en otros generadores que
+	dependen de una semilla inicial, en la comprobación de programas puede ser útil
+	fijar esta semilla durante varias corridas. </span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify;text-indent:35.4pt'><u><span
+	lang=ES-TRAD style='font-size:11.0pt'>La elección de los parámetros <i>m, a</i>,
+	y <i>x</i></span></u><sub><span lang=ES-TRAD style='font-size:11.0pt'>0</span></sub><u><span
+	lang=ES-TRAD style='font-size:11.0pt'> en los generadores multiplicativos. </span></u></p>
+
+
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>En algunos libros se comenta que hay una
+	tendencia a utilizar <i>c</i>=0, esto es, a usar generadores multiplicativos
+	dentro de la categoría de generadores congruenciales, en lugar de mixtos,
+	porque según dichos autores son &quot;más rápidos, menos complicados  y
+	probablemente tan buenos como estos últimos&quot;. Pero cuando se selecciona <i>c=</i>0,
+	hay que seleccionar con más cuidado <i>m, a </i>y <i>x</i><sub>0</sub> porque
+	también se puede generar un ciclo corto, como se verá a continuación. </span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>Si <i>c</i>=0,  la fórmula generadora
+	puede expresarse sin recurrencia así:</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>            <sub><img width=145
+	height=25
+	src="images/Conf_3/image009.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>Entonces, una condición necesaria y
+	suficiente para que no haya ciclos de longitud menor que <i>m </i> es que no se
+	repitan los valores, esto es que:</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>            <sub><img width=173
+	height=25
+	src="images/Conf_3/image010.gif"></sub> para
+	cualesquiera <i>i</i>, <i>j</i>, entre 0 y m-1</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>Cuando <i>m </i> no es primo esta
+	condición se viola muy fácilmente porque en el anillo de los enteros módulo <i>m</i>
+	hay divisores de cero Por ejemplo:</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>Si <i>m</i>=24 y se toma <i>a</i>=5 y <i>x</i><sub>0</sub>=3,
+	se obtiene la sucesión 3, 15, 3, 15, ... porque 5<sup>2</sup>=5<sup>0</sup>
+	(mod 24). Análogamente, si se toma <i>m</i>=24, <i>a</i>=3 y <i>x</i><sub>0</sub>=5,
+	se obtiene la sucesión 5, 15, 21, 15, 21, porque 3<sup>2</sup>=3<sup>4</sup>
+	(mod 24).</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>Cuando <i>m</i> es primo, el anillo de
+	los enteros módulo <i>m</i> es un cuerpo y no tiene divisores de cero, lo que
+	facilita la elección adecuada de <i>a </i>y <i>x</i><sub>0</sub>. En este caso
+	se tiene que hay ciclos si y sólo si </span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>                  <sub><img width=177 height=25
+	src="images/Conf_3/image011.gif"></sub> para
+	ciertos valores de <i>i</i> y <i>j</i> entre 0 y m-1.</span></p>
+
+	
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>Supongamos <i>i</i>&gt;<i>j</i>. En tal
+	caso, se tiene:</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>            <sub><img width=203
+	height=25
+	src="images/Conf_3/image012.gif"></sub>donde
+	<i>k=i</i>-<i>j</i></span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>Como <i>x</i><sub>0</sub> y <i>a</i> son
+	divisores de 0, resulta entonces que la única forma en que puede ocurrir esto
+	es siendo </span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>            <sub><img width=121
+	height=24
+	src="images/Conf_3/image013.gif"></sub> para
+	alguna potencia <i>k</i>,  1</span><span lang=ES-TRAD style='font-size:11.0pt;
+	font-family:Symbol'>£</span><i><span lang=ES-TRAD style='font-size:11.0pt'>k</span></i><span
+	lang=ES-TRAD style='font-size:11.0pt'>&lt;m-1</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>Por ejemplo, si <i>m=</i>23, y tomamos <i>a</i>=3
+	y <i>x</i><sub>0</sub>=5, obtendremos un ciclo después de 11 números: 5, 15,...
+	17, 5, 15,.... porque 3<sup>11</sup>=1 (mod 23). Si con el mismo valor de <i>m</i>,
+	tomamos <i>a</i>=22 y <i>x</i><sub>0</sub>=5, generamos un ciclo más corto: 5,
+	18, 5, 18,... porque 22<sup>2</sup>=1 (mod 23). Sin embargo, si con el mismo
+	valor de <i>m</i>, tomamos <i>a=</i>7 y <i>x</i><sub>0</sub>=5, se evitan todos
+	los problemas porque 7<sup>k</sup></span><span lang=ES-TRAD style='font-size:
+	11.0pt;font-family:Symbol'>¹</span><span lang=ES-TRAD style='font-size:11.0pt'>1
+	(mod 23) para todo <i>k</i>=1, 2,3,...22. Claro que 7<sup>22</sup>=1 (mod 23) y
+	la longitud máxima es 22. En general, el máximo ciclo posible en un generador
+	multiplicativo es <i>m-</i>1 porque ningún número debe resultar en 0 (mod <i>m</i>).</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>Por tanto en el generador multiplicativo,
+	se recomienda, seleccionar <i>m</i> como un número primo, por ejemplo, el mayor
+	primo menor que <i>d</i> (la máxima cantidad generable de números), y prestar
+	atención a la selección de <i>a </i> de manera que </span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-align:justify;text-indent:
+	34.8pt'><span lang=ES-TRAD style='font-size:11.0pt'><sub><img width=181
+	height=24
+	src="images/Conf_3/image014.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>Entonces, con independencia de la
+	selección de <i>x</i><sub>0</sub> se obtendrá el ciclo más largo posible de
+	longitud <i>m-</i>1.  La dificultad de este criterio es obvia, pues salvo la
+	multiplicación por la semilla, el criterio exige prácticamente la generación de
+	los <i>m</i>-1 números aleatorios para observar el ciclo. Los generadores
+	&quot;multiplicativos&quot; no son entonces &quot;más cómodos&quot;  que los
+	mixtos.</span></p>
+
+
+
+	</div>
+
+	<b><i><span lang=ES-TRAD style='font-size:12.0pt;font-family:"Arial","sans-serif"'><br
+	clear=all style='page-break-before:always'>
+	</span></i></b>
+
+	<div class=WordSection2>
+
+	<a name="generadores-aditivos"></a>
+	<h2>Generadores
+	congruenciales aditivos</h2>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Este término se ha reservado para otro tipo de
+	generadores basados también en relaciones de congruencia pero no triviales como
+	los que resultaron del caso descrito antes utilizando un multiplicador igual a
+	1. En este nuevo tipo de generador, cada nuevo número se calcula a partir de la
+	lista de la <i>n</i> números que le preceden, concretamente a partir  de la
+	suma del primer y último elemento de dicha lista. Más precisamente, la semilla
+	de tales métodos consiste de <i>n </i>números: </span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify;text-indent:35.4pt'><span
+	lang=ES-TRAD style='font-size:11.0pt'><sub><img width=100 height=24
+	src="images/Conf_3/image015.gif"></sub></span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>en  principio aleatorios, con distribución uniforme (<i>n</i>
+	estará en el orden de las decenas). El nuevo número <i>x</i><sub>n+1</sub> se
+	determina calculando la suma <i>x<sub>1</sub>+x<sub>n</sub></i> módulo <i>m</i>.
+	Para los restantes términos se tendría:</span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify;text-indent:35.4pt'><span
+	lang=ES-TRAD style='font-size:11.0pt'><sub><img width=169 height=25
+	src="images/Conf_3/image016.gif"></sub></span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Como cada suma es menor que 2, si en particular <i>m </i> ha
+	sido seleccionado como 2<i><sup>w-</sup></i><sup>1</sup>, donde <i>w</i> es la
+	longitud de palabra, la operación modular equivale a tomar la parte
+	fraccionaria de la suma. Para computadoras binarias se ha demostrado que el
+	ciclo de este generador es </span></p>
+
+	
+
+	<p class=MsoNormal style='margin-left:35.4pt;text-align:justify;text-indent:
+	35.4pt'><span lang=ES-TRAD style='font-size:11.0pt'><sub><img width=44
+	height=25
+	src="images/Conf_3/image017.gif"></sub></span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>y se ha logrado tabular los valores de <i>k<sub>n</sub>
+	</i>para diferentes valores de <i>n</i>. Por ejemplo, <i>k</i><sub>15</sub>=32767
+	y para <i>w</i>=32, resulta entonces un ciclo de 70, 366, 596, 694, 016. </span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>A pesar la ventaja de los ciclos largos alcanzables
+	con los métodos congruenciales aditivos, ellos normalmente no aparecen
+	implementados en los paquetes, tal vez, por la necesidad de seleccionar <i>n</i>
+	números como semillas, que sean aleatorios a su vez. También hay evidencias de
+	fracaso en la aleatoriedad lograda a menos que <i>n</i> sea suficientemente
+	grande. No hay demostraciones teóricas sobre la aleatoriedad lograda pero con
+	pruebas estadísticas se ha verificado que si se toman valores de <i>n </i> mayores
+	o iguales que 6 pero menores que 16, pueden aparecer patrones no aleatorios.
+	Además se ha demostrado probabilísticamente que estos patrones pueden ser
+	evitados si se añade un número (cualquiera) entre los que es generado para
+	completar una semilla de 16 números. Cuando <i>n</i>=16 la sucesión generada es
+	capaz de pasar las pruebas estadísticas mencionadas anteriormente; pero el
+	costo computacional se ha enriquecido.</span></p>
+
+	
+	<a name="otros-generadores"></a>
+	<h2>Otros generadores de
+	números pseudoaleatorios</h2>
+
+
+	<p class=MsoBodyText><span lang=ES-TRAD style='font-size:11.0pt'>Se han
+	propuesto muchos otros métodos para generar números aleatorios. La mayoría de
+	las propuestas consiste esencialmente de modificaciones a los procedimientos
+	estándar anteriormente mencionados para lograr mayor aleatoriedad. A
+	continuación se discuten tres procedimientos bastante popularizados que
+	difieren de los métodos congruenciales en algún sentido; pero no precisamente
+	en un “toque extra de aleatoriedad” </span></p>
+
+
+	<h3 style='text-align:justify'><span lang=ES-TRAD style='font-size:10.0pt'>Método
+	de congruencia cuadrática</span></h3>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Este método fue propuesto por R.L. Coveyou. Es
+	aplicable cuando <i>m</i> es una potencia de 2 y se basa en la fórmula:</span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <sub><img width=183 height=24
+	src="images/Conf_3/image018.gif"></sub></span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>La semilla <i>x</i><sub>o</sub> debe ser un número
+	congruente con 2 modulo 4. Es interesante que los resultados son casi
+	equivalentes a los del método del medio cuadrático de Von Neumann cuando este
+	usa aritmética de doble precisión, pero la congruencia cuadrática de Von
+	Neumann genera números de mayor ciclo y resiste mejor los test estadísticos de
+	aleatoriedad. </span></p>
+
+	<h3 style='text-align:justify'><span lang=ES-TRAD style='font-size:10.0pt'>Método
+	aditivo complejo</span></h3>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Este método, fundamentado por Knuth es aplicable
+	cuando <i>m</i> es primo, por ejemplo, el mayor primo menor que la cantidad de
+	números generable <i>d</i>. Parte inicialmente de <i>k</i> números como
+	semillas (<i>x</i><sub>1</sub>, <i>x</i><sub>2</sub>,…<i>x</i><sub>k</sub>) y <i>k
+	</i>multiplicadores (<i>a</i><sub>1</sub>, <i>a</i><sub>2</sub>,…<i>a</i><sub>k</sub>). 
+	Cada nuevo número es generado por una combinación lineal de los <i>k </i>anteriores
+	con estos multiplicadores como coeficientes en el cuerpo de los enteros modulo <i>m</i>.</span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <sub><img width=283 height=24
+	src="images/Conf_3/image019.gif"></sub></span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Pero la selección de los multiplicadores no es
+	trivial. Sus propiedades han sido definidas teóricamente uy Knuth propone una
+	enfoque para seleccionar los multiplicadores. Con una buena elección de estos
+	puede lograrse un periodo de <i>m<sup>k</sup>-</i>1, esto es, óptimo.</span></p>
+
+	<h3 style='text-align:justify'><span lang=ES-TRAD style='font-size:10.0pt'>Método
+	de Marsaglia y MacLaren</span></h3>
+
+
+	<p class=MsoBodyText><span lang=ES-TRAD style='font-size:11.0pt'>Parece ser el
+	método de generación más fuerte de todos los enunciados. Utiliza un generador
+	básico, que puede ser cualquiera de los anteriores  para producir dos
+	sucesiones de números aleatorios </span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <sub><img width=281 height=24
+	src="images/Conf_3/image020.gif"></sub></span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>En cada paso del nuevo método se incrementan estas
+	sucesiones y se genera un número aleatorio que es la salida del nuevo generador.
+	Como semilla se utilizan los primeros <i>k</i> números de las dos secuencias
+	básicas. Usualmente se puede tomar <i>k</i> aproximadamente 100. El método
+	trabaja con una tabla (lista) de longitud <i>k</i> y cuyas celdas, cambiantes
+	en el proceso, denominaremos <i>t</i><sub>j</sub>    <i>j</i>=1,2,…,<i> k</i>.
+	Inicialmente, se llena la tabla con los valores <i>x</i><sub>1</sub>, <i>x</i><sub>2</sub>,…,<i>
+	xk</i>, esto es <i>t</i><sub>j</sub>=<i>x</i><sub>j</sub>  para <i>j</i>=1,2,…,<i>
+	k</i>. </span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Ahora para generar el número <i>n-ésimo </i> (<i>n=k</i>+1,<i>
+	k</i>+2,…) se generan los números <i>x</i><sub>n</sub> y <i>y</i><sub>n</sub> 
+	con el generador básico. El número <i>y</i><sub>n</sub> se transforma en el
+	rango 1 </span><span lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>£</span><span
+	lang=ES-TRAD style='font-size:11.0pt'> <i>j </i></span><span lang=ES-TRAD
+	style='font-size:11.0pt;font-family:Symbol'>£</span><span lang=ES-TRAD
+	style='font-size:11.0pt'> <i>k</i>  con una operación modulo <i>k</i> (la clase
+	0 se convierte en <i>k</i>) y se convierte así en un apuntador a la celda <i>j-ésima.</i>
+	El número <i>t</i><sub>j</sub> de esta celda se toma como salida del generador
+	en este paso mientras que el número <i>x</i><sub>n</sub> sustituye a <i>t</i><sub>j</sub>
+	en la tabla.</span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Este generador produce períodos excepcionalmente
+	largos y su implementación no requiere mucho más trabajo que la implementación
+	del generador básico para las sucesiones de partida. En particular, el paquete
+	Mathematica, versión 3.0 parece que utiliza como generador una variante de este
+	método denominada “Marsaglia-Zaman subtract-with-borrow generator” y cuyos
+	detalles tendría mucho valor conocer. Se recomienda mucho buscar por Internet
+	información sobre el mismo.</span></p>
+
+	<a name="conclusiones"></a>
+	<h2>Conclusiones</h2>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Existen varios métodos para generar números aleatorios
+	con distribución uniforme. Tales métodos se diferencian no sólo en la
+	complejidad de los cálculos, sino sobre todo por lo ciclos de generación que
+	son capaces de alcanzar y por la resistencia a las pruebas de aleatoriedad
+	cuando se generan sucesiones grandes. Todavía hoy en día, la elaboración de
+	nuevos y mejores generadores es objeto de investigación. La mayor parte de los
+	paquetes de Estadística y Simulación contienen métodos para prueba de
+	aleatoriedad y para generación; pero si fuera necesario implementar alguna en
+	un programa de computación propio, se recomiendan las pruebas y algoritmos aqui
+	mencionados, en particular, las pruebas de distancia cuadrática y de “gaps” y
+	los algoritmos basados en métodos congruenciales múltiples y el de Marsaglia
+	MacLaren. En la próxima conferencia se estudia como se pueden generar números
+	aleatorios con cualquier distribución.</span></p>
+
+	<h3 style='text-align:justify'><span lang=EN-GB>Bibliografía</span></h3>
+
+
+	<p class=MsoBodyTextIndent><span lang=EN-GB style='font-size:11.0pt'>[1] 
+	Maisel H., Gnugnoli G. “Simulations of Discrete Stochastic Systems”, Science
+	Research Associates, Inc.    Chicago, 1972, Capítulo 7</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=EN-GB style='font-size:11.0pt'>[2]  Knuth D. E. “The Art of
+	Computer Programming, Vol 2 Seminumerical Algorithms” Reading, Mass. </span><span
+	lang=ES-TRAD style='font-size:11.0pt'>Addison-Wesley Publishing Co. , 1969</span></p>
+
+
+	</div>
+
+</div>
+<div class="footer">
+  <p>
+		2013 SESimula (Software Educativo de Simulación)
+  </p>
+  <p>
+     Documentación creada por: <a title="tutor" href="mailto:asalgado@csd.uo.edu.cu">Antonio Salgado Castillo</a>
+  <p>
+	 Diseño de la web por: <a title="autor" href="mailto:alejandro.labrada@csd.uo.edu.cu,aleplusplus@facebook.com">Alejandro Labrada Diaz</a></p>
+ </p>
+ <p>
+    Bajo la licencia GPL <a href="http://www.gnu.org/licenses/fdl.html">GNU
+    Free Documentation License version 1.3</a>
+ </p>
+</div>
+</body>
+</html>

@@ -1,0 +1,1601 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- qalgorithms.qdoc -->
+  <title>SESimula - Sistema, Modelación y Simulación</title>
+  <link rel="stylesheet" type="text/css" href="style/offline.css" />
+</head>
+<body>
+<div class="header" id="qtdocheader">
+  <div class="content">
+    <a href="index.html" class="qtref"><span>Documentación de Simulación</span></a>
+  </div>
+  <div class="breadcrumb toolblock">
+    <ul>
+      <li class="first"><a href="index.html">Home</a></li>
+      <li>Conferencia 5</li>
+    </ul>
+  </div>
+</div>
+<div class="content mainContent">
+    <p class="naviNextPrevious headerNavi">
+          [Anterior: <a href="Conferencia_4.html">Conferencia 4</a> ]
+          [Siguiente: <a href="Conferencia_6.html">Conferencia 6</a> ]
+    </p>
+    <div class="toc">
+        <h3><a name="toc">Contenido</a></h3>
+        <ul>
+        <li class="level1"><a href="#simulacion-discreto">Simulación de un proceso discreto sencillo. Simulación síncrona</a></li>
+        </ul>
+    </div>
+
+    <h1 class="title">Aplicaciones Simples de la Simualción</h1>
+
+    <a name="simulacion-discreto"></a>
+	<h2>Simulación de un proceso
+	discreto sencillo. Simulación síncrona.</h2>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Uno de los procesos discretos más sencillos objeto de
+	simulación con simple generación de números aleatorios son aquellos que cambian
+	de estado (en forma aleatoria) en instantes discretos de tiempo. Un caso típico
+	es el siguiente.</span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Un administrador de un &quot;mainframe&quot;, recibe
+	quejas sobre el funcionamiento de su sistema. Desea obtener una estimación del
+	uso del mismo con vistas a hacer inversiones para ampliar sus posibilidades.
+	Por ejemplo, supongamos que está interesado en <b><i>estimar el tamaño medio de
+	la cola en el ordenador</i></b>. Puesto que el estudio directo del sistema
+	podría llevar demasiados chequeos o incluso interrupciones, decide emplear un
+	modelo sencillo. Para ello, supone el tiempo dividido en intervalos iguales y
+	suficientemente pequeños para que en cada uno haya a lo sumo una entrada y/o
+	una salida de trabajos e idealiza el funcionamiento del sistema como un
+	&quot;servidor&quot; que atiende &quot;clientes&quot; con disciplina FIFO
+	(First In First Out). En cualquier caso en lugar de hablar de un
+	&quot;mainframe&quot; que sirve a programas usuarios, podemos hablar de un
+	&quot;servidor&quot; de &quot;clientes&quot; con disciplina FIFO sujeto a las
+	condiciones particulares siguientes:</span></p>
+
+	
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>Supongamos que al
+	principio de cada uno de tales intervalos de tiempo se produce la llegada de un
+	trabajo al sistema con probabilidad <i>p</i></span></p>
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>Si hay trabajos en el
+	sistema, en cada intervalo de tiempo, inmediatamente después,  se termina uno
+	con probabilidad <i>q, </i>esto es que el servidor termina el procesamiento de
+	un trabajo con dicha probabilidad en dicho intervalo</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>¡Atención! que aquí <i>q </i>no es 1-<i>p</i>. De
+	hecho, si <i>q</i>&lt;<i>p</i> la cola tiende a crecer indefinidamente. Suponemos
+	<i>q </i>&gt; <i>p</i> y puede entenderse intuitivamente que el tamaño medio de
+	la cola depende inversamente de la diferencia &quot;<i>q - p</i>&quot; (si la
+	probabilidad de terminación es mucho mayor que la probabilidad de entrada de
+	nuevos trabajos, el tamaño medio de la cola tiende a reducirse). Abusando de la
+	intuición, puede comprenderse también que el tamaño medio de la cola depende
+	directamente de la variabilidad en la entrada de trabajos: <i>p </i>(1 - <i>p</i>).
+	Intuiciones dejadas aparte, las hipótesis anteriores se corresponden con una versión
+	discreta y &quot;síncrona (o sincrónica)&quot; de un modelo denominado en la
+	 Teoría de Colas como  <i>M</i>/<i>M</i><b>/</b>1, y en tal teoría se demuestra
+	que la distribución estacionaria del número <i>N</i> de clientes en cola es
+	efectivamente:</span></p>
+
+	<p class=MsoNormal align=center style='text-align:center'><span lang=ES-TRAD
+	style='font-size:11.0pt'><sub><img width=141 height=57
+	src="images/Conf_5/image001.gif"></sub></span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Supongamos que desconocemos todos estos resultados y
+	que vamos a estimar por simulación <b><i>E </i>[<i>N</i>]</b> por ejemplo, para
+	<i>p</i>=0.5  y <i>q</i>=0.7, para los cuales, según la teoría anterior,
+	deberíamos obtener un valor cercano a (0.5)<sup>2</sup>/0.2=1.25.</span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>La idea &quot;síncrona&quot; consiste en simular lo
+	que ocurre en sucesivos intervalos de tiempo de la misma longitud:</span></p>
+
+	<p class=MsoNormal style='text-align:justify;text-indent:35.4pt'><span
+	lang=ES-TRAD style='font-size:11.0pt'><sub><img width=533 height=28
+	src="images/Conf_5/image002.gif"></sub></span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Generamos entonces números aleatorios <i>X<sub>i</sub></i></span><span
+	lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>»</span><span
+	lang=ES-TRAD style='font-size:11.0pt'>Bernoulli(<i>p</i>), que representa una
+	posibles llegada, y si hay trabajos dispuestos a ser servidos, generamos <i>Y<sub>i</sub></i></span><span
+	lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>»</span><span
+	lang=ES-TRAD style='font-size:11.0pt'>Bernoulli(<i>q</i>) que corresponde a una
+	posible terminación en ese intervalo. El tamaño <i>N</i> de la cola es
+	actualizado en cada intervalo de tiempo consecuentemente. Finalmente
+	promediamos los valores de <i>N</i> obtenidos en cada intervalo de tiempo <i>i</i>.
+	El siguiente algoritmo describe en general la posible simulación síncrona de un
+	tal servidor.</span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><b><span lang=ES-TRAD
+	style='font-size:11.0pt'>            Inicializar<i> </i></span></b><i><span
+	lang=ES-TRAD style='font-size:11.0pt'>Variables y Tiempo de simulación</span></i><span
+	lang=ES-TRAD style='font-size:11.0pt'>.</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <b>Mientras  </b><i>Tiempo de simulación
+	&lt; T</i></span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>                        <b>Si </b><i>llega trabajo</i></span></p>
+
+	<p class=MsoNormal style='text-align:justify'><b><i><span lang=ES-TRAD
+	style='font-size:11.0pt'>                        </span></i></b><b><span
+	lang=ES-TRAD style='font-size:11.0pt'>            Si<i> </i></span></b><i><span
+	lang=ES-TRAD style='font-size:11.0pt'>sistema ocupado, poner trabajo en cola</span></i><span
+	lang=ES-TRAD style='font-size:11.0pt'>;</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>                        <b>Si<i> </i></b><i>sistema
+	ocupado</i></span></p>
+
+	<p class=MsoNormal style='text-align:justify'><i><span lang=ES-TRAD
+	style='font-size:11.0pt'>                                   </span></i><b><span
+	lang=ES-TRAD style='font-size:11.0pt'>Si </span></b><i><span lang=ES-TRAD
+	style='font-size:11.0pt'>completa servicio, pasar si existe siguiente trabajo</span></i><span
+	lang=ES-TRAD style='font-size:11.0pt'>;</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><i><span lang=ES-TRAD
+	style='font-size:11.0pt'>                        </span></i><b><span
+	lang=ES-TRAD style='font-size:11.0pt'>Registrar </span></b><i><span
+	lang=ES-TRAD style='font-size:11.0pt'>Estadísticas</span></i><span
+	lang=ES-TRAD style='font-size:11.0pt'>;</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><i><span lang=ES-TRAD
+	style='font-size:11.0pt'>                        </span></i><b><span
+	lang=ES-TRAD style='font-size:11.0pt'>Incrementar </span></b><i><span
+	lang=ES-TRAD style='font-size:11.0pt'>Tiempo de simulación</span></i><span
+	lang=ES-TRAD style='font-size:11.0pt'>.</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><i><span lang=ES-TRAD
+	style='font-size:11.0pt'>            </span></i><b><span lang=ES-TRAD
+	style='font-size:11.0pt'>Calcular </span></b><i><span lang=ES-TRAD
+	style='font-size:11.0pt'>estadísticas finales</span></i><span lang=ES-TRAD
+	style='font-size:11.0pt'>.</span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>El procedimiento <b>&quot;Registrar&quot;<i> </i></b>supone
+	<b>Calcular</b>  y/o <b>Salvar </b>en forma adecuada las estadísticas en cada
+	paso para facilitar el cálculo<b> </b>de<b> </b>las estadísticas finales. Por
+	ejemplo, en nuestro problema, en cada intervalo o paso se puede <b>registrar<i>
+	</i></b><i>N y</i> <i>Nsum</i> (suma acumulada de <i>N</i>) para facilitar el <b>cálculo</b>
+	final de la media del tamaño de la cola (<i>promedio de N</i>), sin que
+	tengamos que almacenar el valor de <i>N</i> en cada paso.  </span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>En nuestro problema particular, la versión más simple
+	del cálculo de la longitud <i>N</i> de la cola en cada intervalo de tiempo,
+	&quot;incluye&quot; el trabajo que se está  serviciando.  Entonces, el
+	algoritmo se concreta así:</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><b><span lang=ES-TRAD
+	style='font-size:11.0pt'>            Inicializar</span></b><span lang=ES-TRAD
+	style='font-size:11.0pt'> N=0;Nsum=0; i=1.</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <b>Mientras  </b><i>i&lt;=n</i></span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>                        <b>Generar </b><i>X<sub>i</sub></i></span><i><span
+	lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>»</span></i><span
+	lang=ES-TRAD style='font-size:11.0pt'>Bernoulli(<i>p</i>);</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>                        <b>Si </b><i>X<sub>i</sub>=</i>1,
+	<i>N=N+</i>1;</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><b><i><span lang=ES-TRAD
+	style='font-size:11.0pt'>                        </span></i></b><b><span
+	lang=ES-TRAD style='font-size:11.0pt'>Si<i> N&gt;=</i></span></b><span
+	lang=ES-TRAD style='font-size:11.0pt'>1,</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>                                   <b>Generar </b><i>Y<sub>i</sub></i></span><i><span
+	lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>»</span></i><span
+	lang=ES-TRAD style='font-size:11.0pt'>Bernoulli(<i>q</i>);</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><i><span lang=ES-TRAD
+	style='font-size:11.0pt'>                                   </span></i><b><span
+	lang=ES-TRAD style='font-size:11.0pt'>Si </span></b><i><span lang=ES-TRAD
+	style='font-size:11.0pt'>Y<sub>i</sub></span></i><span lang=ES-TRAD
+	style='font-size:11.0pt'>=1, <i>N=N-</i>1;  <i>  </i></span></p>
+
+	<p class=MsoNormal style='text-align:justify'><i><span lang=ES-TRAD
+	style='font-size:11.0pt'>                        </span></i><b><span
+	lang=ES-TRAD style='font-size:11.0pt'>Calcular </span></b><i><span
+	lang=ES-TRAD style='font-size:11.0pt'>Nsum=Nsum</span></i><span lang=ES-TRAD
+	style='font-size:11.0pt'>+<i>N</i>. </span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>                        <b>Incrementar</b> <i>i</i>;</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><i><span lang=ES-TRAD
+	style='font-size:11.0pt'>            </span></i><b><span lang=ES-TRAD
+	style='font-size:11.0pt'>Imprimir</span></b><i><span lang=ES-TRAD
+	style='font-size:11.0pt'> Nsum/n</span></i><span lang=ES-TRAD style='font-size:
+	11.0pt'>.</span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Desde el punto de vista del algoritmo general para la <i>simulación
+	síncrona</i>, en este caso particular pueden <b>registrarse</b> otras
+	estadísticas en cada paso y <b>calcularse su total</b> al final. Por ejemplo,
+	puede interesar finalmente:</span></p>
+
+	
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>la probabilidad o
+	proporción de los intervalos, en los cuales el servidor terminó &quot;ocupado&quot;.
+	En cada paso debe entenderse y <b>registrarse </b>que el servidor <i>termina
+	ocupado</i> si la longitud de la cola al final del paso actual es <i>N</i>&gt;=1
+	(recuérdese que en esta modelación, el tamaño de la cola <i>N</i> incluye el
+	servicio que posiblemente se esté prestando y no haya sido concluido en ese
+	intervalo).</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>la probabilidad o
+	proporción de los intervalos, en los cuales el servidor &quot;trabajó&quot;. En
+	cada paso debe entenderse y <b>registrarse </b>que el <i>servidor trabajó</i>
+	si la longitud de la cola al final del intervalo anterior era diferente de cero
+	o si llegó algún trabajo en el intervalo actual (con independencia de si se
+	terminó algún trabajo en este mismo intervalo).</span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Estas estadísticas son fácilmente incorporables al
+	algoritmo anterior en cada paso y al final. La siguiente tabla, realizada en
+	Excel, muestra la simulación a través de unos 100 intervalos de tiempo. Como en
+	cada fila de la tabla se &quot;salvan&quot; las estadísticas de cada intervalo
+	de tiempo no es necesario calcular acumulaciones parciales (como <i>Nsum</i>)
+	par calcular las estadísticas finales.</span></p>
+
+	
+
+	<div align=center>
+
+	<table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0
+	 style='border-collapse:collapse'>
+	 <tr style='height:12.5pt'>
+	  <td width=82 valign=top style='width:61.8pt;border:solid black 1.0pt;
+	  padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><b><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>Intervalo</span></b></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border:solid black 1.0pt;
+	  border-left:none;padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><b><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>X1</span></b></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border:solid black 1.0pt;
+	  border-left:none;padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><b><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>Y1</span></b></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border:solid black 1.0pt;
+	  border-left:none;padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><b><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>N</span></b></p>
+	  </td>
+	  <td width=97 valign=top style='width:72.6pt;border:solid black 1.0pt;
+	  border-left:none;padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><b><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>Ocupado</span></b></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border:solid black 1.0pt;
+	  border-left:none;padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><b><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>Trabajó</span></b></p>
+	  </td>
+	 </tr>
+	 <tr style='height:12.5pt'>
+	  <td width=82 valign=top style='width:61.8pt;border:solid black 1.0pt;
+	  border-top:none;padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	  <td width=97 valign=top style='width:72.6pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	 </tr>
+	 <tr style='height:12.5pt'>
+	  <td width=82 valign=top style='width:61.8pt;border:solid black 1.0pt;
+	  border-top:none;padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=97 valign=top style='width:72.6pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	 </tr>
+	 <tr style='height:12.5pt'>
+	  <td width=82 valign=top style='width:61.8pt;border:solid black 1.0pt;
+	  border-top:none;padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>2</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=97 valign=top style='width:72.6pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	 </tr>
+	 <tr style='height:12.5pt'>
+	  <td width=82 valign=top style='width:61.8pt;border:solid black 1.0pt;
+	  border-top:none;padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>3</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	  <td width=97 valign=top style='width:72.6pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	 </tr>
+	 <tr style='height:12.5pt'>
+	  <td width=82 valign=top style='width:61.8pt;border:solid black 1.0pt;
+	  border-top:none;padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>4</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	  <td width=97 valign=top style='width:72.6pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	 </tr>
+	 <tr style='height:12.5pt'>
+	  <td width=82 valign=top style='width:61.8pt;border:solid black 1.0pt;
+	  border-top:none;padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>5</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	  <td width=97 valign=top style='width:72.6pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	 </tr>
+	 <tr style='height:12.5pt'>
+	  <td width=82 valign=top style='width:61.8pt;border:solid black 1.0pt;
+	  border-top:none;padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>6</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	  <td width=97 valign=top style='width:72.6pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	 </tr>
+	 <tr style='height:12.5pt'>
+	  <td width=82 valign=top style='width:61.8pt;border:solid black 1.0pt;
+	  border-top:none;padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>7</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=97 valign=top style='width:72.6pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	 </tr>
+	 <tr style='height:12.5pt'>
+	  <td width=82 valign=top style='width:61.8pt;border:solid black 1.0pt;
+	  border-top:none;padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>8</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	  <td width=97 valign=top style='width:72.6pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	 </tr>
+	 <tr style='height:12.5pt'>
+	  <td width=82 valign=top style='width:61.8pt;border:solid black 1.0pt;
+	  border-top:none;padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><b><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>.</span></b></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>&nbsp;</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>&nbsp;</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>&nbsp;</span></p>
+	  </td>
+	  <td width=97 valign=top style='width:72.6pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>&nbsp;</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>&nbsp;</span></p>
+	  </td>
+	 </tr>
+	 <tr style='height:12.5pt'>
+	  <td width=82 valign=top style='width:61.8pt;border:solid black 1.0pt;
+	  border-top:none;padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><b><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>.</span></b></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>&nbsp;</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>&nbsp;</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>&nbsp;</span></p>
+	  </td>
+	  <td width=97 valign=top style='width:72.6pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>&nbsp;</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>&nbsp;</span></p>
+	  </td>
+	 </tr>
+	 <tr style='height:12.5pt'>
+	  <td width=82 valign=top style='width:61.8pt;border:solid black 1.0pt;
+	  border-top:none;padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><b><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>.</span></b></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>&nbsp;</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>&nbsp;</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>&nbsp;</span></p>
+	  </td>
+	  <td width=97 valign=top style='width:72.6pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>&nbsp;</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>&nbsp;</span></p>
+	  </td>
+	 </tr>
+	 <tr style='height:12.5pt'>
+	  <td width=82 valign=top style='width:61.8pt;border:solid black 1.0pt;
+	  border-top:none;padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>91</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>6</span></p>
+	  </td>
+	  <td width=97 valign=top style='width:72.6pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	 </tr>
+	 <tr style='height:12.5pt'>
+	  <td width=82 valign=top style='width:61.8pt;border:solid black 1.0pt;
+	  border-top:none;padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>92</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>6</span></p>
+	  </td>
+	  <td width=97 valign=top style='width:72.6pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	 </tr>
+	 <tr style='height:12.5pt'>
+	  <td width=82 valign=top style='width:61.8pt;border:solid black 1.0pt;
+	  border-top:none;padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>93</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>6</span></p>
+	  </td>
+	  <td width=97 valign=top style='width:72.6pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	 </tr>
+	 <tr style='height:12.5pt'>
+	  <td width=82 valign=top style='width:61.8pt;border:solid black 1.0pt;
+	  border-top:none;padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>94</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>5</span></p>
+	  </td>
+	  <td width=97 valign=top style='width:72.6pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	 </tr>
+	 <tr style='height:12.5pt'>
+	  <td width=82 valign=top style='width:61.8pt;border:solid black 1.0pt;
+	  border-top:none;padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>95</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>4</span></p>
+	  </td>
+	  <td width=97 valign=top style='width:72.6pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	 </tr>
+	 <tr style='height:12.5pt'>
+	  <td width=82 valign=top style='width:61.8pt;border:solid black 1.0pt;
+	  border-top:none;padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>96</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>4</span></p>
+	  </td>
+	  <td width=97 valign=top style='width:72.6pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	 </tr>
+	 <tr style='height:12.5pt'>
+	  <td width=82 valign=top style='width:61.8pt;border:solid black 1.0pt;
+	  border-top:none;padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>97</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>4</span></p>
+	  </td>
+	  <td width=97 valign=top style='width:72.6pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	 </tr>
+	 <tr style='height:12.5pt'>
+	  <td width=82 valign=top style='width:61.8pt;border:solid black 1.0pt;
+	  border-top:none;padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>98</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>3</span></p>
+	  </td>
+	  <td width=97 valign=top style='width:72.6pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	 </tr>
+	 <tr style='height:12.5pt'>
+	  <td width=82 valign=top style='width:61.8pt;border:solid black 1.0pt;
+	  border-top:none;padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>99</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>3</span></p>
+	  </td>
+	  <td width=97 valign=top style='width:72.6pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	 </tr>
+	 <tr style='height:12.5pt'>
+	  <td width=82 valign=top style='width:61.8pt;border:solid black 1.0pt;
+	  border-top:none;padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>100</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>3</span></p>
+	  </td>
+	  <td width=97 valign=top style='width:72.6pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1</span></p>
+	  </td>
+	 </tr>
+	 <tr style='height:12.5pt'>
+	  <td width=82 valign=top style='width:61.8pt;border:solid black 1.0pt;
+	  border-top:none;padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>&nbsp;</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>&nbsp;</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>&nbsp;</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>&nbsp;</span></p>
+	  </td>
+	  <td width=97 valign=top style='width:72.6pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>&nbsp;</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>&nbsp;</span></p>
+	  </td>
+	 </tr>
+	 <tr style='height:12.5pt'>
+	  <td width=165 colspan=2 valign=top style='width:123.6pt;border-top:none;
+	  border-left:solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:
+	  none;padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><b><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>Estadísticas finales</span></b></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border:none;border-bottom:solid black 1.0pt;
+	  padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><b><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>&nbsp;</span></b></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border:none;border-bottom:solid black 1.0pt;
+	  padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><b><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>&nbsp;</span></b></p>
+	  </td>
+	  <td width=97 valign=top style='width:72.6pt;border:none;border-bottom:solid black 1.0pt;
+	  padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><b><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>&nbsp;</span></b></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><b><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>&nbsp;</span></b></p>
+	  </td>
+	 </tr>
+	 <tr style='height:12.5pt'>
+	  <td width=82 valign=top style='width:61.8pt;border:solid black 1.0pt;
+	  border-top:none;padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><b><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>&nbsp;</span></b></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><b><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>&nbsp;</span></b></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><b><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>&nbsp;</span></b></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><b><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>&nbsp;</span></b></p>
+	  </td>
+	  <td width=97 valign=top style='width:72.6pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><b><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>&nbsp;</span></b></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><b><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>&nbsp;</span></b></p>
+	  </td>
+	 </tr>
+	 <tr style='height:12.5pt'>
+	  <td width=165 colspan=2 valign=top style='width:123.6pt;border:solid black 1.0pt;
+	  border-top:none;padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><b><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>Total Intervalos</span></b></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><b><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>&nbsp;</span></b></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><b><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>E[N]</span></b></p>
+	  </td>
+	  <td width=97 valign=top style='width:72.6pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><b><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>Pr(Ocupado)</span></b></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><b><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>Pr(Trabajó)</span></b></p>
+	  </td>
+	 </tr>
+	 <tr style='height:12.5pt'>
+	  <td width=165 colspan=2 valign=top style='width:123.6pt;border:solid black 1.0pt;
+	  border-top:none;padding:0cm 1.5pt 0cm 1.5pt;height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>100</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>&nbsp;</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>1.19</span></p>
+	  </td>
+	  <td width=97 valign=top style='width:72.6pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0.475247525</span></p>
+	  </td>
+	  <td width=82 valign=top style='width:61.8pt;border-top:none;border-left:none;
+	  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0cm 1.5pt 0cm 1.5pt;
+	  height:12.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><span
+	  style='font-size:11.0pt;font-family:"Arial","sans-serif";color:black;
+	  layout-grid-mode:line'>0.71287129</span></p>
+	  </td>
+	 </tr>
+	</table>
+
+	</div>
+
+	
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Deben estar claras en particular las fórmulas utilizadas
+	en Excel o en cualquier lenguaje de programación que conduzca a una tabla como
+	la anterior (los intervalos de tiempo son las filas):</span></p>
+
+	
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>En el intervalo de
+	tiempo 0 se inicializan todas las variables </span></p>
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>A partir de aquí, los
+	cálculos en cada intervalo de tiempo (i=1,2,...,100) se muestran por filas
+	utilizando recursivamente los resultados de las filas anteiores. Las columnas
+	representan las variables que se calculan en dicho intervalo:</span></p>
+
+	<p class=MsoNormal style='margin-left:88.8pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>Þ<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+	lang=ES-TRAD style='font-size:11.0pt'>X1 se calcula según la fórmula de Excel
+	en español:  Si(Aleatorio()&lt;0.5,1,0)</span></p>
+
+	<p class=MsoNormal style='margin-left:88.8pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>Þ<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+	lang=ES-TRAD style='font-size:11.0pt'>Y1 se calcula según una fórmula un poco
+	&quot;más complicada&quot;: Si(en el intervalo anterior se terminó ocupado o si
+	se recibió un trabajo, entonces, Si(Aleaatorio()&lt;0.7,1,0),0))</span></p>
+
+	<p class=MsoNormal style='margin-left:88.8pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>Þ<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+	lang=ES-TRAD style='font-size:11.0pt'>N, el tamaño actual de la cola (que
+	incluye al que se está sirviendo) es el tamaño de la cola del instante anterior
+	+ X1 (porque arribó un cliente) - Y1 (porque terminó un servicio)</span></p>
+
+	<p class=MsoNormal style='margin-left:88.8pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>Þ<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+	lang=ES-TRAD style='font-size:11.0pt'>Ocupado al final del intervalo: en este
+	caso, puede calcularse simplemente como 1 si el tamaño de la cola al término
+	del intervalo actual es N&gt;=1<b> </b>porque la cola incluye el trabajo siendo
+	serviciado.</span></p>
+
+	<p class=MsoNormal style='margin-left:88.8pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>Þ<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+	lang=ES-TRAD style='font-size:11.0pt'>Trabajó: esta variable debe dar 1 en cada
+	intervalo, si en el intervalo anterior el sistema resultó finalmente
+	&quot;Ocupado&quot; o si se recibió algún nuevo trabajo en el intervalo actual.
+	En caso contrario debe resultar 0</span></p>
+
+	<p class=MsoNormal style='margin-left:35.4pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>- Las estadísticas finales tienen una
+	interpretación obvia.</span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Nótese que la estimación del número esperado de
+	clientes en cola resultó aquí 1.19 (¿muy lejos de 1.25?). Además la
+	probabilidad de estar ocupado al final de cada intervalo de tiempo fue estimada
+	en 47.5% y la probabilidad de haber trabajado en cada intervalo de tiempo de la
+	longitud considerada como  71.2%. Sobre la base de estas conclusiones, el
+	empresario podría comenzar a decidir si vale la pena (por ejemplo
+	financieramente) ampliar sus potencialidades de servicio. Pero en realidad,
+	estos resultados preliminares son los de una sola &quot;corrida&quot;,
+	&quot;experimentación&quot; o &quot;realización&quot; de la simulación. Valdría
+	la pena ejecutar varias realizaciones y promediar los resultados, para
+	acercarnos a la verdad con mayor fiabilidad. Es un buen ejercicio consultar
+	este tabla en Excel, en la carpeta de esta conferencia, y ejecutarla
+	sucesivamente para observar la varianza de los resultados.</span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Otro problema interesante podría ser el siguiente:
+	supongamos que consideramos <b><i>N</i> </b>como el tamaño físico de la cola
+	(sin contar el &quot;cliente&quot; que está siendo &quot;serviciado&quot;). El
+	valor de <i>E[N]</i> no se ajusta ya al estipulado por la
+	 Teoría de Colas, y también puede ser &quot;redefinido&quot; el concepto de
+	&quot;ocupado al final del intervalo&quot;. Sin embargo, la simulación puede
+	resolver estos problemas sólo con un poco más de elaboración. Resolveremos esto
+	en la Clase Práctica </span></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:14.0pt'>Bibliografía</span></p>
+
+
+	<p class=MsoBodyTextIndent><span lang=ES-TRAD style='font-size:11.0pt'>[1] Ríos
+	Insua, D; Rios Insua, S; Martín Jiménez, J; Simulación, Métodos y Aplicaciones,
+	Alfaomega, Grupo Editor S.A. de C.V., México D.F., 2000</span></p>
+
+	<p class=MsoBodyTextIndent><span lang=ES-TRAD style='font-size:11.0pt'>[2] 
+	Ross, Sheldom M.; Simulación, 2da. Edición, Prentice Hall, México, 1999.</span></p>
+
+	<p class=MsoBodyTextIndent><span lang=EN-GB style='font-size:11.0pt'>[3] Tanner,
+	M. Tools for Statistical Inference, Springer, 1996</span></p>
+
+	<p class=MsoNormal style='margin-left:14.2pt;text-align:justify;text-indent:
+	-14.2pt'><span lang=ES-TRAD style='font-size:11.0pt'>[4]  Ayuda en línea de
+	paquetes de software: <i>Excel</i> para Office 97,  y <i>Mathematica</i>,
+	Versión 3.0</span></p>
+
+
+</div>
+<div class="footer">
+  <p>
+		2013 SESimula (Software Educativo de Simulación)
+  </p>
+  <p>
+     Documentación creada por: <a title="tutor" href="mailto:asalgado@csd.uo.edu.cu">Antonio Salgado Castillo</a>
+  <p>
+	 Diseño de la web por: <a title="autor" href="mailto:alejandro.labrada@csd.uo.edu.cu,aleplusplus@facebook.com">Alejandro Labrada Diaz</a></p>
+ </p>
+ <p>
+    Bajo la licencia GPL <a href="http://www.gnu.org/licenses/fdl.html">GNU
+    Free Documentation License version 1.3</a>
+ </p>
+</div>
+</body>
+</html>

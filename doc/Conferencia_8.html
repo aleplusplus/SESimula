@@ -1,0 +1,1694 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- qalgorithms.qdoc -->
+  <title>SESimula - Sistema, Modelación y Simulación</title>
+  <link rel="stylesheet" type="text/css" href="style/offline.css" />
+</head>
+<body>
+<div class="header" id="qtdocheader">
+  <div class="content">
+    <a href="index.html" class="qtref"><span>Documentación de Simulación</span></a>
+  </div>
+  <div class="breadcrumb toolblock">
+    <ul>
+      <li class="first"><a href="index.html">Home</a></li>
+      <li>Conferencia 8</li>
+    </ul>
+  </div>
+</div>
+<div class="content mainContent">
+    <p class="naviNextPrevious headerNavi">
+          [Anterior: <a href="Conferencia_7.html">Conferencia 7</a> ]
+          [Siguiente: <a href="Conferencia_9.html">Conferencia 9</a> ]
+    </p>
+    <div class="toc">
+        <h3><a name="toc">Contenido</a></h3>
+        <ul>
+        <li class="level1"><a href="#ventajas-desventajas">Ventajas y Desventajas de la estrategia de Simulación orientada a bloques de entrada salida</a></li>
+        <li class="level2"><a href="#segundo-ejemplo">Un segundo ejemplo para mostrar la ESOE: “Simulación de un Supermercado”</a></li>
+        <li class="level2"><a href="#descripcion-modelo">Descripción general del modelo y la ESOE</a></li>
+		<li class="level2"><a href="#descricion-supermercado">Descripción del Algoritmo para el Ejemplo del supermercado</a></li>
+        </ul>
+    </div>
+
+    <h1 class="title">Estrategia de Simulación Orientada a Eventos</h1>
+
+	<h3>Introducción:</h3>
+
+	<p>Podemos denominar la estrategia de S seguida hasta ahora como ESO a bloques
+	de entrada - salida . En ella se trata de modelar cada componente de forma
+	independiente para todos los objetos que entran o salen de ella y las variables
+	descriptivas fundamentales consisten en el momento de llegada y el momento de
+	salida de cada objeto en esa componente.</p>
+
+	<a name="ventajas-desventajas"></a>
+	<h2>Ventajas y Desventajas de la estrategia de Simulación
+	orientada a bloques de entrada salida. Ejemplo del banco.</h2>
+
+	<p class=MsoNormal style='text-align:justify'><span style='font-size:12.0pt'>Esta
+	estrategia tiene como <i>ventaja esencial:</i></span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span style='font-size:12.0pt'>La
+	alta reusabilidad. El modelo correspondiente a cada componente típica puede ser
+	“reusado” en modelos de naturaleza muy diferente pero en los cuales exista la
+	misma componente típica.</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span style='font-size:12.0pt'>El
+	modelo tiene como <i>desventaja esencial:</i></span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span
+	 style='font-size:12.0pt'>La S</span><span style='font-size:12.0pt'> supone el
+	calculo de variables de estado de todo el conjunto de datos que fluyen por la
+	componente. Ello requiere en primer lugar memoria para almacenar arreglos, pero
+	sobretodo se diferencia el análisis de sistemas en los que hay reflujo de
+	objetos entre diferentes componentes en momentos diferentes, incluyendo ciclos
+	que son prácticamente insolubles en esta estrategia.</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span style='font-size:12.0pt'>El
+	ejemplo real del Banco de Esperanza ayuda a ilustrar tanto las ventajas como
+	las desventajas de la ESOB de entrada - salida . En este caso se tiene el flujo
+	de usuarios gobernado por el siguiente esquema:</span></p>
+
+
+	<p align="center">
+	<img src="images/Conf_8/image001.jpg"></img>
+	</p>
+
+
+
+	<a name="segundo-ejemplo"></a>
+	<h2>
+	Un segundo ejemplo para mostrar la ESOE: “Simulación de un Supermercado”.
+	</h2>
+
+	<p class=MsoNormal style='text-align:justify'><span style='font-size:12.0pt'>De
+	forma general el supermercado tendrá una <u>Entrada</u>  a través de la cual se
+	pasa a un <u>Área de compras</u> en la que están expuestos los productos a
+	escoger. Una vez que se terminen de seleccionar los productos deseados se pasa
+	a una <u>Caja </u>en la que se espera para ser atendido por un cajero y pagar.
+	Una vez hecho esto se abandona el establecimiento por la salida.</span></p>
+
+
+	<p align="center">
+	<img src="images/Conf_8/image002.gif"></img>
+	</p>
+
+	<br clear=ALL>
+
+	<p class=MsoNormal style='text-align:justify;line-height:12.0pt'><span
+	style='font-size:12.0pt'>El tiempo entre arribos de usuarios </span><span
+	style='font-size:22.0pt'>ζ<sub>a</sub></span><span style='font-size:16.0pt'> </span><span
+	style='font-size:12.0pt'>es aleatorio con cierta distribución conocida, el
+	tiempo con que cada usuario permanece en el área de compras </span><span
+	style='font-size:16.0pt'>ζ</span><sub><span style='font-size:22.0pt'>c</span></sub><span
+	style='font-size:16.0pt'> </span><span style='font-size:12.0pt'>es también
+	aleatorio con cierta distribución conocida. El tiempo que demora en pagar
+	(aparte de la cola) es también aleatorio.</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span style='font-size:12.0pt;font-family:Symbol'>·<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><b><i><span style='font-size:12.0pt'>Un evento </span></i></b><span
+	style='font-size:12.0pt'>es un “cambio de estado del sistema” que no consume
+	tiempo. Así el sistema discreto de S por una sucesión de eventos que ocurren
+	sucesivamente en ciertos instantes de tiempo asincrónicos y de manera tal que
+	entre dos de tales instantes no hay cambios en el sistema.</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span style='font-size:12.0pt;font-family:Symbol'>·<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><b><i><span style='font-size:12.0pt'>El estado del sistema </span></i></b><span
+	style='font-size:12.0pt'>se caracteriza por el conjunto de “variables de
+	estado” de las “componentes principales”. Las <b>variables de estado </b>de una
+	componente son el subconjunto de variables que caracterizan esencialmente la
+	componente y a partir de la cual las restantes variables de esa componente
+	(variables descriptivas) pueden ser calculadas.</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span style='font-size:12.0pt'>En
+	este enfoque de sistema discreto se consideran como <b>componentes
+	“principales” o “componentes activas”</b> a las que no requieren de una acción
+	externa para cambiar; cambian por si solas. (Ellas pueden estar influenciadas
+	por otras, pero tienen su dinámica propia). Se consideran <b>componentes
+	“secundarias” o “pasivas”</b> a aquellas que necesiten que otras componentes
+	cambien de estado para cambiar ellas.</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span style='font-size:12.0pt;font-family:Symbol'>·<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span style='font-size:12.0pt'>El enfoque orientado a eventos
+	permite así restringir la atención del simulador a aquellas componentes activas
+	que pueden cambiar de estado en el próximo paso.</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	style='font-size:12.0pt'>Ello exige de alguna forma establecer un <u>calendario
+	de eventos </u>para lo cual hay que controlar en cada momento de un cierto
+	“reloj” el tiempo en que cada componente activa realizará su próximo cambio.</span></p>
+
+	<p class=MsoBodyText>En el ejemplo:</p>
+
+	<p class=MsoNormal style='text-align:justify'><span style='font-size:12.0pt'>Componentes
+	activas = { Entrada, Área, Caja}</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span style='font-size:12.0pt'>Componentes
+	pasivas = {Salida}</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><u><span style='font-size:12.0pt'>Variables
+	descriptivas:</span></u></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span style='font-size:12.0pt;font-family:Symbol'>·<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span style='font-size:12.0pt'>Describiremos <u>Entrada </u>por
+	el número o nombre del usuario k.</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span style='font-size:22.0pt'>e</span><span
+	style='font-size:12.0pt'>ent = k significa que llegó el <b>k-ésimo</b> usuario.</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span style='font-size:12.0pt'>En
+	el momento en que llega el <b>k-ésimo</b> usuario, el tiempo remanente o tiempo
+	necesario para que llegue el próximo usuario es </span><b><span
+	style='font-size:20.0pt'>ζ<sub>a</sub></span></b><b><span style='font-size:
+	12.0pt'>.</span></b><span style='font-size:12.0pt'> Después del incremento el
+	tiempo </span><b><span style='font-size:20.0pt;font-family:Symbol'>D</span></b><b><sub><span
+	style='font-size:20.0pt'>t</span></sub></b><span style='font-size:20.0pt'> </span><span
+	style='font-size:12.0pt'>del Reloj, el tiempo remanente será </span><b><span
+	style='font-size:20.0pt'>ζ<sub>a</sub> -</span></b><b><span style='font-size:
+	20.0pt;font-family:Symbol'>D</span></b><b><sub><span style='font-size:20.0pt'>t</span></sub></b><span
+	style='font-size:20.0pt'> </span><span style='font-size:12.0pt'>hasta que este
+	valor sea <b>0</b> (llega el próximo usuario) .</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span style='font-size:12.0pt;font-family:Symbol'>·<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span style='font-size:12.0pt'>Describiremos el área de compras,
+	por el conjunto de usuarios que están comprando, conjuntamente con sus tiempos
+	remanentes de compras.</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:12.0pt'>(</span></b><b><span style='font-size:20.0pt'>x<sub>1</sub>,
+	ζ<sub>1</sub>), (x<sub>2</sub>, ζ<sub>2</sub>), . . . (x<sub>n</sub>, ζ<sub>n</sub>)</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	style='font-size:12.0pt'>Estos tiempos remanentes </span><span
+	style='font-size:20.0pt'>ζ<sub>I</sub></span><span style='font-size:12.0pt'>
+	para cada usuario se calculan a partir de un tiempo </span><span
+	style='font-size:20.0pt'>ζ<sub>c</sub> </span><span style='font-size:12.0pt'>aleatoriamente
+	asignado a cada uno y el instante t medido por el reloj.</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	style='font-size:12.0pt'>Así en cada instante, el estado del área es:</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:20.0pt'>e<sub>área</sub>= { ζ<sub>c</sub>, (x<sub>1</sub>, ζ<sub>1</sub>),
+	(x<sub>2</sub>, ζ<sub>2</sub>), . . . (x<sub>n</sub>, ζ<sub>n</sub>)}</span></b><span
+	style='font-size:12.0pt'> donde </span><b><span style='font-size:20.0pt'>ζ<sub>c</sub></span></b><span
+	style='font-size:12.0pt'> es el tiempo de compras aleatorio que será asignado
+	al próximo usuario que entre al área.</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	style='font-size:12.0pt'>Si no hay entradas, el tiempo remanente del área es </span><b><span
+	style='font-size:20.0pt'>min</span></b><span style='font-size:12.0pt'> <b>(</b></span><b><span
+	style='font-size:20.0pt'>ζ<sub>i</sub>),</span></b><span style='font-size:20.0pt'>
+	</span><span style='font-size:12.0pt'>porque es el tiempo mínimo antes del cual
+	un usuario sale del área, <b>i</b> varia entre 1 y n.</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	style='font-size:12.0pt'>Podría pensarse que el tiempo remanente del área es
+	min </span><b><span style='font-size:20.0pt'>(ζ<sub>a</sub> – </span></b><b><span
+	style='font-size:20.0pt;font-family:Symbol'>D</span></b><b><span
+	style='font-size:20.0pt'>Reloj, min ζ<sub>i</sub>)</span></b><span
+	style='font-size:20.0pt'> </span><span style='font-size:12.0pt'>pero es mejor
+	considerar el evento “Entrada de un nuevo usuario” con tiempo remanente </span><b><span
+	style='font-size:20.0pt'>ζ<sub>a</sub> – </span></b><b><span style='font-size:
+	20.0pt;font-family:Symbol'>D</span></b><b><span style='font-size:20.0pt'>Reloj</span></b><span
+	style='font-size:12.0pt'>, como un cambio de estado de “Entrada que “influye”  
+	en un cambio de estado del área.</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span style='font-size:12.0pt;font-family:Symbol'>·<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span style='font-size:12.0pt'>Describiremos el <u>Área de cajas </u>(caja
+	con su cola) por una lista de usuarios </span><b><span style='font-size:20.0pt'>y<sub>0</sub>,
+	y<sub>1</sub>, . . . ,y<sub>n</sub></span></b><b><span style='font-size:12.0pt'>,
+	</span></b><span style='font-size:12.0pt'>el primero de los cuales es el que
+	está pagando. Cada usuario se demora un tiempo aleatorio </span><span
+	style='font-size:20.0pt'>ζ<sub>s</sub></span><span style='font-size:12.0pt'> en
+	pagar.</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	style='font-size:12.0pt'>Por ello el estado de caja </span><b><span
+	style='font-size:20.0pt'>e<sub>caja</sub>= { ζ<sub>s</sub>, y<sub>0</sub>,y<sub>1</sub>,
+	. . .,y<sub>n</sub>}</span></b><b><span style='font-size:12.0pt'> </span></b><span
+	style='font-size:12.0pt'>donde </span><b><span style='font-size:20.0pt'>ζ<sub>s</sub></span></b><span
+	style='font-size:12.0pt'> es el tiempo de pago que se asignará al próximo
+	usuario que se ponga en la posición cero de la cola (que pase a caja).</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	style='font-size:12.0pt'>De esta forma, el tiempo necesario para el cambio de
+	estado (lo que le falta a y<sub>0</sub> para terminar de pagar) en cada momento
+	será </span><b><span style='font-size:20.0pt;font-family:Symbol'>s</span></b><b><span
+	style='font-size:20.0pt'> = ζ<sub>c0 </sub>– </span></b><b><span
+	style='font-size:20.0pt;font-family:Symbol'>D</span></b><b><span
+	style='font-size:20.0pt'> Reloj</span></b><b><span style='font-size:12.0pt'> </span></b><span
+	style='font-size:12.0pt'>donde </span><b><span style='font-size:20.0pt'>ζ<sub>c0</sub></span></b><span
+	style='font-size:12.0pt'> es el tiempo de pago que fue “asignado”
+	aleatoriamente a y<sub>0</sub> en el momento que pasó a pagar.</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	style='font-size:12.0pt'>Aquí pudiera  pensarse que el tiempo necesario para el
+	cambio de estado depende también del tiempo de compra porque este determina
+	incorporaciones en la cola, pero una vez mas se enfoca el problema desde el
+	punto de vista activo. Este cambio de estado de la cola producto de la
+	incorporación de otros usuarios no es interno de la cola, sino influido por un
+	cambio de estado interno del área de compras.</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span style='font-size:12.0pt;font-family:Symbol'>·<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span style='font-size:12.0pt'>La componente <u>Salida  </u>se
+	puede describir por la lista de usuarios que han salido {k<sub>1</sub>, k<sub>1</sub>,
+	. . . ,k<sub>n</sub>}, pero esta componente es pasiva.</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><b><u><span style='font-size:
+	12.0pt;background:yellow'>En Resumen:</span></u></b><span style='font-size:
+	12.0pt;background:yellow'> El estado del sistema se puede caracterizar por el conjunto
+	de variables siguientes:</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><b><span style='font-size:20.0pt;
+	background:yellow'>{ ζ<sub>a</sub>, (x<sub>1</sub>, ζ<sub>1</sub>), (x<sub>2</sub>,
+	ζ<sub>2</sub>), . . . (x<sub>n</sub>, ζ<sub>n</sub>), ζ<sub>c</sub>, { y<sub>0</sub>,y<sub>1</sub>,
+	. . .,y<sub>n</sub>}, ζ<sub>s</sub>, </span></b><b><span style='font-size:20.0pt;
+	font-family:Symbol;background:yellow'>s</span></b><b><span style='font-size:
+	20.0pt;background:yellow'>}</span></b></p>
+
+	<p class=MsoNormal style='text-align:justify'><b><span style='font-size:12.0pt'>¿
+	Cuáles son las reglas de interacción del sistema y cómo se precisan con este
+	conjunto de variables? </span></b></p>
+
+	<p class=MsoNormal style='text-align:justify'><b><u><span style='font-size:
+	12.0pt'>Informalmente:</span></u></b><span style='font-size:12.0pt'> Cuando
+	llega un nuevo usuario lo que ocurre cada </span><b><span style='font-size:
+	14.0pt'>ζ<sub>a</sub></span></b><sub><span style='font-size:14.0pt'> </span></sub><span
+	style='font-size:12.0pt'>minutos, pasa al área de compras donde se va a demorar
+	un tiempo </span><b><span style='font-size:14.0pt'>ζ<sub>c</sub></span></b><b><span
+	style='font-size:12.0pt'> </span></b><span style='font-size:12.0pt'>asignado<b>
+	</b>aleatoriamente<b>.</b></span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span style='font-size:12.0pt'>Allí
+	este tiempo va decreciendo con el avance del reloj y cuando para algunos de los
+	usuarios x<sub>i </sub>llega a ser </span><b><span style='font-size:11.0pt'>ζ<sub>i</sub>
+	=0</span></b><span style='font-size:11.0pt'>, </span><span style='font-size:
+	12.0pt'>pasa a la cola de la caja, donde se incorpora de último. El usuario que
+	encabeza esta cola (y<sub>0</sub>) es el que está pagando y en cada momento le
+	falta un tiempo </span><span style='font-size:12.0pt;font-family:Symbol'>s</span><span
+	style='font-size:12.0pt'> para salir. Cuando sale el próximo de la cola pasa a
+	pagar, lo que le demora un tiempo <b>ζ<sub>c</sub>.</b></span></p>
+
+	<p class=MsoBodyText2>Los  eventos esenciales en este ejemplo son los que
+	determinan cambios de estados de las componentes activas:</p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span style='font-size:12.0pt;font-family:Symbol;background:yellow'>·<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><b><span style='font-size:12.0pt;background:yellow'>Entrada del
+	nuevo usuario (entra y pasa al área de compras).</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span style='font-size:12.0pt;font-family:Symbol;background:yellow'>·<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><b><span style='font-size:12.0pt;background:yellow'>Compra
+	usuario k (termina de comprar y se</span></b><span style='font-size:12.0pt;
+	background:yellow'> <b>incorpora a la cola).</b></span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span style='font-size:12.0pt;font-family:Symbol;background:yellow'>·<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><b><span style='font-size:12.0pt;background:yellow'>Paga usuario
+	(termina de pagar y sale).</span></b></p>
+
+	<p class=MsoNormal style='text-align:justify'><span style='font-size:12.0pt'>Supongamos
+	que el Reloj de S tiene el valor t<sub>i </sub>y el próximo instante de tiempo
+	en que se registran algunos de estos eventos es <b>t<sub>i</sub> + 1:</b></span></p>
+
+	<p class=MsoNormal style='text-align:justify'><i><span style='font-size:12.0pt'>¿Cómo
+	repercute ello en el estado del sistema?.</span></i></p>
+
+	<p><b>Sea </b><b><span style='font-size:22.0pt'>e</span>= {</b><b><span
+	style='font-size:18.0pt'> </span>ζ<sub>a</sub></b><b><span style='font-size:
+	11.0pt'>, (x<sub>1</sub>, ζ<sub>1</sub>), (x<sub>2</sub>, ζ<sub>2</sub>), . . .
+	(x<sub>n</sub>, ζ<sub>n</sub>), ζ<sub>c</sub>, { y<sub>0</sub>,y<sub>1</sub>, .
+	. .,y<sub>n</sub>}, ζ<sub>s</sub>, </span></b><b><span style='font-size:11.0pt;
+	font-family:Symbol'>s</span>}</b></p>
+
+	<h1><b><i><span style='background:yellow'>Sea</span></i><span style='background:
+	yellow'> </span></b><b><span style='font-family:Symbol;background:yellow'>D</span><sub><span
+	style='background:yellow'>t</span></sub><span style='background:yellow'> = t<sub>i</sub>
+	<sub>+1</sub> –t<sub>i</sub> tiempo remanente del estado general del sistema,
+	entonces </span></b><b><span style='font-family:Symbol;background:yellow'>D</span><span
+	style='background:yellow'>t= min (ζ<sub>a</sub></span></b><b><span
+	style='font-size:11.0pt;background:yellow'>, ζ<sub>1</sub>,  ζ<sub>2</sub>, . .
+	. , ζ<sub>n</sub>, , </span></b><b><span style='font-size:11.0pt;font-family:
+	Symbol;background:yellow'>s</span><span style='background:yellow'>)  luego si </span></b><b><span
+	style='font-family:Symbol;background:yellow'>D</span><sub><span
+	style='background:yellow'>t</span></sub><span style='background:yellow'> = ζ<sub>a
+	</sub>eso significa que el evento es la entrada de un nuevo usuario.</span></b></h1>
+
+	<p class=MsoNormal style='text-align:justify'><b><span style='font-size:22.0pt;
+	background:yellow'>e<sup> *</sup></span></b><b><span style='font-size:12.0pt;
+	background:yellow'> = { ζ<sub>a</sub><sup>*</sup>, (x<sub>1</sub>, ζ<sub>1</sub>
+	-ζ<sub>a</sub>), (x<sub>2</sub>, ζ<sub>2</sub> -ζ<sub>a</sub>), . . . (x<sub>n</sub>,
+	ζ<sub>n</sub> -ζ<sub>a</sub>), (x<sub>n + 1</sub>, ζ<sub>c</sub>), ζ<sub>c</sub><sup>*</sup>,
+	{ y<sub>0</sub>,y<sub>1</sub>, . . .,y<sub>m</sub>}, ζ<sub>s</sub>, </span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol;background:yellow'>s</span></b><b><span
+	style='font-size:12.0pt;background:yellow'>-ζ<sub>a</sub>}</span></b></p>
+
+
+	<p><b><i><span style='background:yellow'>Si</span></i><span style='background:
+	yellow'> </span></b><b><span style='font-family:Symbol;background:yellow'>D</span><sub><span
+	style='background:yellow'>t</span></sub><span style='background:yellow'> = ζ<sub>k</sub>
+	eso significa que el evento fue que terminó de comprar el usuario k, entonces </span></b></p>
+
+
+	<p class=MsoNormal style='text-align:justify'><b><span style='font-size:22.0pt;
+	background:yellow'>e<sup> *</sup></span></b><b><span style='font-size:12.0pt;
+	background:yellow'> = { ζ<sub>a</sub>- ζ<sub>k</sub>, (x<sub>1</sub>, ζ<sub>1</sub>
+	–ζ<sub>k</sub>), (x<sub>2</sub>, ζ<sub>2</sub> –ζ<sub>k</sub>), . . . (x<sub>k-1</sub>,
+	ζ<sub>k-1</sub> –ζ<sub>k</sub>), (x<sub>k+1</sub>, ζ<sub>k+1</sub> –ζ<sub>k</sub>), 
+	…, (x<sub>n</sub>, ζ<sub>n</sub> –ζ<sub>k</sub>), (x<sub>n + 1</sub>, ζ<sub>c</sub>),
+	ζ<sub>c</sub>, { y<sub>0</sub>,y<sub>1</sub>, . . .,y<sub>m</sub>, x<sub>k</sub>},
+	ζ<sub>s</sub>, </span></b><b><span style='font-size:12.0pt;font-family:Symbol;
+	background:yellow'>s</span></b><b><span style='font-size:12.0pt;background:
+	yellow'>-ζ<sub>k</sub>}</span></b></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><b><i><span style='font-size:
+	12.0pt;background:yellow'>Si</span></i></b><b><span style='font-size:12.0pt;
+	background:yellow'> </span></b><b><span style='font-size:12.0pt;font-family:
+	Symbol;background:yellow'>D</span><sub><span style='background:yellow'>t</span></sub><span
+	style='background:yellow'> = </span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol;background:yellow'>s</span></b><b><span style='font-size:
+	12.0pt;background:yellow'> eso significa que el evento consistió en terminar de
+	pagar y<sub>0</sub>, entonces</span></b></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><b><span style='font-size:22.0pt;
+	background:yellow'>e<sup> *</sup></span></b><b><span style='font-size:12.0pt;
+	background:yellow'> = { ζ<sub>a</sub>- </span></b><b><span style='font-size:
+	12.0pt;font-family:Symbol;background:yellow'>s</span></b><b><span
+	style='font-size:12.0pt;background:yellow'>, (x<sub>1</sub>, ζ<sub>1</sub> –</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol;background:yellow'>s</span></b><b><span
+	style='font-size:12.0pt;background:yellow'>), (x<sub>2</sub>, ζ<sub>2</sub> –</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol;background:yellow'>s</span></b><b><span
+	style='font-size:12.0pt;background:yellow'>), . . . (x<sub>n</sub>, ζ<sub>n</sub>
+	–</span></b><b><span style='font-size:12.0pt;font-family:Symbol;background:
+	yellow'>s</span></b><b><span style='font-size:12.0pt;background:yellow'>)}, ζ<sub>c</sub>,
+	{ y<sub>1</sub>, . . .,y<sub>m</sub> }, ζ<sub>s</sub><sup>*</sup>, ζ<sub>s</sub>}</span></b></p>
+
+
+	<p class=MsoNormal style='text-align:justify'><b><span style='font-size:12.0pt'>¿Qué
+	pasaría si </span></b><b><span style='font-size:12.0pt;font-family:Symbol'>D</span><sub>t
+	</sub></b><b><span style='font-size:12.0pt'>es simultáneamente dos o más de los
+	valores posibles?.</span></b></p>
+
+
+	<p class=MsoNormal style='text-align:justify'><span style='font-size:12.0pt'>Para
+	lograr que los estados sean únicos debemos o bien:</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span style='font-size:12.0pt;font-family:Symbol'>·<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span style='font-size:12.0pt'>Definir eventos compuestos (<b>complejiza
+	el sistema</b>).</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span style='font-size:12.0pt;font-family:Symbol'>·<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span style='font-size:12.0pt'>Definir prioridades, por ejemplo
+	atender primero salida de caja, luego la terminación de una compra, por el
+	orden de usuarios en el área y luego la entrada.</span></p>
+
+
+	<p class=MsoBodyText2>Véase que en cualquier momento de la
+	 S realizada por el movimiento del reloj entre [TiempoInicio, TiempoFin], se
+	puede predecir cuál (o cuáles)  son los eventos inminentes pues a partir del
+	estado del sistema en el momento del reloj se puede predecir el tiempo en que
+	ocurrirá cada tipo de evento.</p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span style='font-size:12.0pt;font-family:Symbol'>·<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span style='font-size:12.0pt'>La próxima entrada en el tiempo =
+	Reloj + ζ<sub>a</sub> siendo ζ<sub>a</sub> primera componente.</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span style='font-size:12.0pt;font-family:Symbol'>·<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span style='font-size:12.0pt'>La compra del usuario k en el
+	tiempo = Reloj + ζ<sub>k</sub> </span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span style='font-size:12.0pt;font-family:Symbol'>·<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span style='font-size:12.0pt'>El pago de y<sub>0</sub> en el
+	tiempo = Reloj +  </span><span style='font-size:12.0pt;font-family:Symbol'>s</span></p>
+
+
+	<p class=MsoNormal style='text-align:justify'><span style='font-size:12.0pt'>Para
+	facilitar la implementación del modelo se pone énfasis en los eventos que
+	ocurren en cada componente activa y se automatizan los cambios derivados en las
+	componentes que son influidas por este cambio, de otra parte se pone énfasis en
+	el preordenamiento de los eventos a partir del conocimiento del tiempo en que
+	ocurriran.</span></p>
+
+
+	<p class=MsoNormal style='text-align:justify'><span style='font-size:12.0pt'>Esto
+	lleva a la idea de <b>Influencias de una componente activa, de Listado de
+	eventos, eventos inminentes y función de selección de prioridades.</b></span></p>
+
+	<a name="descripcion-modelo"></a>
+	<h2>
+	Descripción general del modelo y la ESOE.</h2>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span style='font-size:12.0pt'>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span style='font-size:12.0pt'>Componentes = Componentes Activas </span><span
+	style='font-size:12.0pt;font-family:Symbol'>È</span><span style='font-size:
+	12.0pt'> Componentes Pasivas</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	style='font-size:12.0pt'>Componentes Activas = <b>{</b></span><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>1</span></sub></b><b><span style='font-size:12.0pt'>, </span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>2</span></sub></b><b><span style='font-size:12.0pt'>,
+	. . . ,</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>a</span></sub></b><b><span style='font-size:12.0pt'>}</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	style='font-size:12.0pt'>Componentes Pasivas = <b>{</b></span><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>a +1</span></sub></b><b><span style='font-size:12.0pt'>,
+	</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>a + 2</span></sub></b><b><span style='font-size:12.0pt'>,
+	. . . ,</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>n</span></sub></b><b><span style='font-size:12.0pt'>}</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><b><span style='font-size:12.0pt'>2.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span></b><b><span style='font-size:12.0pt;font-family:Symbol'>&quot;</span></b><b><span
+	style='font-size:12.0pt'> i = 1, 2, . . . , n definimos </span></b><b><span
+	style='font-size:22.0pt'>e</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>i</span></sub></b><b><span
+	style='font-size:12.0pt'> = Estado (</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>i</span></sub></b><b><span
+	style='font-size:12.0pt'>)   // <i>COMPONENTES PASIVAS</i></span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><b><span style='font-size:12.0pt'>3.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span></b><b><span style='font-size:12.0pt;font-family:Symbol'>&quot;</span></b><b><span
+	style='font-size:12.0pt'> i = 1, 2, . . . , a definimos </span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt'>i</span></sub></b><b><span style='font-size:12.0pt'>= <i>TiempoRemanente</i>
+	(</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>i</span></sub></b><b><span style='font-size:12.0pt'>),
+	esto es, el tiempo que falta en cada momento para que la componente </span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>i   </span></sub></b><b><span style='font-size:12.0pt'>cambie
+	por si misma.</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><b><span style='font-size:12.0pt'>4.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span></b><b><span style='font-size:12.0pt;font-family:Symbol'>&quot;</span></b><b><span
+	style='font-size:12.0pt'> i = 1, 2, . . . , a definimos: </span></b></p>
+
+	<p class=MsoNormal style='text-align:justify'><b><i><span style='font-size:
+	12.0pt'>Influencias </span></i></b><b><span style='font-size:12.0pt'>(</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>i</span></sub></b><b><span style='font-size:12.0pt'>)
+	= {(</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>b</span></b><b><sub><span
+	style='font-size:12.0pt'>1</span></sub></b><b><span style='font-size:12.0pt'>,</span></b><b><span
+	style='font-size:22.0pt'>e</span></b><b><span style='font-family:Symbol'>b</span><sub>1</sub>,
+	</b><b><span style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sub><span
+	style='font-family:Symbol'>b</span>1</sub></b><b><span style='font-size:12.0pt'>),
+	(</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>b</span></b><b><sub><span
+	style='font-size:12.0pt'>2</span></sub></b><b><span style='font-size:12.0pt'>,</span></b><b><span
+	style='font-size:22.0pt'>e</span></b><b><span style='font-family:Symbol'>b</span><sub>2</sub>,
+	</b><b><span style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sub><span
+	style='font-family:Symbol'>b</span>2</sub></b><b><span style='font-size:12.0pt'>),...,(</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>b</span></b><b><sub><span
+	style='font-size:12.0pt'>k</span></sub></b><b><span style='font-size:12.0pt'>,</span></b><b><span
+	style='font-size:22.0pt'>e</span></b><b><span style='font-family:Symbol'>b</span><sub>k</sub>,
+	</b><b><span style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sub><span
+	style='font-family:Symbol'>b</span>k</sub></b><b><span style='font-size:12.0pt'>),
+	( </span></b><b><span style='font-size:12.0pt;font-family:Symbol'>b</span></b><b><sub><span
+	style='font-size:12.0pt'>k+1</span></sub></b><b><span style='font-size:12.0pt'>,</span></b><b><span
+	style='font-size:22.0pt'>e</span></b><b><span style='font-family:Symbol'>b</span><sub>k+1</sub></b><b><span
+	style='font-size:12.0pt'>),...,((</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>b</span></b><b><sub><span style='font-size:12.0pt'>n</span></sub></b><b><span
+	style='font-size:12.0pt'>,</span></b><b><span style='font-size:22.0pt'> e</span></b><b><span
+	style='font-family:Symbol'>b</span><sub>n</sub></b><b><span style='font-size:
+	12.0pt'>))}</span></b></p>
+
+	<p class=MsoNormal style='text-align:justify'><span style='font-size:12.0pt'>Como
+	el conjunto de todas los componentes (activas y pasivas) que son influidas por
+	un cambio interno de </span><span style='font-size:12.0pt;font-family:Symbol'>a</span><sub><span
+	style='font-size:12.0pt'>i</span></sub><span style='font-size:12.0pt'>.</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><b><span style='font-size:12.0pt'>Nótese
+	que junto con las componentes activas </span></b><b><span style='font-size:
+	12.0pt;font-family:Symbol'>b</span></b><b><sub><span style='font-size:12.0pt'>i</span></sub></b><b><span
+	style='font-size:12.0pt'>, 1</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>£</span></b><b><span style='font-size:12.0pt'> i </span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>£</span></b><b><span
+	style='font-size:12.0pt'> k, consideramos su estado </span></b><b><span
+	style='font-size:22.0pt'>e</span></b><b><span style='font-family:Symbol'>b</span><sub>i</sub>
+	y </b><b><span style='font-size:12.0pt'>su tiempo remanente </span></b><b><span
+	style='font-size:20.0pt;font-family:Symbol'>s</span></b><b><sub><span
+	style='font-size:20.0pt;font-family:Symbol'>b</span></sub></b><b><sub><span
+	style='font-size:20.0pt'>i,</span></sub> </b><b><span style='font-size:12.0pt'>mientras
+	que con las componentes pasivas </span></b><b><span style='font-size:20.0pt;
+	font-family:Symbol'>b</span></b><b><sub><span style='font-size:20.0pt'>k+1</span></sub></b><b><span
+	style='font-size:20.0pt'>, …, </span></b><b><span style='font-size:20.0pt;
+	font-family:Symbol'>b</span></b><b><sub><span style='font-size:20.0pt'>m</span></sub></b><b><span
+	style='font-size:12.0pt'> consideramos sólo su estado.</span></b></p>
+
+	<p class=MsoNormal style='text-align:justify'><b><span lang=EN-US
+	style='font-size:12.0pt'>Evidentemente </span></b><b><span style='font-size:
+	12.0pt;font-family:Symbol'>&quot;</span></b><b><span lang=EN-US
+	style='font-size:12.0pt'> i = 1, 2, . . . , a   (</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	lang=EN-US style='font-size:12.0pt'>i</span></sub></b><b><span lang=EN-US
+	style='font-size:12.0pt'>,</span></b><b><span lang=EN-US style='font-size:22.0pt'>e</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	lang=EN-US style='font-size:12.0pt'>i</span></sub></b><b><sub><span lang=EN-US>
+	</span></sub></b><b><span lang=EN-US>, </span></b><b><span style='font-size:
+	12.0pt;font-family:Symbol'>s</span></b><b><sub><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></sub></b><b><sub><span lang=EN-US
+	style='font-size:12.0pt'>i</span></sub></b><b><span lang=EN-US
+	style='font-size:12.0pt'>) </span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>Î</span></b><b><span lang=EN-US style='font-size:12.0pt'>  <i>Influencias</i>
+	(</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	lang=EN-US style='font-size:12.0pt'>i</span></sub></b><b><span lang=EN-US
+	style='font-size:12.0pt'>).</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><b><span style='font-size:12.0pt;background:lime'>5.<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></b><b><span
+	style='font-size:12.0pt;background:lime'>Reglas de interacción</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:12.0pt;font-family:Symbol;background:lime'>&quot;</span></b><b><span
+	style='font-size:12.0pt;background:lime'> i = 1, 2, . . . , a   se especifica
+	una función de cambio de estado </span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol;background:lime'>d</span></b><b><sub><span style='font-size:
+	12.0pt;font-family:Symbol;background:lime'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt;background:lime'>i</span></sub></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:12.0pt;background:lime'>Esta función describe el valor de </span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol;background:lime'>d</span></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol;background:lime'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt;background:lime'>i</span></sub></b><b><span
+	style='font-size:12.0pt;background:lime'> (</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol;background:lime'>b</span></b><b><span
+	style='font-size:12.0pt;background:lime'>,</span></b><b><span style='font-size:
+	22.0pt;background:lime'>e</span></b><b><span style='font-family:Symbol;
+	background:lime'>b</span><span style='background:lime'>, </span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol;background:lime'>s</span></b><b><sub><span
+	style='font-family:Symbol;background:lime'>b</span></sub></b><b><span
+	style='font-size:12.0pt;background:lime'>) = (</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol;background:lime'>b</span></b><b><span
+	style='font-size:12.0pt;background:lime'>,</span></b><b><span style='font-size:
+	22.0pt;background:lime'>e</span></b><b><span style='font-family:Symbol;
+	background:lime'>b</span><sup><span style='background:lime'>*</span></sup><span
+	style='background:lime'>, </span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol;background:lime'>s</span></b><b><sub><span style='font-family:
+	Symbol;background:lime'>b</span></sub><sup><span style='background:lime'>*</span></sup></b><b><span
+	style='font-size:12.0pt;background:lime'>) </span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol;background:lime'>&quot;</span></b><b><span
+	style='font-size:12.0pt;background:lime'> </span></b><b><span style='font-size:
+	12.0pt;font-family:Symbol;background:lime'>b</span></b><b><span
+	style='font-size:12.0pt;background:lime'> </span></b><b><span style='font-size:
+	12.0pt;font-family:Symbol;background:lime'>Î</span></b><b><span
+	style='font-size:12.0pt;background:lime'> <i>Influencias</i> (</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol;background:lime'>a</span></b><b><sub><span
+	style='font-size:12.0pt;background:lime'>i</span></sub></b><b><span
+	style='font-size:12.0pt;background:lime'>) </span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol;background:lime'>Ç</span></b><b><span
+	style='font-size:12.0pt;background:lime'>  Componentes Activas y </span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol;background:lime'>d</span></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol;background:lime'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt;background:lime'>i</span></sub></b><b><span
+	style='font-size:12.0pt;background:lime'> (</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol;background:lime'>b</span></b><b><span
+	style='font-size:12.0pt;background:lime'>,</span></b><b><span style='font-size:
+	22.0pt;background:lime'>e</span></b><b><span style='font-family:Symbol;
+	background:lime'>b</span><span style='background:lime'>,</span></b><b><span
+	style='font-size:12.0pt;background:lime'>) = (</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol;background:lime'>b</span></b><b><sup><span
+	style='font-size:12.0pt;background:lime'>*</span></sup></b><b><span
+	style='font-size:12.0pt;background:lime'>,</span></b><b><span style='font-size:
+	12.0pt;font-family:Symbol;background:lime'>s</span></b><b><sub><span
+	style='font-family:Symbol;background:lime'>b</span></sub><sup><span
+	style='background:lime'>*</span></sup></b><b><span style='font-size:12.0pt;
+	background:lime'>) </span></b><b><span style='font-size:12.0pt;font-family:
+	Symbol;background:lime'>&quot;</span></b><b><span style='font-size:12.0pt;
+	background:lime'> </span></b><b><span style='font-size:12.0pt;font-family:Symbol;
+	background:lime'>b</span></b><b><span style='font-size:12.0pt;background:lime'>
+	</span></b><b><span style='font-size:12.0pt;font-family:Symbol;background:lime'>Î</span></b><b><span
+	style='font-size:12.0pt;background:lime'> <i>Influencias</i> (</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol;background:lime'>a</span></b><b><sub><span
+	style='font-size:12.0pt;background:lime'>i</span></sub></b><b><span
+	style='font-size:12.0pt;background:lime'>) </span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol;background:lime'>Ç</span></b><b><span
+	style='font-size:12.0pt;background:lime'>  Componentes</span></b><b><span
+	style='font-size:12.0pt'> <span style='background:lime'>Pasivas.</span></span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><b><span style='font-size:12.0pt'>6.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span></b><b><span style='font-size:12.0pt;font-family:Symbol'>&quot;</span></b><b><span
+	style='font-size:12.0pt'> i = 1, 2, . . . , a  se describen <u>los eventos</u>
+	que pueden ocurrir que hacen que se active la componente  </span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>i</span></sub></b><b><span style='font-size:12.0pt'>,
+	Evento k (</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>i</span></sub></b><b><span style='font-size:12.0pt'>)
+	y el momento en que ellos pueden ocurrir T<sub>k</sub> (</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>i</span></sub></b><b><span style='font-size:12.0pt'>).</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:12.0pt'>A evento k (</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>i</span></sub></b><b><span
+	style='font-size:12.0pt'>) va asociada una función </span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>d</span></b><b><sub><span
+	style='font-size:12.0pt'>k</span></sub></b><b><sub><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></sub></b><b><sub><span style='font-size:12.0pt'>i</span></sub></b><b><span
+	style='font-size:12.0pt'> de cambio de estado y el evento interno en sí se
+	describe por el valor particular de: </span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>d</span></b><b><sub><span style='font-size:12.0pt'>k</span></sub></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt'>i</span></sub></b><b><span style='font-size:12.0pt'> (</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>i</span></sub></b><b><span style='font-size:12.0pt'>,</span></b><b><span
+	style='font-size:22.0pt'>e</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>i</span></sub>,
+	</b><b><span style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt'>i</span></sub></b><b><span style='font-size:12.0pt'>)
+	= (</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>i</span></sub></b><b><span style='font-size:12.0pt'>,</span></b><b><span
+	style='font-size:22.0pt'>e</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>i</span></sub></b><b><sup><span
+	style='font-size:12.0pt'>*</span></sup>, </b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>s</span></b><b><sub><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></sub></b><b><sub><span style='font-size:12.0pt'>i</span></sub></b><b><sup><span
+	style='font-size:12.0pt'>*</span></sup></b><b><span style='font-size:12.0pt'>)</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:12.0pt'>La función </span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>d</span></b><b><sub><span style='font-size:12.0pt'>k</span></sub></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt'>i</span></sub></b><b><span style='font-size:12.0pt'> 
+	sobre las otras componentes de <i>Influencias</i> (</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>i</span></sub></b><b><span style='font-size:12.0pt'>)
+	describe el cambio general del sistema.</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><b><span style='font-size:12.0pt'>7.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span></b><b><span style='font-size:12.0pt'>Los pares (Evento<sub>k</sub>
+	(</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>i</span></sub></b><b><span style='font-size:12.0pt'>),
+	T<sub>k</sub> (</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>i</span></sub></b><b><span style='font-size:12.0pt'>))
+	se almacenan en una <u>lista de eventos </u>que se mantiene siempre ordenada
+	respecto a las T<sub>k</sub> (</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>i</span></sub></b><b><span
+	style='font-size:12.0pt'>).</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><b><span style='font-size:12.0pt'>8.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span></b><b><span style='font-size:12.0pt'>En cada momento del Reloj
+	se denomina: </span></b></p>
+
+	<p class=MsoNormal style='text-align:justify'><b><i><span style='font-size:
+	12.0pt'>Inminentes (</span></i></b><b><span style='font-size:12.0pt'>Reloj<i>)</i>
+	= {Eventos<sub>k</sub> (</span></b><b><span style='font-size:12.0pt;font-family:
+	Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>i</span></sub></b><b><span
+	style='font-size:12.0pt'>) / Eventos<sub>k</sub> (</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>i</span></sub></b><b><span style='font-size:12.0pt'>),
+	T<sub>k</sub> (</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>i</span></sub></b><b><span style='font-size:12.0pt'>) </span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>Î</span></b><b><span
+	style='font-size:12.0pt'> Lista de eventos y T<sub>k</sub> (</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>i</span></sub></b><b><span style='font-size:12.0pt'>)
+	=Reloj }</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><b><span style='font-size:12.0pt;background:lime'>9.<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></b><b><span
+	style='font-size:12.0pt;background:lime'>Se define una función biunívoca:</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:12.0pt;background:lime'>Selecciona: <i>Inminentes (</i>Reloj<i>)
+	</i></span></b><b><i><span style='font-size:12.0pt;font-family:Symbol;
+	background:lime'>®</span></i></b><b><i><span style='font-size:12.0pt;
+	background:lime'> </span></i></b><b><i><span style='font-size:12.0pt;
+	font-family:Symbol;background:lime'>À</span></i></b><b><i><sup><span
+	style='font-size:12.0pt;background:lime'>*</span></sup></i></b><b><i><span
+	style='font-size:12.0pt;background:lime'> ={1,2, …, }</span></i></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><i><span
+	style='font-size:12.0pt;background:lime'>                  </span></i></b><b><span
+	style='font-size:12.0pt;background:lime'>Eventos k (</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol;background:lime'>a</span></b><b><sub><span
+	style='font-size:12.0pt;background:lime'>i</span></sub></b><b><span
+	style='font-size:12.0pt;background:lime'>)<i>         </i></span></b><b><i><span
+	style='font-size:12.0pt;font-family:Symbol;background:lime'>®</span></i></b><b><i><span
+	style='font-size:12.0pt;background:lime'> n        </span></i></b><b><span
+	style='font-size:12.0pt;background:lime'>(prioridad)</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><b><span style='font-size:12.0pt'>10.<span style='font:7.0pt "Times New Roman"'>&nbsp;
+	</span></span></b><b><span style='font-size:12.0pt'>El modelo se implementa con
+	un algoritmo como el siguiente:</span></b></p>
+
+	<h3><b><span lang=PT-BR>Begin</span></b></h3>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	18.0pt'><b><i><span lang=PT-BR style='font-size:12.0pt'>{Inicialización}</span></i></b></p>
+
+	<h5><b><i><span lang=PT-BR>Reloj</span></i></b><b><span lang=PT-BR> := <i>TiempoInicio</i></span></b></h5>
+
+	<h4 style='text-indent:18.0pt'><b><i><span lang=PT-BR>For</span></i></b><b><span
+	lang=PT-BR> I:= 1 <i>to</i> N <i>do</i></span></b></h4>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	lang=PT-BR style='font-size:12.0pt'>           <i>Begin</i></span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><i><span
+	lang=PT-BR style='font-size:12.0pt'>                  </span></i></b><b><span
+	lang=PT-BR style='font-size:22.0pt'>e</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span lang=PT-BR style='font-size:12.0pt'>i
+	</span></sub></b><b><span lang=PT-BR style='font-size:12.0pt'>:= </span></b><b><span
+	lang=PT-BR style='font-size:22.0pt'>e</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span lang=PT-BR style='font-size:12.0pt'>i</span></sub></b><b><sup><span
+	lang=PT-BR style='font-size:12.0pt'>0</span></sup></b><b><span lang=PT-BR
+	style='font-size:12.0pt'>    {Valores iniciales}</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	lang=PT-BR style='font-size:22.0pt'>          </span></b><b><i><span
+	lang=EN-US style='font-size:12.0pt'>if </span></i></b><b><span lang=EN-US
+	style='font-size:12.0pt'> 1</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>£</span></b><b><span lang=EN-US style='font-size:12.0pt'> i
+	</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>£</span></b><b><span
+	lang=EN-US style='font-size:12.0pt'> a <i>then</i> </span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	lang=EN-US style='font-size:12.0pt'>i</span></sub></b><b><span lang=EN-US
+	style='font-size:12.0pt'>:= </span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>s</span></b><b><sub><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></sub></b><b><sub><span lang=EN-US
+	style='font-size:12.0pt'>i</span></sub></b><b><sup><span lang=EN-US
+	style='font-size:12.0pt'>0</span></sup></b><b><span lang=EN-US
+	style='font-size:12.0pt'>;</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><i><span
+	lang=EN-US style='font-size:12.0pt'>                  </span></i></b><b><i><span
+	style='font-size:12.0pt'>“Colocar los pares (</span></i></b><b><span
+	style='font-size:12.0pt'>Eventos k (</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>i</span></sub></b><b><span
+	style='font-size:12.0pt'>), Tiempo de Inicio + </span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt'>i</span></sub></b><b><i><span style='font-size:12.0pt'>)
+	en la lista de eventos;</span></i></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><i><span
+	style='font-size:12.0pt'>                  End</span></i></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><i><span
+	style='font-size:12.0pt'>                  {</span></i></b><b><span
+	style='font-size:12.0pt'>avance del reloj<i>}</i></span></b></p>
+
+	<h3><b>                  While </b><b><span style='font-style:normal'>Reloj </span></b><b><span
+	style='font-family:Symbol'>£</span> </b><b><span style='font-style:normal'>TiempoFin</span></b></h3>
+
+	<p class=MsoNormal><b><i><span style='font-size:12.0pt'>                           
+	Begin</span></i></b></p>
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-indent:36.0pt'><b><span
+	style='font-size:12.0pt'>      Reloj := T</span></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><span
+	style='font-size:12.0pt'>  siendo (Evento(</span></b><b><span style='font-size:
+	12.0pt;font-family:Symbol'>a</span></b><b><span style='font-size:12.0pt'>),T</span></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><span
+	style='font-size:12.0pt'>) el primer par en la
+	 <i>Lista</i><i> de Eventos.</i></span></b></p>
+
+	<p class=MsoNormal style='margin-left:90.0pt'><b><span style='font-size:12.0pt'>Inminente
+	:= {Eventos (</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>b</span></b><b><span
+	style='font-size:12.0pt'>) / (Eventos (</span></b><b><span style='font-size:
+	12.0pt;font-family:Symbol'>b</span></b><b><span style='font-size:12.0pt'>),T</span></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>b</span></sub></b><b><span
+	style='font-size:12.0pt'>)} </span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>Î</span></b><b><span style='font-size:12.0pt'> <i>Lista de
+	Eventos</i> y T</span></b><b><sub><span style='font-size:12.0pt;font-family:
+	Symbol'>b</span></sub></b><b><span style='font-size:12.0pt'> = T</span></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:22.0pt'>          </span></b><b><i><span style='font-size:
+	12.0pt'>            While </span></i></b><b><span style='font-size:12.0pt'>Inminente
+	</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>¹</span></b><b><span
+	style='font-size:12.0pt'> </span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>f</span></b><b><i><span style='font-size:12.0pt'> do</span></i></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><i><span
+	style='font-size:12.0pt'>                                 Begin</span></i></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><i><span
+	style='font-size:12.0pt'>                                    </span></i></b><b><span
+	style='font-size:12.0pt'>Evento (</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>b</span></b><b><span style='font-size:12.0pt'>) =
+	Seleccionar (mínimo (<i>Inminentes</i>))</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:12.0pt'>                              <i>      Eliminar</i>
+	Evento (</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>b</span></b><b><span
+	style='font-size:12.0pt'>) de <i>Inminente;</i></span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><i><span
+	style='font-size:12.0pt'>                                   Procedure              </span></i></b><b><span
+	style='font-size:12.0pt'>Evento (</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>b</span></b><b><span style='font-size:12.0pt'>)</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><i><span
+	style='font-size:12.0pt'>                              End</span></i></b></p>
+
+	<h6><b>End</b></h6>
+
+	<p class=MsoNormal style='margin-left:22.5pt;text-align:justify'><b><i><span
+	style='font-size:12.0pt'>End.</span></i></b></p>
+
+	<p class=MsoNormal style='margin-left:22.5pt;text-align:justify'><b><i><span
+	style='font-size:12.0pt'>&nbsp;</span></i></b></p>
+
+	<p class=MsoNormal style='margin-left:22.5pt;text-align:justify'><b><i><span
+	style='font-size:12.0pt'>Procedure </span></i></b><b><span style='font-size:
+	12.0pt'>Evento (</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>b</span></b><b><span
+	style='font-size:12.0pt'>)</span></b></p>
+
+	<p class=MsoNormal style='margin-left:22.5pt;text-align:justify'><b><i><span
+	style='font-size:12.0pt'>    Begin</span></i></b></p>
+
+	<p class=MsoNormal style='margin-left:90.0pt;text-align:justify;text-indent:
+	-18.0pt'><span style='font-size:12.0pt;font-family:Wingdings'>Ø<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><b><i><span
+	style='font-size:12.0pt'>Actualizar (</span></i></b><b><span style='font-size:
+	12.0pt;font-family:Symbol'>b</span></b><b><span style='font-size:12.0pt'>, </span></b><b><span
+	style='font-size:16.0pt'>e</span></b><b><sub><span style='font-size:12.0pt;
+	font-family:Symbol'>b</span></sub></b><b><sup><span style='font-size:12.0pt'>*</span></sup></b><b><span
+	style='font-size:12.0pt'>, </span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>s</span></b><b><sub><span style='font-size:12.0pt;
+	font-family:Symbol'>b</span></sub></b><b><sup><span style='font-size:12.0pt'>*</span></sup></b><b><i><span
+	style='font-size:12.0pt'>) = </span></i></b><b><i><span style='font-size:12.0pt;
+	font-family:Symbol'>d</span></i></b><b><sub><span style='font-size:12.0pt;
+	font-family:Symbol'>b</span></sub></b><b><i><span style='font-size:12.0pt'> (</span></i></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>b</span></b><b><span
+	style='font-size:12.0pt'>, </span></b><b><span style='font-size:16.0pt'>e</span></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>b</span></sub></b><b><span
+	style='font-size:12.0pt'>, </span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>s</span></b><b><sub><span style='font-size:12.0pt;
+	font-family:Symbol'>b</span></sub></b><b><i><span style='font-size:12.0pt'>);              </span></i></b></p>
+
+	<p class=MsoNormal style='margin-left:90.0pt;text-align:justify;text-indent:
+	-18.0pt'><span style='font-size:12.0pt;font-family:Wingdings'>Ø<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><b><i><span
+	style='font-size:12.0pt'>Para cada componente activa </span></i></b><b><span
+	style='font-size:12.0pt'>ζ<i>  tal que (</i>ζ<sub>, </sub></span></b><b><span
+	style='font-size:16.0pt'>e</span></b><b><sub><span style='font-size:12.0pt'>ζ</span></sub></b><b><i><span
+	style='font-size:12.0pt'>,</span></i></b><b><span style='font-size:12.0pt'> </span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sub><span
+	style='font-size:12.0pt'>ζ</span></sub></b><b><i><span style='font-size:12.0pt'>)
+	</span></i></b><b><span style='font-size:12.0pt;font-family:Symbol'>Î</span></b><b><span
+	style='font-size:12.0pt'> <i>Influencias</i> (</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>b</span></b><b><span
+	style='font-size:12.0pt'>)</span></b></p>
+
+	<p class=MsoNormal style='margin-left:72.0pt;text-align:justify;text-indent:
+	18.0pt'><b><span style='font-size:12.0pt'>actualizar (ζ<sub>, </sub></span></b><b><span
+	style='font-size:16.0pt'>e</span></b><b><sub><span style='font-size:12.0pt'>ζ</span></sub></b><b><sup><span
+	style='font-size:12.0pt'>*</span></sup></b><b><i><span style='font-size:12.0pt'>,</span></i></b><b><span
+	style='font-size:12.0pt'> </span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>s</span></b><b><sub><span style='font-size:12.0pt'>ζ</span></sub></b><b><sup><span
+	style='font-size:12.0pt'>*</span></sup></b><b><span style='font-size:12.0pt'>)
+	= </span></b><b><i><span style='font-size:12.0pt;font-family:Symbol'>d</span></i></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>b</span></sub></b><b><span
+	style='font-size:12.0pt'> (ζ<sub>, </sub></span></b><b><span style='font-size:
+	16.0pt'>e</span></b><b><sub><span style='font-size:12.0pt'>ζ</span></sub></b><b><i><span
+	style='font-size:12.0pt'>,</span></i></b><b><span style='font-size:12.0pt'> </span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sub><span
+	style='font-size:12.0pt'>ζ</span></sub></b><b><span style='font-size:12.0pt'>);</span></b></p>
+
+	<p class=MsoNormal style='margin-left:90.0pt;text-align:justify;text-indent:
+	-18.0pt'><span style='font-size:12.0pt;font-family:Wingdings'>Ø<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><b><i><span
+	style='font-size:12.0pt'>Para cada componente pasiva </span></i></b><b><i><span
+	style='font-size:12.0pt;font-family:Symbol'>m</span></i></b><b><i><span
+	style='font-size:12.0pt'> tal que (</span></i></b><b><i><span style='font-size:
+	12.0pt;font-family:Symbol'>m</span></i></b><b><sub><span style='font-size:12.0pt'>,
+	</span></sub></b><b><span style='font-size:16.0pt'>e</span></b><b><i><span
+	style='font-size:12.0pt;font-family:Symbol'>m</span></i></b><b><i><span
+	style='font-size:12.0pt'>,) </span></i></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>Î</span></b><b><span style='font-size:12.0pt'> <i>Influencias</i>
+	(</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>b</span></b><b><span
+	style='font-size:12.0pt'>) actualizar<i> (</i></span></b><b><i><span
+	style='font-size:12.0pt;font-family:Symbol'>m</span></i></b><b><sub><span
+	style='font-size:12.0pt'>, </span></sub></b><b><span style='font-size:16.0pt'>e</span></b><b><i><span
+	style='font-size:12.0pt;font-family:Symbol'>m</span></i></b><b><sup><span
+	style='font-size:12.0pt'>*</span></sup></b><b><i><span style='font-size:12.0pt'>)
+	= </span></i></b><b><i><span style='font-size:12.0pt;font-family:Symbol'>d</span></i></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>b</span></sub></b><b><i><span
+	style='font-size:12.0pt'>(</span></i></b><b><i><span style='font-size:12.0pt;
+	font-family:Symbol'>m</span></i></b><b><sub><span style='font-size:12.0pt'>, </span></sub></b><b><span
+	style='font-size:16.0pt'>e</span></b><b><i><span style='font-size:12.0pt;
+	font-family:Symbol'>m</span></i></b><b><i><span style='font-size:12.0pt'>);</span></i></b></p>
+
+	<p class=MsoNormal style='margin-left:90.0pt;text-align:justify;text-indent:
+	-18.0pt'><span style='font-size:12.0pt;font-family:Wingdings'>Ø<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><b><i><span
+	style='font-size:12.0pt'>Eliminar (</span></i></b><b><span style='font-size:
+	12.0pt'>Evento (</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>b</span></b><b><span
+	style='font-size:12.0pt'>), T(</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>b</span></b><b><span style='font-size:12.0pt'>)<i>) de
+	Lista de Eventos;</i></span></b></p>
+
+	<p class=MsoNormal style='margin-left:90.0pt;text-align:justify;text-indent:
+	-18.0pt'><span style='font-size:12.0pt;font-family:Wingdings'>Ø<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><b><i><span
+	style='font-size:12.0pt'>Para cada componente activa </span></i></b><b><span
+	style='font-size:12.0pt'>ζ tal que <i>(</i>ζ<sub>, </sub></span></b><b><span
+	style='font-size:16.0pt'>e</span></b><b><sub><span style='font-size:12.0pt'>ζ</span></sub></b><b><i><span
+	style='font-size:12.0pt'>,</span></i></b><b><span style='font-size:12.0pt'> </span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sub><span
+	style='font-size:12.0pt'>ζ</span></sub></b><b><i><span style='font-size:12.0pt'>)
+	</span></i></b><b><span style='font-size:12.0pt;font-family:Symbol'>Î</span></b><b><span
+	style='font-size:12.0pt'> <i>Influencias</i> (</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>b</span></b><b><span
+	style='font-size:12.0pt'>)</span></b></p>
+
+	<p class=MsoNormal style='margin-left:72.0pt;text-align:justify'><b><i><span
+	style='font-size:12.0pt'>Begin</span></i></b></p>
+
+	<p class=MsoNormal style='margin-left:90.0pt;text-align:justify;text-indent:
+	0cm'><span style='font-size:12.0pt;font-family:Wingdings'>v<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><b><i><span
+	style='font-size:12.0pt'>Determinar los eventos </span></i></b><b><span
+	style='font-size:12.0pt'>Evento (ζ) y el momento en que pueden ocurrir por T<sub>k</sub>(ζ)
+	= Reloj + </span></b><b><span style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sub><span
+	style='font-size:12.0pt'>ζ</span></sub></b><b><sup><span style='font-size:12.0pt'>*</span></sup></b><b><span
+	style='font-size:12.0pt'>             {Puede ser mas de uno si </span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sub><span
+	style='font-size:12.0pt'>ζ</span></sub></b><b><sup><span style='font-size:12.0pt'>*
+	</span></sup></b><b><span style='font-size:12.0pt'>depende de algún k};</span></b></p>
+
+	<p class=MsoNormal style='margin-left:90.0pt;text-align:justify;text-indent:
+	0cm'><span style='font-size:12.0pt;font-family:Wingdings'>v<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><b><i><span
+	style='font-size:12.0pt'>Insertar los pares (</span></i></b><b><span
+	style='font-size:12.0pt'>Evento <sub>k</sub>(ζ), T<sub>k</sub>, (ζ)<i>) en la
+	 Lista de Eventos si no están allí</i></span></b></p>
+
+	<p class=MsoNormal style='margin-left:72.0pt;text-align:justify'><b><i><span
+	style='font-size:12.0pt'>End</span></i></b></p>
+
+	<p class=MsoNormal style='margin-left:90.0pt;text-align:justify;text-indent:
+	-18.0pt'><span style='font-size:12.0pt;font-family:Wingdings'>Ø<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><b><span
+	style='font-size:12.0pt'>Ordenar lista de eventos</span></b></p>
+
+	<p class=MsoNormal style='margin-left:72.0pt;text-align:justify'><b><span
+	style='font-size:12.0pt'>End (*Evento </span></b><b><span style='font-size:
+	12.0pt;font-family:Symbol'>b</span></b><b><span style='font-size:12.0pt'>*)</span></b></p>
+
+	<a name="descricion-supermercado"></a>
+	<h2>Descripción del Algoritmo para el Ejemplo del supermercado</h2>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><b><span style='font-size:12.0pt'>1)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span></b><b><span style='font-size:12.0pt'>Componentes activas = {</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>1</span></sub></b><b><span style='font-size:12.0pt'>, </span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>2</span></sub></b><b><span style='font-size:12.0pt'>,</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>3</span></sub></b><b><span style='font-size:12.0pt'>},
+	a = 3</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>1</span></sub></b><b><span style='font-size:12.0pt'> =
+	Entrada, </span></b><b><span style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>2</span></sub></b><b><span style='font-size:12.0pt'> =
+	Área ,</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>3</span></sub></b><b><span style='font-size:12.0pt'> =
+	Caja</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:12.0pt'>Componentes pasivas = {</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>4</span></sub></b><b><span style='font-size:12.0pt'>}      N
+	= 4</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>4</span></sub></b><b><span style='font-size:12.0pt'> =
+	Salida</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><b><span style='font-size:12.0pt'>2)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span></b><b><span style='font-size:22.0pt'>e</span></b><b><sub><span
+	style='font-size:12.0pt'>Entrada </span></sub></b><b><span style='font-size:
+	12.0pt'>= Estado (</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>1</span></sub></b><b><span style='font-size:12.0pt'>)=
+	{k, ζ <sub>a</sub>}</span></b></p>
+
+	<p class=MsoNormal style='text-align:justify;text-indent:18.0pt'><b><span
+	style='font-size:22.0pt'>e</span></b><b><sub><span style='font-size:12.0pt'>Area
+	</span></sub></b><b><span style='font-size:12.0pt'>= Estado (</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><span
+	style='font-size:12.0pt'>2)= { (x<sub>1,ζ</sub> <sub>1</sub>), (x<sub>2,ζ</sub>
+	<sub>2</sub>), …,(x<sub>p,ζ</sub> <sub>p</sub>), ζ <sub>c</sub>}</span></b></p>
+
+	<p class=MsoNormal style='text-align:justify;text-indent:18.0pt'><b><span
+	style='font-size:22.0pt'>e</span></b><b><sub><span style='font-size:12.0pt'>Caja</span></sub></b><b><span
+	style='font-size:12.0pt'>= Estado (</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><span style='font-size:12.0pt'>3)= {k(y<sub>0,</sub>
+	y<sub>1</sub>, …, y<sub>n</sub>), ζ <sub>s</sub>}</span></b></p>
+
+	<p class=MsoNormal style='text-align:justify;text-indent:18.0pt'><b><span
+	style='font-size:22.0pt'>e</span></b><b><sub><span style='font-size:12.0pt'>Salida
+	</span></sub></b><b><span style='font-size:12.0pt'>= Estado (</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><span
+	style='font-size:12.0pt'>4)= {y<sub>0</sub>}</span></b></p>
+
+	<p class=MsoNormal style='margin-top:0cm;margin-right:-90.0pt;margin-bottom:
+	0cm;margin-left:18.0pt;margin-bottom:.0001pt;text-align:justify;text-indent:
+	-18.0pt'><b><span style='font-size:12.0pt'>3)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span></b><b><span style='font-size:12.0pt'><sub><img width=245
+	height=25
+	src="images/Conf_8/image003.gif"></sub></span></b></p>
+
+	<p class=MsoNormal style='text-align:justify'><b><span style='font-size:12.0pt'><sub><img
+	width=703 height=55
+	src="images/Conf_8/image004.gif"></sub></span></b></p>
+
+	<p class=MsoNormal style='text-align:justify'><b><span style='font-size:12.0pt'><sub><img
+	width=104 height=31
+	src="images/Conf_8/image005.gif"></sub>          </span></b></p>
+
+	<p class=MsoNormal style='text-align:justify'><b><span style='font-size:12.0pt'><sub><img
+	width=445 height=51
+	src="images/Conf_8/image006.gif"></sub></span></b></p>
+
+	<p class=MsoNormal style='text-align:justify'><b><span style='font-size:12.0pt'>
+	<sub><img
+	width=648 height=51
+	src="images/Conf_8/image008.gif"></sub></span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><b><span style='font-size:12.0pt'>4)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span></b><b><i><span style='font-size:12.0pt'>Influencias</span></i></b><b><span
+	style='font-size:12.0pt'> (</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>1</span></sub></b><b><span
+	style='font-size:12.0pt'>) = {(</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>1</span></sub></b><b><span
+	style='font-size:12.0pt'>,</span></b><b><span style='font-size:22.0pt'>e</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>1</span> </sub>, </b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>s</span></b><b><sub><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></sub></b><b><sub><span style='font-size:12.0pt'>1</span></sub></b><b><span
+	style='font-size:12.0pt'>), (</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>2</span></sub></b><b><span
+	style='font-size:12.0pt'>,</span></b><b><span style='font-size:22.0pt'>e</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>2</span> </sub>, </b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>s</span></b><b><sub><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></sub></b><b><sub><span style='font-size:12.0pt'>2</span></sub></b><b><span
+	style='font-size:12.0pt'>) }</span></b></p>
+
+	<p class=MsoNormal style='text-align:justify;text-indent:18.0pt'><b><i><span
+	style='font-size:12.0pt'>Influencias</span></i></b><b><span style='font-size:
+	12.0pt'> (</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>2</span></sub></b><b><span style='font-size:12.0pt'>)
+	= {(</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>2</span></sub></b><b><span style='font-size:12.0pt'>,</span></b><b><span
+	style='font-size:22.0pt'>e</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>2</span></sub>,
+	</b><b><span style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt'>2</span></sub></b><b><span style='font-size:12.0pt'>),
+	(</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>3</span></sub></b><b><span style='font-size:12.0pt'>,</span></b><b><span
+	style='font-size:22.0pt'>e</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>3</span>
+	</sub>, </b><b><span style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt'>3</span></sub></b><b><span style='font-size:12.0pt'>)
+	}</span></b></p>
+
+	<p class=MsoNormal style='text-align:justify;text-indent:18.0pt'><b><i><span
+	style='font-size:12.0pt'>Influencias</span></i></b><b><span style='font-size:
+	12.0pt'> (</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>3</span></sub></b><b><span style='font-size:12.0pt'>)
+	= {(</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>3</span></sub></b><b><span style='font-size:12.0pt'>,</span></b><b><span
+	style='font-size:22.0pt'>e</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>3</span></sub>,
+	</b><b><span style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt'>3</span></sub></b><b><span style='font-size:12.0pt'>),
+	(</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>4</span></sub></b><b><span style='font-size:12.0pt'>,</span></b><b><span
+	style='font-size:22.0pt'>e</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>4</span>
+	</sub></b><b><span style='font-size:12.0pt'>}</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><b><span style='font-size:12.0pt'>5)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span></b><b><span style='font-size:12.0pt'>Reglas de interacción</span></b></p>
+
+	<p class=MsoNormal><span style='font-size:12.0pt'><sub><img width=335
+	height=28
+	src="images/Conf_8/image009.gif"></sub></span></p>
+
+
+	<br clear=ALL>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:12.0pt;font-family:Symbol'>d</span></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt'>1</span></sub></b><b><span style='font-size:12.0pt'> (</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>1</span></sub></b><b><span style='font-size:12.0pt'>,</span></b><b><span
+	style='font-size:22.0pt'>e</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>1</span>
+	</sub>, </b><b><span style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt'>1</span></sub></b><b><span style='font-size:12.0pt'>)
+	= (</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>1</span></sub></b><b><span style='font-size:12.0pt'>,</span></b><b><span
+	style='font-size:22.0pt'>e<sup>*</sup></span></b><b><span style='font-size:
+	12.0pt;font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>1</span>
+	</sub>, </b><b><span style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sup><span
+	style='font-size:12.0pt'>*</span></sup></b><b><sub><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></sub></b><b><sub><span style='font-size:12.0pt'>1</span></sub></b><b><span
+	style='font-size:12.0pt'>)</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:22.0pt'>e</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>1 </span></sub></b><b><span
+	style='font-size:12.0pt'>= {k}                    </span></b><b><span
+	style='font-size:22.0pt'>e<sup>*</sup></span></b><b><span style='font-size:
+	12.0pt;font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>1
+	</span></sub></b><b><span style='font-size:12.0pt'>= {k + 1}     </span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	style='position:relative;z-index:251656192'><span style='left:0px;position:
+	absolute;left:109px;top:-2px;width:42px;height:14px'><img width=42 height=14
+	src="images/Conf_8/image010.gif"></span></span><b><span
+	style='font-size:12.0pt'>                              </span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt'>1</span></sub></b><b><span style='font-size:12.0pt'> =
+	</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>D</span></b><b><span
+	style='font-size:12.0pt'>t                      </span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sup><span
+	style='font-size:12.0pt'>*</span></sup></b><b><sub><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></sub></b><b><span style='font-size:12.0pt'>  = ζ<sub>a</sub></span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:12.0pt;font-family:Symbol'>d</span></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt'>1</span></sub></b><b><span style='font-size:12.0pt'> (</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>2</span></sub></b><b><span style='font-size:12.0pt'>,</span></b><b><span
+	style='font-size:22.0pt'>e</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>2</span>
+	</sub>, </b><b><span style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt'>2</span></sub></b><b><span style='font-size:12.0pt'>)
+	= (</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>2</span></sub></b><b><span style='font-size:12.0pt'>,</span></b><b><span
+	style='font-size:22.0pt'>e<sup>*</sup></span></b><b><span style='font-size:
+	12.0pt;font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>2</span>
+	</sub>, </b><b><span style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sup><span
+	style='font-size:12.0pt'>*</span></sup></b><b><sub><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></sub></b><b><sub><span style='font-size:12.0pt'>2</span></sub></b><b><span
+	style='font-size:12.0pt'>)</span></b></p>
+
+	<p class=MsoNormal style='text-align:justify;text-indent:18.0pt'><b><span
+	style='font-size:22.0pt'>e</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>2</span></sub></b><b><span
+	style='font-size:12.0pt'>= { (x<sub>1</sub>, ζ<sub>1</sub>), (x<sub>2</sub>, ζ<sub>2</sub>),
+	. . . (x<sub>p</sub>, ζ<sub>p</sub>), ζ<sub>c</sub> }</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	style='position:absolute;z-index:251657216;left:0px;margin-left:100px;
+	margin-top:6px;width:41px;height:13px'><img width=41 height=13
+	src="images/Conf_8/image011.gif"></span><b><span
+	style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt'>2</span></sub></b><b><span style='font-size:12.0pt'> =
+	ζ                        </span></b></p>
+
+	<p class=MsoNormal style='text-align:justify'><b><span style='font-size:12.0pt'>                                    </span></b><b><span
+	style='font-size:22.0pt'>e<sup>*</sup></span></b><b><span style='font-size:
+	12.0pt;font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>2</span></sub></b><b><span
+	style='font-size:12.0pt'> = { (x<sub>1</sub>, ζ<sub>1</sub> –</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>D</span></b><b><span
+	style='font-size:12.0pt'>t), (x<sub>2</sub>, ζ<sub>2</sub> –</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>D</span></b><b><span
+	style='font-size:12.0pt'>t), . . . (x<sub>p</sub>, ζ<sub>p</sub> –</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>D</span></b><b><span
+	style='font-size:12.0pt'>t), (k+1,ζ<sub>c</sub>), ζ<sub>c</sub> *) }</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:12.0pt'>                              </span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sup><span
+	lang=EN-US style='font-size:12.0pt'>*</span></sup></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	lang=EN-US style='font-size:12.0pt'>2</span></sub></b><b><span lang=EN-US
+	style='font-size:12.0pt'> = min(</span></b><b><span style='font-size:12.0pt'>ζ</span></b><b><span
+	lang=EN-US style='font-size:12.0pt'> –</span></b><b><span style='font-size:
+	12.0pt;font-family:Symbol'>D</span></b><b><span lang=EN-US style='font-size:
+	12.0pt'>t, </span></b><b><span style='font-size:12.0pt'>ζ</span></b><b><sub><span
+	lang=EN-US style='font-size:12.0pt'>c</span></sub></b><b><span lang=EN-US
+	style='font-size:12.0pt'>) = min(min(</span></b><b><span style='font-size:12.0pt'>ζ</span></b><b><sub><span
+	lang=EN-US style='font-size:12.0pt'>i</span></sub></b><b><span lang=EN-US
+	style='font-size:12.0pt'> –</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>D</span></b><b><span lang=EN-US style='font-size:12.0pt'>t)),
+	</span></b><b><span style='font-size:12.0pt'>ζ</span></b><b><sub><span
+	lang=EN-US style='font-size:12.0pt'>c</span></sub></b><b><span lang=EN-US
+	style='font-size:12.0pt'>); i= 1,…, p</span></b></p>
+
+	<p class=MsoNormal><span style='font-size:12.0pt'><sub><img width=332
+		height=26
+		src="images/Conf_8/image012.gif"></sub></span>
+	</p>
+
+	<br clear=ALL>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:12.0pt;font-family:Symbol'>d</span></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt'>2</span></sub></b><b><span style='font-size:12.0pt'> (</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>2</span></sub></b><b><span style='font-size:12.0pt'>,</span></b><b><span
+	style='font-size:22.0pt'>e</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>2</span>
+	</sub>, </b><b><span style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt'>2</span></sub></b><b><span style='font-size:12.0pt'>)
+	= (</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>2</span></sub></b><b><span style='font-size:12.0pt'>,</span></b><b><span
+	style='font-size:22.0pt'>e<sup>*</sup></span></b><b><span style='font-size:
+	12.0pt;font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>2</span>
+	</sub>, </b><b><span style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sup><span
+	style='font-size:12.0pt'>*</span></sup></b><b><sub><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></sub></b><b><sub><span style='font-size:12.0pt'>2</span></sub></b><b><span
+	style='font-size:12.0pt'>)</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:22.0pt'>e</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>2</span></sub></b><b><span
+	style='font-size:12.0pt'>= { (x<sub>1</sub>, ζ<sub>1</sub>), (x<sub>2</sub>, ζ<sub>2</sub>),
+	. . . (x<sub>p</sub>, ζ<sub>p</sub>), ζ<sub>c</sub> }</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt'>2</span></sub></b><b><span style='font-size:12.0pt'> =
+	min(ζ<sub>1</sub>, ζ<sub>2</sub>, ζ<sub>p</sub>) = </span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>D</span></b><b><span
+	style='font-size:12.0pt'>t              y          k = min {j / ζ<sub>p</sub> =
+	</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>D</span></b><b><span
+	style='font-size:12.0pt'>t; j=1,…,p}</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:22.0pt'>e<sup>*</sup></span></b><b><span style='font-size:
+	12.0pt;font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>2</span></sub></b><b><span
+	style='font-size:12.0pt'> = { (x<sub>1</sub>, ζ<sub>1</sub> –</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>D</span></b><b><span
+	style='font-size:12.0pt'>t), (x<sub>2</sub>, ζ<sub>2</sub> –</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>D</span></b><b><span
+	style='font-size:12.0pt'>t), . . . (x<sub>k-1</sub>, ζ<sub>k-1</sub> –</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>D</span></b><b><span
+	style='font-size:12.0pt'>t),  (x<sub>k+1</sub>, ζ<sub>k+1</sub> –</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>D</span></b><b><span
+	style='font-size:12.0pt'>t), …,(x<sub>s</sub>, ζ<sub>s</sub> –</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>D</span></b><b><span
+	style='font-size:12.0pt'>t), ζ<sub>c</sub> }</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sup><span
+	lang=EN-US style='font-size:12.0pt'>*</span></sup></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	lang=EN-US style='font-size:12.0pt'>2</span></sub></b><b><span lang=EN-US
+	style='font-size:12.0pt'> = min(</span></b><b><span style='font-size:12.0pt'>ζ</span></b><b><sub><span
+	lang=EN-US style='font-size:12.0pt'>i</span></sub></b><b><span lang=EN-US
+	style='font-size:12.0pt'> –</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>D</span></b><b><span lang=EN-US style='font-size:12.0pt'>t
+	/ i = 1,…, s; i </span></b><b><span style='font-size:12.0pt;font-family:Symbol'>¹</span></b><b><span
+	lang=EN-US style='font-size:12.0pt'> k)</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:22.0pt'>e</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>3</span></sub></b><b><span
+	style='font-size:12.0pt'>= { (y<sub>0</sub>, y<sub>1</sub>, …, y<sub>n</sub>),
+	ζ<sub>s</sub>}</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt'>3</span></sub></b><b><span style='font-size:12.0pt'> =
+	</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><span
+	style='font-size:12.0pt'> </span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:12.0pt'>Entonces: </span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:22.0pt'>e<sup>*</sup></span></b><b><span style='font-size:
+	12.0pt;font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>3</span></sub></b><b><span
+	style='font-size:12.0pt'>= { (y<sub>0</sub>, y<sub>1</sub>, …, y<sub>n</sub>),
+	ζ<sub>s</sub>}</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sup><span
+	style='font-size:12.0pt'>*</span></sup></b><b><sub><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></sub></b><b><sub><span style='font-size:12.0pt'>3</span></sub></b><b><span
+	style='font-size:12.0pt'> = </span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>s</span></b><b><span style='font-size:12.0pt'> - </span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>D</span></b><b><span
+	style='font-size:12.0pt'>t         </span></b></p>
+
+
+	<p class=MsoNormal><span style='font-size:12.0pt'><sub><img width=329
+	height=28
+	src="images/Conf_8/image013.gif"></sub></span></p>
+
+
+	<br clear=ALL>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:12.0pt;font-family:Symbol'>d</span></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt'>3</span></sub></b><b><span style='font-size:12.0pt'> (</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>3</span></sub></b><b><span style='font-size:12.0pt'>,</span></b><b><span
+	style='font-size:22.0pt'>e</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>3</span>
+	</sub>, </b><b><span style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt'>3</span></sub></b><b><span style='font-size:12.0pt'>)
+	= (</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>3</span></sub></b><b><span style='font-size:12.0pt'>,</span></b><b><span
+	style='font-size:22.0pt'>e<sup>*</sup></span></b><b><span style='font-size:
+	12.0pt;font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>3</span>
+	</sub>, </b><b><span style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sup><span
+	style='font-size:12.0pt'>*</span></sup></b><b><sub><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></sub></b><b><sub><span style='font-size:12.0pt'>3</span></sub></b><b><span
+	style='font-size:12.0pt'>)</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:22.0pt'>e</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>3</span></sub></b><b><span
+	style='font-size:12.0pt'>= { (y<sub>0</sub>, y<sub>1</sub>, …, y<sub>n</sub>),
+	ζ<sub>c</sub>}</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt'>3</span></sub></b><b><span style='font-size:12.0pt'> =
+	</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><span
+	style='font-size:12.0pt'> = </span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>D</span></b><b><span style='font-size:12.0pt'>t</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:12.0pt'>Entonces:</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:22.0pt'>e<sup>*</sup></span></b><b><span style='font-size:
+	12.0pt;font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>3</span></sub></b><b><span
+	style='font-size:12.0pt'>= { (y<sub>0</sub>, y<sub>1</sub>, …, y<sub>n</sub>),
+	ζ<sub>c</sub><sup>*</sup> }</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sup><span
+	style='font-size:12.0pt'>*</span></sup></b><b><sub><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></sub></b><b><sub><span style='font-size:12.0pt'>3</span></sub></b><b><span
+	style='font-size:12.0pt'> = ζ<sub>c</sub>, Además </span></b><b><span
+	style='font-size:22.0pt'>e</span></b><b><sup><span style='font-size:12.0pt'> *</span></sup></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt'>4</span></sub></b><b><span style='font-size:12.0pt'> =
+	{y<sub>0</sub>}</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><b><span style='font-size:12.0pt'>6)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span></b><b><span style='font-size:12.0pt'>Evento (1, </span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>1</span></sub></b><b><span style='font-size:12.0pt'>):
+	Entra un usuario T<sub>1</sub> (</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>1</span></sub></b><b><span
+	style='font-size:12.0pt'>) = Reloj + </span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>s</span></b><b><sub><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></sub></b><b><sub><span style='font-size:12.0pt'>1</span></sub></b></p>
+
+	<p class=MsoNormal style='text-align:justify;text-indent:18.0pt'><b><span
+	style='font-size:12.0pt'>Evento (k, </span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>2</span></sub></b><b><span
+	style='font-size:12.0pt'>): Compra usuario k, 1</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>£</span></b><b><span
+	style='font-size:12.0pt'> k </span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>£</span></b><b><span style='font-size:12.0pt'> p, T<sub>k</sub>
+	(</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>1</span></sub></b><b><span style='font-size:12.0pt'>)
+	= Reloj + ζ<sub>k</sub></span></b></p>
+
+	<p class=MsoNormal style='text-align:justify;text-indent:18.0pt'><b><span
+	style='font-size:12.0pt'>Evento (1, </span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>3</span></sub></b><b><span
+	style='font-size:12.0pt'>): Paga el usuario y<sub>0</sub>, T<sub>1</sub> (</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>2</span></sub></b><b><span style='font-size:12.0pt'>)
+	= Reloj + </span></b><b><span style='font-size:12.0pt;font-family:Symbol'>s</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:12.0pt'>Evento (1, </span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>1</span></sub></b><b><span
+	style='font-size:12.0pt'>)       </span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>d</span></b><b><sub><span style='font-size:12.0pt'>1</span></sub></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt'>1</span></sub></b><b><span style='font-size:12.0pt'> (</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>1</span></sub></b><b><span style='font-size:12.0pt'>,</span></b><b><span
+	style='font-size:22.0pt'>e</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>1</span>
+	</sub>, </b><b><span style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt'>1</span></sub></b><b><span style='font-size:12.0pt'>)
+	= </span></b><b><span style='font-size:12.0pt;font-family:Symbol'>d</span></b><b><sub><span
+	style='font-size:12.0pt'> </span></sub></b><b><sub><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></sub></b><b><sub><span style='font-size:12.0pt'>1</span></sub></b><b><span
+	style='font-size:12.0pt'> (</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>1</span></sub></b><b><span
+	style='font-size:12.0pt'>,</span></b><b><span style='font-size:22.0pt'>e</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>1</span> </sub>, </b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>s</span></b><b><sub><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></sub></b><b><sub><span style='font-size:12.0pt'>1</span></sub></b><b><span
+	style='font-size:12.0pt'>)</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:12.0pt'>                              </span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>d</span></b><b><sub><span
+	style='font-size:12.0pt'>1</span></sub></b><b><sub><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></sub></b><b><sub><span style='font-size:12.0pt'>1</span></sub></b><b><span
+	style='font-size:12.0pt'> (</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>2</span></sub></b><b><span
+	style='font-size:12.0pt'>,</span></b><b><span style='font-size:22.0pt'>e</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>2</span> </sub>, </b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>s</span></b><b><sub><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></sub></b><b><sub><span style='font-size:12.0pt'>2</span></sub></b><b><span
+	style='font-size:12.0pt'>) = </span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>d</span></b><b><sub><span style='font-size:12.0pt'> </span></sub></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt'>1</span></sub></b><b><span style='font-size:12.0pt'> (</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>2</span></sub></b><b><span style='font-size:12.0pt'>,</span></b><b><span
+	style='font-size:22.0pt'>e</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>2</span>
+	</sub>, </b><b><span style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt'>2</span></sub></b><b><span style='font-size:12.0pt'>)</span></b></p>
+
+	<p class=MsoNormal style='text-align:justify;text-indent:18.0pt'><b><span
+	style='font-size:12.0pt'>                              </span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>d</span></b><b><sub><span
+	style='font-size:12.0pt'>1</span></sub></b><b><sub><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></sub></b><b><sub><span style='font-size:12.0pt'>1 </span></sub></b><b><span
+	style='font-size:12.0pt'>= </span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>d</span></b><b><sub><span style='font-size:12.0pt'> </span></sub></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt'>1</span></sub></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:12.0pt'>Evento (k, </span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>2</span></sub></b><b><span
+	style='font-size:12.0pt'>)      </span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>d</span></b><b><sub><span style='font-size:12.0pt'>k</span></sub></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt'>2</span></sub></b><b><span style='font-size:12.0pt'> (</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>2</span></sub></b><b><span style='font-size:12.0pt'>,</span></b><b><span
+	style='font-size:22.0pt'>e</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>2</span>
+	</sub>, </b><b><span style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt'>2</span></sub></b><b><span style='font-size:12.0pt'>)
+	= </span></b><b><span style='font-size:12.0pt;font-family:Symbol'>d</span></b><b><sub><span
+	style='font-size:12.0pt'> </span></sub></b><b><sub><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></sub></b><b><sub><span style='font-size:12.0pt'>2</span></sub></b><b><span
+	style='font-size:12.0pt'> (</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>2</span></sub></b><b><span
+	style='font-size:12.0pt'>,</span></b><b><span style='font-size:22.0pt'>e</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>2</span> </sub>, </b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>s</span></b><b><sub><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></sub></b><b><sub><span style='font-size:12.0pt'>2</span></sub></b><b><span
+	style='font-size:12.0pt'>) Cuando usuario k sale del área.</span></b></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><b><span
+	style='font-size:12.0pt'>                              </span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>d</span></b><b><sub><span
+	style='font-size:12.0pt'>k</span></sub></b><b><sub><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></sub></b><b><sub><span style='font-size:12.0pt'>2 </span></sub></b><b><span
+	style='font-size:12.0pt'>(</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>3</span></sub></b><b><span
+	style='font-size:12.0pt'>,</span></b><b><span style='font-size:22.0pt'>e</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>3</span> </sub>, </b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>s</span></b><b><sub><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></sub></b><b><sub><span style='font-size:12.0pt'>3</span></sub></b><b><span
+	style='font-size:12.0pt'>) = </span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>d</span></b><b><sub><span style='font-size:12.0pt'> </span></sub></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt'>2</span></sub></b><b><span style='font-size:12.0pt'> (</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>3</span></sub></b><b><span style='font-size:12.0pt'>,</span></b><b><span
+	style='font-size:22.0pt'>e</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>3</span>
+	</sub>, </b><b><span style='font-size:12.0pt;font-family:Symbol'>s</span></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt'>3</span></sub></b><b><span style='font-size:12.0pt'>)
+	Cuando se incrementa cola.</span></b></p>
+
+	<p class=MsoNormal style='text-align:justify;text-indent:18.0pt'><b><span
+	style='font-size:12.0pt'>Evento (1, </span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>3</span></sub></b><b><span
+	style='font-size:12.0pt'>)       </span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>d</span></b><b><sub><span style='font-size:12.0pt'>1</span></sub></b><b><sub><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></sub></b><b><sub><span
+	style='font-size:12.0pt'>3 </span></sub></b><b><span style='font-size:12.0pt'>=
+	</span></b><b><span style='font-size:12.0pt;font-family:Symbol'>d</span></b><b><sub><span
+	style='font-size:12.0pt'> </span></sub></b><b><sub><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></sub></b><b><sub><span style='font-size:12.0pt'>3</span></sub></b></p>
+
+	<p class=MsoNormal style='text-align:justify;text-indent:18.0pt'><b><span
+	style='font-size:12.0pt'>&nbsp;</span></b></p>
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-align:justify;text-indent:
+	-18.0pt'><b><span lang=EN-US style='font-size:12.0pt;background:yellow'>7)<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></b><b><i><span
+	lang=EN-US style='font-size:12.0pt;background:yellow'>Lista de Eventos = Sort
+	[{</span></i></b><b><span lang=EN-US style='font-size:12.0pt;background:yellow'>Evento
+	(k, </span></b><b><span style='font-size:12.0pt;font-family:Symbol;background:
+	yellow'>a</span></b><b><sub><span lang=EN-US style='font-size:12.0pt;
+	background:yellow'>i</span></sub></b><b><span lang=EN-US style='font-size:12.0pt;
+	background:yellow'>), T<sub>k</sub> (</span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol;background:yellow'>a</span></b><b><sub><span lang=EN-US
+	style='font-size:12.0pt;background:yellow'>i</span></sub></b><b><span
+	lang=EN-US style='font-size:12.0pt;background:yellow'>) i = 1, 2, 3;  k = 1, …,
+	k</span></b><b><sub><span style='font-size:12.0pt;font-family:Symbol;
+	background:yellow'>a</span></sub></b><b><sub><span lang=EN-US style='font-size:
+	12.0pt;background:yellow'>I</span></sub></b><b><span lang=EN-US
+	style='font-size:12.0pt;background:yellow'>}, T<sub>k</sub> (</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol;background:yellow'>a</span></b><b><sub><span
+	lang=EN-US style='font-size:12.0pt;background:yellow'>i</span></sub></b><b><span
+	lang=EN-US style='font-size:12.0pt;background:yellow'>)<i>]</i></span></b></p>
+
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-align:justify;text-indent:
+	-18.0pt'><b><span style='font-size:12.0pt'>8)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span></b><b><i><span style='font-size:12.0pt'>Inminentes (Reloj) = {</span></i></b><b><span
+	style='font-size:12.0pt'>Evento (k, </span></b><b><span style='font-size:12.0pt;
+	font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>i</span></sub></b><b><span
+	style='font-size:12.0pt'>) / Evento (k, </span></b><b><span style='font-size:
+	12.0pt;font-family:Symbol'>a</span></b><b><sub><span style='font-size:12.0pt'>i</span></sub></b><b><span
+	style='font-size:12.0pt'>), T<sub>k</sub> (</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>i</span></sub></b><b><span style='font-size:12.0pt'>) </span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>e</span></b><b><span
+	style='font-size:12.0pt'> <i>Lista de Eventos,</i> T<sub>k</sub> (</span></b><b><span
+	style='font-size:12.0pt;font-family:Symbol'>a</span></b><b><sub><span
+	style='font-size:12.0pt'>i</span></sub></b><b><span style='font-size:12.0pt'>)
+	= Reloj<i>}</i></span></b></p>
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-align:justify;text-indent:
+	-18.0pt'><b><span style='font-size:12.0pt'>9)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span></b><span style='position:absolute;z-index:251660288;left:0px;
+	margin-left:253px;margin-top:5px;width:42px;height:12px'></span><b><span
+	style='font-size:12.0pt'>Selecciona: <i>Inminentes (Reloj)  <img width=42
+	height=12
+	src="images/Conf_8/image014.gif"></img>  </i></span></b><b><i><span
+	style='font-size:12.0pt;font-family:Symbol'>À</span></i></b><b><i><span
+	style='font-size:12.0pt'> <sup>*</sup> = {1, 2, 3, …}   </span></i></b></p>
+
+	<p class=MsoHeading9><span style='position:absolute;z-index:251661312;
+	left:0px;margin-left:234px;margin-top:34px;width:42px;height:12px'>
+	</span><b>Evento
+	(k, </b><b><span style='font-family:Symbol'>a</span><sub>i</sub>)                  <sub><img
+	width=369 height=75
+	src="images/Conf_8/image016.gif"></sub></b></p>
+
+</div>
+<div class="footer">
+  <p>
+		2013 SESimula (Software Educativo de Simulación)
+  </p>
+  <p>
+     Documentación creada por: <a title="tutor" href="mailto:asalgado@csd.uo.edu.cu">Antonio Salgado Castillo</a>
+  <p>
+	 Diseño de la web por: <a title="autor" href="mailto:alejandro.labrada@csd.uo.edu.cu,aleplusplus@facebook.com">Alejandro Labrada Diaz</a></p>
+ </p>
+ <p>
+    Bajo la licencia GPL <a href="http://www.gnu.org/licenses/fdl.html">GNU
+    Free Documentation License version 1.3</a>
+ </p>
+</div>
+</body>
+</html>

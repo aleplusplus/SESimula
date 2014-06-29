@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- qalgorithms.qdoc -->
+  <title>SESimula - Sistema, Modelación y Simulación</title>
+  <link rel="stylesheet" type="text/css" href="style/offline.css" />
+</head>
+<body>
+<div class="header" id="qtdocheader">
+  <div class="content">
+    <a href="index.html" class="qtref"><span>Documentación de Simulación</span></a>
+  </div>
+  <div class="breadcrumb toolblock">
+    <ul>
+      <li class="first"><a href="index.html">Home</a></li>
+      <li>Conferencia 7</li>
+    </ul>
+  </div>
+</div>
+<div class="content mainContent">
+    <p class="naviNextPrevious headerNavi">
+          [Anterior: <a href="Conferencia_6.html">Conferencia 6</a> ]
+          [Siguiente: <a href="Conferencia_8.html">Conferencia 8</a> ]
+    </p>
+    <div class="toc">
+        <h3><a name="toc">Contenido</a></h3>
+        <ul>
+        <li class="level1"><a href="#conceptos-eventos">Conceptos generales de la simulación	mediante eventos discretos</a></li>
+        <li class="level2"><a href="#sistema-compuesto">Sistema compuesto por un servidor con cola</a></li>
+        <li class="level2"><a href="#sistema-colas">Sistema compuestos de dos servidores en serie con sendas colas</a></li>
+        <li class="level2"><a href="#sistema-paralelo">Sistema de dos servidores en paralelo con una cola común y otras posibilidades</a></li>
+        <li class="level2"><a href="#modelo-inventario">Modelo de inventario</a></li>
+        <li class="level2"><a href="#problema-reparacion">Un problema de reparación</a></li>
+        </ul>
+    </div>
+
+    <h1 class="title">Introducción a la Simulación por Eventos Discretos</h1>
+
+	<h3>Introducción</h3>
+
+
+	<p class=MsoBodyText>En la Conferencia 5 analizamos la estrategia de modelación
+	síncrona en la cual, el intervalo de tiempo de simulación de un proceso
+	discreto, se divide en pequeños subintervalos de tiempo todos de la misma
+	longitud, en los cuales con cierta propiedad puede haber un cambio en el
+	sistema y se estudian precisamente estos cambios a lo largo de tales
+	intervalos. Tal estrategia tiene el inconveniente que no siempre resulta tan
+	fácil determinar el tamaño óptimo de tales subintervalos debido a que en un
+	sistema real puede haber partes que “cambien” mucho más frecuentemente que
+	otras e interesa seguirlas todas en su conjunto. </p>
+
+
+	<p class=MsoBodyText>En la Conferencia 8 analizamos otro enfoque de la
+	simulación de sistemas discretos descomponiéndola en “bloques de entrada y
+	salida” y tratando de analizar como las “entidades móviles” transitaban por
+	cada bloque (momento de llegada, espera, duración en el bloque, momento de
+	salida)  en lugar de hacer un enfoque a través de intervalos regulares de
+	tiempo. Tal estrategia también puede ser muy limitada porque en un sistema real
+	puede existir una estructura lógica de sus elementos no fácilmente representables
+	por el movimiento de entidades a través de ciertas localizaciones o bloques de
+	entrada – salida. Por ejemplo, si puede haber “retornos” a un mismo bloque, la
+	estrategia no puede ser implementada.</p>
+
+
+	<p class=MsoBodyText>En general, la evolución de un sistema en el tiempo puede
+	incluir complejas estructuras que ninguna de las estrategias anteriores la
+	puede resolver. Vamos a presentar en esta conferencia una introducción a la
+	simulación “asíncrona” o simulación “Orientada a eventos”. Se trata de seguir
+	también el sistema a través del tiempo, pero no a través de intervalos
+	idénticos de tiempo, sino moviendo el “reloj de la simulación” en cada paso, al
+	momento en que vaya a ocurrir el próximo “evento” o “cambio en el sistema”, no
+	importa si sea casi inmediato o muy distante del instante actual. Por ello el
+	nombre de asíncrono.</p>
+
+
+	<p class=MsoBodyText>Utilizaremos primero algunos ejemplos que ya hicimos con
+	simulación síncrona. Veremos después algunos ejemplos que no pueden realizarse
+	con simulación síncrona ni orientada a bloques de entrada-salida. Estos
+	ejemplos nos ayudarán a concebir la formulación teórica un modelo “general”
+	para esta estrategia que permitirá tener un programa “general” de simulación
+	orientada a eventos al cual sólo hay que añadir un número mínimo de
+	procedimientos o programas específicos de la aplicación en cuestión. </p>
+
+	<a name="conceptos-eventos"></a>
+	<h2>Conceptos generales de la simulación
+	mediante eventos discretos</h2>
+
+	<p class=MsoNormal style='text-align:justify'>Los elementos fundamentales en
+	una simulación orientada a eventos discretos en esta introducción son las
+	variables y los eventos. Para realizar la simulación, mantenemos un seguimiento
+	continuo de ciertas variables. En general, hay tres clases de variables que se
+	utilizan con mayor frecuencia: la variable de tiempo, Las variables de conteo o
+	contadores y las variables de estado del sistema.</p>
+
+
+
+	<h4>Variables</h4>
+
+
+
+	<table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0
+	 style='border-collapse:collapse'>
+	 <tr>
+	  <td width=185 valign=top style='width:138.5pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'>Variable de tiempo</p>
+	  </td>
+	  <td width=401 valign=top style='width:300.5pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'>Se refiere al tiempo (simulado)
+	  que ha transcurrido</p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=185 valign=top style='width:138.5pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'>Variables de conteo</p>
+	  </td>
+	  <td width=401 valign=top style='width:300.5pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'>Son variables que mantienen un
+	  conteo del número de veces que ciertos eventos han ocurrido hasta el instante
+	  <i>t</i></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=185 valign=top style='width:138.5pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'>Variables de estado del sistema</p>
+	  </td>
+	  <td width=401 valign=top style='width:300.5pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'>Caracterizan el “estado del
+	  sistema” en el instante <i>t</i></p>
+	  </td>
+	 </tr>
+	</table>
+
+
+
+	<p class=MsoBodyText>Siempre que ocurre un “evento” los valores de estas
+	variables se actualizan, y como salida reunimos los datos de interés. Para
+	determinar el momento de ocurrencia del siguiente “evento”, se mantiene una
+	“lista de eventos” que enumera los próximos eventos y el momento en que se
+	espera que ocurran. Siempre que “ocurra” un evento, reestableceremos la
+	variable de tiempo, así como todas las variables de estado y contadores, y
+	reunimos los datos importantes. De esta forma, podemos “seguir” el sistema
+	asíncronamente conforme evoluciona en el tiempo.</p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'>Como lo anterior sólo pretende
+	dar una idea general de los elementos de una simulación de procesos discretos,
+	orientada a eventos, es útil analizar algunos ejemplos, y comenzaremos por
+	problemas donde hay uno o varios servidores, en cola o paralelo, que ya sabemos
+	que pueden resolverse por simulación síncrona, al menos cuando los tiempos de
+	servicio en cada servidor son no muy disímiles.  </p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'>Para facilitar la comprensión en
+	todos estos modelos de cola suponemos que los “clientes” llegan de acuerdo a un
+	proceso de Poisson homogéneo con media <span style='font-family:Symbol'>l</span>,
+	o lo que es equivalente, el Tiempo interarribos se distribuye exponencialmente
+	con razón <span style='font-family:Symbol'>l</span>, o con media 1/<span
+	style='font-family:Symbol'>l</span>. En definitiva lo que cambiará será la
+	forma de generación de números aleatorios. Recuérdese entonces que para generar
+	tiempo entre arribos o momentos de llegada, bastará seguir el siguiente
+	algoritmo:</p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><i>Algoritmo para generar el
+	momento del próximo arribo <b>t</b> después del arribo en el momento <b>t</b>:</i></p>
+
+	
+
+	<p class=MsoNormal style='text-align:justify'><b>Generar </b><b><i>U </i></b><b><span
+	style='font-family:Symbol'>»</span> <i>Uniforme </i>( 0 , 1 )</b></p>
+
+	<h4>Calcular <i>t = t </i>– <i>log ( U ) / </i><i><span style='font-family:
+	Symbol'>l</span></i></h4>
+
+
+
+	<p class=MsoNormal style='text-align:justify'>porque <b>– <i>log ( U ) / </i></b><b><i><span
+	style='font-family:Symbol'>l</span></i></b> tendría distribución exponencial
+	con razón <b><i><span style='font-family:Symbol'>l</span></i></b><i> </i>y por
+	tanto simularía el tiempo entre arribos  (<b><i>t</i></b> es el momento de
+	próxima llegada).</p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'>Después, en clases prácticas podremos
+	analizar otras distribuciones de llegada, normales, uniformes o un poco más
+	reales, en particular, procesos de Poisson no homogéneos.</p>
+
+	
+	<a name="sistema-compuesto"></a>
+	<h2>Sistema compuesto por un servidor con cola</h2>
+
+
+
+	<p class=MsoNormal style='text-align:justify'>Considere una estación de
+	servicios a la cual los clientes llegan de acuerdo con un proceso Poisson
+	homogéneo con intensidad <i><span style='font-family:Symbol'>l</span></i>. Hay
+	un único servidor y al llegar un cliente pasa a servicio si el servidor está
+	libre en ese momento, o bien se incorpora al final de la cola de espera si está
+	ocupado. Cuando el servidor termina de dar servicio a un cliente, se ocupa del
+	cliente que ha estado esperando más tiempo (disciplina FIFO) si hay clientes
+	esperando, o bien, si no los hay, permanece libre hasta la llegada del
+	siguiente cliente. El tiempo que tarda la atención a un cliente es una variable
+	aleatoria (independientemente de los demás tiempos de servicio y del proceso de
+	llegada) con cierta distribución de probabilidad <i>G</i> (también conocida).
+	Hay además un tiempo fijo total <i>T</i> después del cual no se permite que
+	otras llegadas entren al sistema, pero supondremos, por ejemplo, que el
+	servidor atiende a todos los que ya estén dentro del sistema en el instante <i>T</i>.</p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'>Estamos interesados en simular el
+	sistema anterior para determinar cantidades tales como </p>
+
+
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-align:justify;text-indent:
+	-18.0pt'>a)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span>El tiempo promedio que pasa un cliente dentro del sistema</p>
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-align:justify;text-indent:
+	-18.0pt'>b)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span>El tiempo promedio posterior a <i>T</i> hasta que sale el último
+	cliente, esto es, el tiempo promedio adicional que el servidor tiene que
+	trabajar después de <i>T</i> antes de cesar.</p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'>Para simular este problema
+	concreto, utilizamos las siguientes variables:</p>
+
+
+
+	<table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0
+	 style='border-collapse:collapse;border:none'>
+	 <tr>
+	  <td width=185 valign=top style='width:138.5pt;border:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'>Variable de tiempo</p>
+	  </td>
+	  <td width=401 valign=top style='width:300.5pt;border:solid windowtext 1.0pt;
+	  border-left:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><i>t</i></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=185 valign=top style='width:138.5pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'>Variables de conteo</p>
+	  </td>
+	  <td width=401 valign=top style='width:300.5pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><i>N</i><sub>A</sub> : número
+	  de llegadas (hasta el instante <i>t</i>)</p>
+	  <p class=MsoNormal style='text-align:justify'><i>N</i><sub>S</sub>  : número
+	  de salidas (hasta el instante <i>t</i>)</p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=185 valign=top style='width:138.5pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'>Variables de estado del sistema</p>
+	  </td>
+	  <td width=401 valign=top style='width:300.5pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><i>n </i>:   número de clientes
+	  en el sistema en el instante <i>t</i> </p>
+	  </td>
+	 </tr>
+	</table>
+
+
+
+	<p class=MsoNormal style='text-align:justify'>Como el instante natural para
+	modificar las cantidades anteriores es cuando ocurre una llegada o una salida,
+	las consideramos “eventos”; es decir, hay dos tipos de eventos: Llegadas y
+	salidas. La lista de eventos contiene el instante de la siguiente llegada y el
+	instante de la salida del cliente que se encuentra en servicio, es decir, la
+	lista de eventos es:</p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'>            <b>LE ={ <i>t</i><sub>A
+	</sub>, <i>t</i><sub>S </sub>}</b></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'>Donde <i>t</i><sub>A</sub> es el
+	momento de la siguiente llegada y <i>t</i><sub>S</sub> el momento en el que
+	concluirá el servicio del cliente que se está atendiendo actualmente. Si no hay
+	clientes en servicio,</p>
+
+	<p class=MsoNormal style='text-align:justify'><b> <i>t</i><sub>S </sub>= </b><b><span
+	style='font-family:Symbol'>¥</span>. </b></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'>Las variables de salida a
+	registrar son <b><i>A</i>(<i>i</i>),</b> el momento de llegada del cliente <b><i>i</i>:
+	S(<i>i</i>),</b> el momento de salida del cliente <i>i</i>, y <i>T</i><sub>p</sub>
+	el momento de salida del último cliente posterior a <i>T</i>.</p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'>Para comenzar la simulación, inicializamos
+	las variables y los tiempos de los eventos como sigue:</p>
+
+
+
+	<h4>Inicializar </h4>
+
+	<h4 style='text-indent:35.4pt'><i>t </i>= 0, <i>N</i><sub>A </sub>= 0, <i>N</i><sub>S
+	</sub>= 0</h4>
+
+	<h4 style='text-indent:35.4pt'>ES = 0, (*estado del sistema medido en este caso
+	por una única variable <i>n</i>*) </h4>
+
+	<p class=MsoNormal><b>            Generar<i> </i><i>t</i><sub>A</sub>, </b></p>
+
+	<p class=MsoNormal><b>            <i>t</i><sub>S </sub>= </b><b><span
+	style='font-family:Symbol'>¥</span>.</b></p>
+
+
+	<p class=MsoNormal style='text-align:justify'>Para actualizar el sistema, nos
+	movemos a lo largo del eje del tiempo hasta encontrar el siguiente evento. En
+	el primer paso será evidentemente la llegada del primer cliente, pero para los
+	pasos siguientes en cada momento debemos considerar varios casos, dependiendo
+	de cual sea el menor elemento de la lista de eventos. En lo sucesivo, <i>Y</i>
+	se refiere a una variable aleatoria con distribución <i>G</i> para el tiempo de
+	servicio.</p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'>            <b><i>t </i>= variable
+	de tiempo           ES = n      LE={<i> t</i><sub>A</sub>,<i> t</i><sub>S</sub>
+	}</b></p>
+
+	<a name="sistema-colas"></a>
+	<h2>Sistema compuestos de dos servidores en
+	serie con sendas colas</h2>
+
+
+	<a name="sistema-paralelo"></a>
+	<h2>Sistema de dos servidores en paralelo con
+	una cola común y otras posibilidades</h2>
+
+
+	<a name="modelo-inventario"></a>
+	<h2>Modelo de inventario</h2>
+
+	<a name="problema-reparacion"></a>
+	<h2>Un problema de reparación </h2>
+
+</div>
+<div class="footer">
+  <p>
+		2013 SESimula (Software Educativo de Simulación)
+  </p>
+  <p>
+     Documentación creada por: <a title="tutor" href="mailto:asalgado@csd.uo.edu.cu">Antonio Salgado Castillo</a>
+  <p>
+	 Diseño de la web por: <a title="autor" href="mailto:alejandro.labrada@csd.uo.edu.cu,aleplusplus@facebook.com">Alejandro Labrada Diaz</a></p>
+ </p>
+ <p>
+    Bajo la licencia GPL <a href="http://www.gnu.org/licenses/fdl.html">GNU
+    Free Documentation License version 1.3</a>
+ </p>
+</div>
+</body>
+</html>

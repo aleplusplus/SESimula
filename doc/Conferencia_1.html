@@ -1,0 +1,811 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>SESimula - Sistema, Modelación y Simulación</title>
+  <link rel="stylesheet" type="text/css" href="style/offline.css" />
+</head>
+<body>
+<div class="header" id="qtdocheader">
+  <div class="content">
+    <a href="index.html" class="qtref"><span>Documentación de Simulación</span></a>
+  </div>
+  <div class="breadcrumb toolblock">
+    <ul>
+      <li class="first"><a href="index.html">Home</a></li>
+      <li>Conferencia 1</li>
+    </ul>
+  </div>
+</div>
+<div class="content mainContent">
+    <p class="naviNextPrevious headerNavi">
+        [Anterior: <a href="indice.html">Indice</a> ]
+        [Siguiente: <a href="Conferencia_2.html">Conferencia 2</a> ]
+    </p>
+    <div class="toc">
+        <h3><a name="toc">Contenido</a></h3>
+        <ul>
+        <li class="level1"><a href="#definicion-simulacion">Definición de simulación</a></li>
+        <li class="level2"><a href="#ventajas-desventajas">Ventajas y desventajas de la simulación</a></li>
+        <li class="level2"><a href="#definicion-sistema">Definición de sistemas</a></li>
+        <li class="level2"><a href="#sistema-discreto-continuos">Sistemas discretos y continuos. Sistemas estocásticos y determinísticos</a></li>
+        <li class="level2"><a href="#modelo-sistema">Modelos de sistemas</a></li>
+        <li class="level2"><a href="#trabajo-uso">Como trabaja y se usa la simulación</a></li>
+        </ul>
+    </div>
+
+    <h1 class="title">Sistema, Modelación y Simulación</h1>
+
+	<h3>Introducción general al curso y a la conferencia.</h3>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>La simulación es una técnica de creciente importancia
+	en muchos campos teóricos y aplicados. En esta asignatura se discutirá una de
+	las varias clases de simulación: <span style='color:red'>la simulación de
+	procesos estocásticos discretos.</span> Esta primera conferencia caracteriza el
+	tipo de simulaciones que serán discutidas en el curso y para ello se discuten
+	los términos y conceptos que permiten esta caracterización: modelación,
+	sistemas, sistemas discretos, estocásticos, variables, etc. Se comentan además
+	las ventajas y desventajas de la simulación y se hace una breve descripción de
+	cómo trabaja y cómo se usa esta técnica.</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>El programa de la asignatura incluye los siguientes
+	temas</span></p>
+
+	<h3 style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:35.4pt;
+	margin-bottom:.0001pt;text-align:justify'><span lang=ES-TRAD style='font-size:
+	11.0pt;font-family:"Times New Roman","serif"'> 1. Simulación, sistemas y 
+	modelos. </span></h3>
+
+	<h3 style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:35.4pt;
+	margin-bottom:.0001pt;text-align:justify'><span lang=ES-TRAD style='font-size:
+	11.0pt;font-family:"Times New Roman","serif"'> 2. Procedimiento general de
+	simulación de sistemas estocásticos discretos.</span></h3>
+
+	<h3 style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:35.4pt;
+	margin-bottom:.0001pt;text-align:justify'><span lang=ES-TRAD style='font-size:
+	11.0pt;font-family:"Times New Roman","serif"'> 3. Revisión de las herramientas
+	estadísticas de más frecuente uso en simulación. </span></h3>
+
+	<h3 style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:35.4pt;
+	margin-bottom:.0001pt;text-align:justify'><span lang=ES-TRAD style='font-size:
+	11.0pt;font-family:"Times New Roman","serif"'> 4. Generación de números
+	aleatorios para la simulación. </span></h3>
+
+	<h3 style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:35.4pt;
+	margin-bottom:.0001pt;text-align:justify'><span lang=ES-TRAD style='font-size:
+	11.0pt;font-family:"Times New Roman","serif"'> 5. Programación y lenguajes de
+	simulación.</span></h3>
+
+	<h3 style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:35.4pt;
+	margin-bottom:.0001pt;text-align:justify'><span lang=ES-TRAD style='font-size:
+	11.0pt;font-family:"Times New Roman","serif"'> 6. Un ejemplo completo de
+	simulación con ayuda de paquetes.</span></h3>
+
+	<h3 style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:35.4pt;
+	margin-bottom:.0001pt;text-align:justify'><span lang=ES-TRAD style='font-size:
+	11.0pt;font-family:"Times New Roman","serif"'> 7. Programación de modelos y
+	estrategias particulares de simulación</span></h3>
+
+	<h3 style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:35.4pt;
+	margin-bottom:.0001pt;text-align:justify'><span lang=ES-TRAD style='font-size:
+	11.0pt;font-family:"Times New Roman","serif"'> 8. Modelación con Redes de Petri</span></h3>
+
+	<p>Los detalles del Programa de la asignatura pueden verse en la Intranet de la Facultad. <a href="ftp://ftp.csd.uo.edu.cu/pub/DOCENCIA/bibliografia_computacion/INTELIGENCIA%20ARTIFICIAL/SIMULACIÓN/">SIMULACIÓN</a></p>
+
+	<a name="definicion-simulacion"></a>
+	<h2>Definición de simulación</h2>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>El concepto de simulación tiene múltiples acepciones.
+	El uso general del término puede responder a lo siguiente &quot;Simulación es
+	un acto o proceso que brinda la apariencia o efecto de alguna parte de la
+	realidad...Simular es obtener la esencia sin la realidad...&quot; [1].  Este
+	concepto puede ser muy general y válido pero poco operacional. Además tiende a
+	confundir la &quot;modelación&quot; y la &quot;simulación&quot; porque en
+	última instancia &quot;modelar&quot; es obtener también la esencia.</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Si se pretende conceptualizar
+	&quot;modelación-simulación&quot; como un proceso único, puede ser efectivo la
+	siguiente definición informal [2]: &quot;Modelación y simulación es el conjunto
+	de actividades asociado a la construcción de <i>modelos</i> del mundo real y su
+	<i>simulación</i>  mediante <i>computadoras</i> con el objetivo de dar solución
+	a <i>determinados procesos</i>&quot;</span></p>
+
+	<p align="center">
+	<img src="images/Conf_1/image001.gif"></img>
+	</p>
+	
+	<br clear=ALL>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Según esta idea:</span></p>
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt;font-family:Wingdings'>§<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=ES-TRAD
+	style='font-size:11.0pt'>La modelación se ocupa de la relación entre sistemas
+	reales y el modelo</span></p>
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt;font-family:Wingdings'>§<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=ES-TRAD
+	style='font-size:11.0pt'>La simulación se ocupa de la relación entre los
+	modelos y la computadora.</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Esta definición informal de
+	&quot;modelación-simulación&quot; pone en foco además que se tienen tres
+	componentes esenciales en el proceso: </span><b><span lang=ES-TRAD
+	style='font-size:14.0pt'>el sistema real, el modelo y la computadora</span></b><span
+	lang=ES-TRAD style='font-size:11.0pt'>. Para algunos autores [2] son cinco las
+	componentes esenciales: </span><b><i><span lang=ES-TRAD style='font-size:14.0pt'>el
+	sistema real, el marco experimental, el modelo base, el modelo simplificado y
+	la computadora</span></i></b><i><span lang=ES-TRAD style='font-size:11.0pt'>.</span></i><span
+	lang=ES-TRAD style='font-size:11.0pt'> </span></p>
+
+	<p class=MsoNormal style='text-align:justify'><b><u><span lang=ES-TRAD
+	style='font-size:14.0pt'>Sistema Real</span></u></b></p>
+
+	<p align="center">
+	<img src="images/Conf_1/image002.gif">
+	</p>
+
+	<br clear=ALL>
+
+	<p class=MsoNormal style='text-align:justify'><b><span lang=ES-TRAD
+	style='font-size:11.0pt'>Básicamente, la simulación podemos utilizarla en dos
+	casos:</span></b></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>* Cuando el sistema existe: En este caso, la
+	simulación se utiliza como herramienta de análisis para predecir los efectos y
+	las alteraciones que los cambios introducidos produzcan sobre el rendimiento
+	del sistema.</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>* Cuando el sistema no está construido: En este caso,
+	la simulación se utiliza como herramienta de diseño para predecir el
+	rendimiento de nuevos sistemas bajo un diverso grupo de condiciones y
+	circunstancias.</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:12.0pt;font-family:"Arial","sans-serif"'>El llamado Sistema
+	Real</span><span lang=ES-TRAD style='font-size:11.0pt'> </span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Es una <u>fuente de datos a observar</u>. Puede ser un
+	sistema físico, químico, biológico, económico, social, etc., y en principio
+	debe ser analizable a través de ciertas &quot;variables&quot;. A los fines de
+	la simulación, su funcionamiento debe caracterizarse por funciones que
+	relacionan variables de &quot;entrada&quot; y &quot;salida&quot; y pueden
+	existir además ciertas variables &quot;de estado&quot; no necesariamente
+	observables, de acuerdo al esquema anterior</span></p>
+
+	<h3 style='text-align:justify'><span lang=ES-TRAD>Marco experimental</span></h3>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Caracteriza un conjunto limitado de circunstancias
+	bajo las cuales se experimenta o se observa el sistema real. Para un mismo
+	sistema real pueden existir varios marcos experimentales de interés. La validez
+	de un modelo de simulación será siempre relativa a un marco experimental dado.</span></p>
+
+
+	<h3 style='text-align:justify'><span lang=ES-TRAD>Modelo base</span></h3>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Es teóricamente un modelo capaz de reflejar todo el
+	comportamiento del sistema real, es decir un modelo válido en cualquier marco
+	experimental permisible</span></p>
+
+
+	<h3 style='text-align:justify'><span lang=ES-TRAD>Modelo simplificado</span></h3>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Es un modelo que se construye a partir del modelo
+	base, simplificando componentes e interacciones y de acuerdo a un marco
+	experimental concreto.</span></p>
+
+
+
+	<h3 style='text-align:justify'><span lang=ES-TRAD>Computadora</span></h3>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Es el dispositivo con cuya ayuda se generan los
+	&quot;pares&quot; de entrada/salida  del modelo simplificado. Normalmente estas
+	trayectorias se ejecutan paso a paso o continuas en el tiempo y a este proceso
+	se le denomina &quot;simulación&quot;. En la simulación de procesos
+	estocásticos discretos como los que vamos a estudiar, se usa siempre una
+	computadora digital.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:14.0pt'>E.I</span><span lang=ES-TRAD style='font-size:11.0pt'>:
+	<b>El Anexo A incluye un ejemplo de problema en el cual se caracterizan el
+	modelo base, el marco experimental y el modelo simplificado.</b></span></p>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Definición más precisa de simulación: </span><i><span
+	lang=ES-TRAD style='font-size:14.0pt'>&quot;Simulación es una <u>técnica
+	numérica</u> para <u>conducir experimentos</u> sobre una <u>computadora digital</u>
+	que envuelve ciertos tipos de <u>modelos matemáticos y lógicos</u> que
+	describen el comportamiento de <u>sistemas </u>físicos, químicos, biológicos,
+	económicos o sociales, <u> a lo largo del tiempo&quot;.</u></span></i></p>
+
+	<a name="ventajas-desventajas"></a>
+	<h2>Ventajas y desventajas de la simulación.</h2>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Viendo la simulación como técnica de modelación o de
+	experimentación, tiene  como ventajas, las siguientes:</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>Tratabilidad. </span></p>
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>Esto significa la posibilidad de tratar
+	sistemas en los cuales es imposible experimentar ampliamente con la realidad
+	por razones técnicas, económicas, humanitarias, etc. R. Hing tiene ejemplos
+	fehacientes relacionados con investigaciones de física nuclear. R. Grau tiene
+	ejemplos interesantes con epidemias.</span></p>
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>Esta ventaja se extiende a problemas cuya
+	experimentación no es tan &quot;peligrosa&quot; pero cuestionable desde el
+	punto de vista económico. </span></p>
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>2.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>Facilidades para la
+	experimentación controlada:</span></p>
+
+	<p class=MsoNormal style='margin-left:88.8pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>permite la
+	consideración de muchos factores</span></p>
+
+	<p class=MsoNormal style='margin-left:88.8pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>permite la
+	manipulación de muchas unidades individuales</span></p>
+
+	<p class=MsoNormal style='margin-left:88.8pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>permite el manejo de
+	políticas alternativas</span></p>
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>3.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>La simulación es una
+	buena herramienta de entrenamiento (hay por ejemplo programa de simulación del
+	pilotaje de un avión)</span></p>
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>4.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>El proceso como tal
+	de la simulación permite adquirir información intrínseca sobre los procesos,
+	que tiene su valor, independientemente del proceso de simulación</span></p>
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>5.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>La simulación puede
+	hacer que una gerencia &quot;mediocre&quot; se haga más efectiva </span></p>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>La simulación tiene como desventajas:</span></p>
+
+
+	<p class=MsoNormal style='margin-left:53.4pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>Es muy costosa. </span></p>
+
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>El costo más elevado es el de los
+	recursos humanos, pues se requiere de muchos especialistas altamente
+	calificados. La simulación requiere de computadoras suficientemente rápidas y
+	de alta capacidad. Ello se puede lograr hoy en día con microcomputadoras pero
+	de la última generación y preferiblemente conectadas en red con un servidor
+	suficientemente potente. La simulación requiere a veces de otros recursos
+	escasos y caros, digamos sensores.</span></p>
+
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>Fácilmente el costo de la simulación de
+	un proceso más o menos complicado se eleva a cientos de miles de dólares. </span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:53.4pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>2.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>Requiere de un tiempo
+	largo para el desarrollo</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:53.4pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>Una simulación satisfactoria de un
+	proceso más o menos complicado requiere no menos de 1 o 2 años con varios
+	especialistas.</span></p>
+
+
+	<p class=MsoNormal style='margin-left:53.4pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>3.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>Requiere a veces de
+	grandes estudios de campo, que por demás no son usualmente del gusto de
+	especialistas</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:53.4pt;text-align:justify;text-indent:
+	-18.0pt'><b><i><span lang=ES-TRAD style='font-size:11.0pt'>4.<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></i></b><b><i><span
+	lang=ES-TRAD style='font-size:11.0pt'>Hay una última desventaja sutil:</span></i></b></p>
+
+
+	<p class=MsoNormal style='margin-left:53.4pt;text-align:justify'><i><span
+	lang=ES-TRAD style='font-size:11.0pt'>La simulación existe solo como un
+	conjunto de programas y por tanto los jefes no &quot;ven&quot; cómo ella opera
+	realmente. Por suerte ellos normalmente aceptan los resultados sin demasiada
+	oposición; pero cualquier resultado negativo pasa a ser
+	&quot;determinante&quot; aunque en realidad no lo es, o está asociado a un
+	detalle fácilmente reparable.</span></i></p>
+
+
+	<a name="definicion-sistema"></a>
+	<h2>Definición de sistemas.</h2>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Se ha definido el objeto de estudio de la asignatura
+	como la simulación de sistemas estocásticos discretos. Ello exige una
+	definición de sistemas, al menos desde el punto de vista de la teoría de la
+	simulación.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt;color:red'>&quot;Un sistema es una colección de
+	componentes interdependientes o que interactúan regularmente</span><span
+	lang=ES-TRAD style='font-size:11.0pt'> (a los fines de simulación se tratan
+	componentes tales como máquinas, personas, información y comunicaciones) <span
+	style='color:red'>actuando como una unidad para alcanzar una misión implícita o
+	explícita&quot;.</span></span></p>
+
+
+
+	<table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0
+	 style='border-collapse:collapse'>
+	 <tr>
+	  <td width=127 style='width:95.4pt;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoBodyText align=center style='margin-top:12.0pt;text-align:center'><span
+	  style='font-size:12.0pt'>Ejemplos:</span></p>
+	  </td>
+	  <td width=192 style='width:144.0pt;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoBodyText align=center style='margin-top:12.0pt;text-align:center'><u><span
+	  style='font-size:12.0pt;font-weight:normal'>Componentes</span></u></p>
+	  </td>
+	  <td width=279 style='width:209.6pt;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoBodyText align=center style='margin-top:12.0pt;text-align:center'><span
+	  style='font-size:12.0pt'>Interacciones</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=127 rowspan=4 style='width:95.4pt;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoBodyText align=center style='margin-top:12.0pt;text-align:center'><span
+	  style='font-size:12.0pt;font-weight:normal'>Puestos de trabajo       </span></p>
+	  </td>
+	  <td width=192 style='width:144.0pt;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoBodyText align=center style='margin-top:12.0pt;text-align:center'><span
+	  style='font-size:12.0pt;font-weight:normal'>Computadora</span></p>
+	  </td>
+	  <td width=279 rowspan=4 style='width:209.6pt;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoBodyText style='text-align:justify'><span style='font-size:12.0pt;
+	  font-weight:normal'>el operador lee la libreta de notas para ver que tiene
+	  que calcular</span></p>
+	  <p class=MsoBodyText style='text-align:justify'><span style='font-size:12.0pt;
+	  font-weight:normal'>presiona  botones sobre la calculadora para efectuar el
+	  calculo</span></p>
+	  <p class=MsoBodyText style='text-align:justify'><span style='font-size:12.0pt;
+	  font-weight:normal'>lee la respuesta de la calculadora </span></p>
+	  <p class=MsoBodyText style='text-align:justify'><span style='font-size:12.0pt;
+	  font-weight:normal'>usa el lápiz para anotar en la libreta o hacer interpretaciones
+	  </span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=192 style='width:144.0pt;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoBodyText align=center style='margin-top:12.0pt;text-align:center'><span
+	  style='font-size:12.0pt;font-weight:normal'>Operador</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=192 style='width:144.0pt;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoBodyText align=center style='margin-top:12.0pt;text-align:center'><span
+	  style='font-size:12.0pt;font-weight:normal'>Libreta de notas</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=192 style='width:144.0pt;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoBodyText align=center style='margin-top:12.0pt;text-align:center'><span
+	  style='font-size:12.0pt;font-weight:normal'>Lápiz</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=127 rowspan=3 style='width:95.4pt;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoBodyText align=center style='margin-top:12.0pt;text-align:center'><span
+	  style='font-size:12.0pt;font-weight:normal'>Clase práctica de Estadística en
+	  un laboratorio de Computación</span></p>
+	  </td>
+	  <td width=192 style='width:144.0pt;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoBodyText align=center style='margin-top:12.0pt;margin-right:-5.4pt;
+	  margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:center'><span
+	  style='font-size:12.0pt;font-weight:normal'>10 Puestos de trabajos</span></p>
+	  </td>
+	  <td width=279 rowspan=3 style='width:209.6pt;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoBodyText style='margin-top:12.0pt;text-align:justify'><span
+	  style='font-size:12.0pt;font-weight:normal'>Nota: la misión de los
+	  subsistemas que representan los puestos de trabajo es asignada por el
+	  profesor. La misión de la CP puede no estar definida explícitamente pero está
+	  claro que hay una misión implícita.</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=192 style='width:144.0pt;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoBodyText align=center style='margin-top:12.0pt;text-align:center'><span
+	  style='font-size:12.0pt;font-weight:normal'>Profesor</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=192 style='width:144.0pt;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoBodyText align=center style='margin-top:12.0pt;text-align:center'><span
+	  style='font-size:12.0pt;font-weight:normal'>Medios audiovisuales</span></p>
+	  </td>
+	 </tr>
+	</table>
+
+	<a name="sistema-discreto-continuos"></a>
+	<h2>Sistemas discretos y continuos. Sistemas estocásticos y
+	determinísticos</h2>
+
+	<p class=MsoBodyText style='margin-top:12.0pt;text-align:justify'><u><span
+	style='font-size:12.0pt;font-weight:normal'>Clasificaciones de los sistemas</span></u></p>
+
+	<p class=MsoBodyText style='margin-left:35.7pt;text-align:justify;text-indent:
+	-17.85pt'><span style='font-size:12.0pt;font-family:Wingdings;font-weight:normal'>§<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span
+	style='font-size:12.0pt;font-weight:normal'>Continuos: Las variables pueden
+	variar continuamente a lo largo del tiempo(variables que pueden tomar valores
+	reales en un intervalo o un conjunto dado de intervalos en cada instante de
+	tiempo )</span></p>
+
+	<p class=MsoBodyText style='margin-left:35.7pt;text-align:justify;text-indent:
+	-17.85pt'><span style='font-size:12.0pt;font-family:Wingdings;font-weight:normal'>§<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span
+	style='font-size:12.0pt;font-weight:normal'>Discretos: incluyen variables que
+	pueden tomar solamente valores particulares en un conjunto de alternativas.</span></p>
+
+	<p class=MsoBodyText style='margin-left:35.7pt;text-align:justify;text-indent:
+	-17.85pt'><span style='font-size:12.0pt;font-family:Wingdings;font-weight:normal'>§<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span
+	style='font-size:12.0pt;font-weight:normal'>Atendiendo a la forma que cambia de
+	un estado a otro o lo que es lo mismo, los valores que pueden ser tomados por
+	las variables que caracterizan el estado del sistema</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span style='font-size:11.0pt'>&nbsp;</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>La &quot;clase práctica de Estadística en el
+	laboratorio de computadoras&quot; es un sistema discreto porque el sistema
+	cambia de uno a otro estado en la medida que se realizan actividades en una
+	sucesión de pasos individuales. Por ejemplo, el operador o estudiante en cada
+	puesto de trabajo está asociado a una serie de actividades discretas: lee de la
+	libreta, pulsa el teclado, hace notas en el papel, estudia los resultados, oye
+	al  instructor, está distraído, etc. En cada momento particular su estado puede
+	ser especificado por una variable que indica en cuál de estas actividades está
+	enfrascado.</span></p>
+
+	<p class=MsoBodyText style='margin-left:8.95pt;text-align:justify'><span
+	style='font-size:12.0pt;font-weight:normal'>\El operador en cada conjunto de
+	trabajo está asociado a una serie de actividades discretas:</span></p>
+
+	<table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0
+	 style='border-collapse:collapse'>
+	 <tr style='height:21.0pt'>
+	  <td width=187 style='width:140.4pt;padding:0cm 5.4pt 0cm 5.4pt;height:21.0pt'>
+	  <p class=MsoBodyText style='text-align:justify'><span style='position:absolute;
+	  z-index:251656192;left:0px;margin-left:174px;margin-top:6px;width:62px;
+	  height:146px'></span><span
+	  style='font-size:12.0pt;font-weight:normal'>Lee la libreta                   </span></p>
+	  </td>
+	  <td width=411 rowspan=6 style='width:308.6pt;padding:0cm 5.4pt 0cm 5.4pt;
+	  height:21.0pt'>
+	  <p class=MsoBodyText align=center style='margin-left:30.6pt;text-align:center'><span
+	  style='font-size:12.0pt;font-weight:normal'>En cada momento particular su
+	  estado puede ser especificado por una variable en cual de estas actividades
+	  está enfrascado</span></p>
+	  </td>
+	 </tr>
+	 <tr style='height:21.0pt'>
+	  <td width=187 style='width:140.4pt;padding:0cm 5.4pt 0cm 5.4pt;height:21.0pt'>
+	  <p class=MsoBodyText style='text-align:justify'><span style='font-size:12.0pt;
+	  font-weight:normal'>Pulsa el teclado                 </span></p>
+	  </td>
+	 </tr>
+	 <tr style='height:21.0pt'>
+	  <td width=187 style='width:140.4pt;padding:0cm 5.4pt 0cm 5.4pt;height:21.0pt'>
+	  <p class=MsoBodyText style='text-align:justify'><span style='font-size:12.0pt;
+	  font-weight:normal'>Hace notas en el papel</span></p>
+	  </td>
+	 </tr>
+	 <tr style='height:21.0pt'>
+	  <td width=187 style='width:140.4pt;padding:0cm 5.4pt 0cm 5.4pt;height:21.0pt'>
+	  <p class=MsoBodyText style='text-align:justify'><span style='font-size:12.0pt;
+	  font-weight:normal'>Estudia los resultados</span></p>
+	  </td>
+	 </tr>
+	 <tr style='height:21.0pt'>
+	  <td width=187 style='width:140.4pt;padding:0cm 5.4pt 0cm 5.4pt;height:21.0pt'>
+	  <p class=MsoBodyText style='text-align:justify'><span style='font-size:12.0pt;
+	  font-weight:normal'>Oye al instructor </span></p>
+	  </td>
+	 </tr>
+	 <tr style='height:21.0pt'>
+	  <td width=187 style='width:140.4pt;padding:0cm 5.4pt 0cm 5.4pt;height:21.0pt'>
+	  <p class=MsoBodyText style='text-align:justify'><span style='font-size:12.0pt;
+	  font-weight:normal'>Está distraído</span></p>
+	  </td>
+	 </tr>
+	</table>
+
+	<p class=MsoBodyText style='text-align:justify'><span style='font-size:12.0pt;
+	font-weight:normal'>Sistema de atención a usuarios a una oficina en el que se
+	pretende describir el estado de los empleados y el tiempo que demora cada
+	cliente en ser atendido.</span></p>
+
+
+
+	<p class=MsoBodyText style='margin-left:8.95pt;text-align:justify'><span
+	style='font-size:12.0pt;font-weight:normal'>La recepcionista puede indicarse
+	por una variable  cuyos valores discretos muestra </span></p>
+
+	<p class=MsoBodyText style='margin-left:26.95pt;text-align:justify;text-indent:
+	-18.0pt'><span style='font-size:12.0pt;font-family:Wingdings;font-weight:normal'>§<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span
+	style='font-size:12.0pt;font-weight:normal'>Si está conversando con un cliente</span></p>
+
+	<p class=MsoBodyText style='margin-left:26.95pt;text-align:justify;text-indent:
+	-18.0pt'><span style='font-size:12.0pt;font-family:Wingdings;font-weight:normal'>§<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span
+	style='font-size:12.0pt;font-weight:normal'>Llamando por teléfono</span></p>
+
+	<p class=MsoBodyText style='margin-left:26.95pt;text-align:justify;text-indent:
+	-18.0pt'><span style='font-size:12.0pt;font-family:Wingdings;font-weight:normal'>§<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span
+	style='font-size:12.0pt;font-weight:normal'>Llenando ciertos documentos </span></p>
+
+	<p class=MsoBodyText style='margin-left:26.95pt;text-align:justify;text-indent:
+	-18.0pt'><span style='font-size:12.0pt;font-family:Wingdings;font-weight:normal'>§<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span
+	style='font-size:12.0pt;font-weight:normal'>Esperando sin nada que hacer</span></p>
+
+	<p class=MsoBodyText style='margin-left:26.95pt;text-align:justify;text-indent:
+	-18.0pt'><span style='font-size:12.0pt;font-family:Wingdings;font-weight:normal'>§<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span
+	style='font-size:12.0pt;font-weight:normal'>Está fuera de su puesto de trabajo</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span style='font-size:11.0pt'>&nbsp;</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><b><span lang=ES-TRAD
+	style='font-size:12.0pt'>Como un ejemplo de sistema continuo</span></b><span
+	lang=ES-TRAD style='font-size:11.0pt'> pudiera considerarse el formado por un
+	aeroplano en vuelo. En tal sistema pudiera ser de interés la potencia de los
+	motores, la dirección y velocidad del viento, la posición de las superficies de
+	control, la posición y velocidad del aeroplano, todas las cuales son continuas.
+	</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Normalmente la modelación-simulación de sistemas
+	continuos se logra con modelos matemáticos bastante complicados, basados por
+	ejemplo en sistemas de </span><b><span lang=ES-TRAD style='font-size:14.0pt'>ecuaciones
+	diferenciales,</span></b><span lang=ES-TRAD style='font-size:11.0pt'> que son
+	manipulados eficientemente por computadoras. </span></p>
+
+
+	<p class=MsoNormal style='text-align:justify'><b><span lang=ES-TRAD
+	style='font-size:11.0pt'>Muchas veces y a los fines de la simulación se
+	&quot;discretiza&quot; el proceso, haciendo mediciones en intervalos regulares
+	de tiempo para procesar por computadoras digitales. </span></b></p>
+
+	<p class=MsoBodyText style='margin-top:12.0pt;text-align:justify'><span
+	style='font-size:12.0pt;font-weight:normal'>Vuelo del aeroplano </span></p>
+
+	<table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0
+	 style='border-collapse:collapse'>
+	 <tr style='height:21.0pt'>
+	  <td width=187 style='width:140.4pt;padding:0cm 5.4pt 0cm 5.4pt;height:21.0pt'>
+	  <p class=MsoBodyText align=center style='margin-top:12.0pt;text-align:center'><span
+	  style='position:absolute;z-index:251657216;left:0px;margin-left:154px;
+	  margin-top:15px;width:62px;height:122px'></span><span
+	  style='font-size:12.0pt;font-weight:normal'>Estados</span></p>
+	  </td>
+	  <td width=411 rowspan=5 style='width:308.6pt;padding:0cm 5.4pt 0cm 5.4pt;
+	  height:21.0pt'>
+	  <p class=MsoBodyText align=center style='margin-left:30.6pt;text-align:center'><span
+	  style='font-size:12.0pt;font-weight:normal'>Es útil para  en estudio de
+	  tráfico aéreo pero no para simular características de vuelo del aeroplano o
+	  la destreza del piloto</span></p>
+	  </td>
+	 </tr>
+	 <tr style='height:21.0pt'>
+	  <td width=187 style='width:140.4pt;padding:0cm 5.4pt 0cm 5.4pt;height:21.0pt'>
+	  <p class=MsoBodyText align=center style='text-align:center'><span
+	  style='font-size:12.0pt;font-weight:normal'>Desemboque</span></p>
+	  </td>
+	 </tr>
+	 <tr style='height:21.0pt'>
+	  <td width=187 style='width:140.4pt;padding:0cm 5.4pt 0cm 5.4pt;height:21.0pt'>
+	  <p class=MsoBodyText align=center style='text-align:center'><span
+	  style='font-size:12.0pt;font-weight:normal'>Vuelo sobre tierra</span></p>
+	  </td>
+	 </tr>
+	 <tr style='height:21.0pt'>
+	  <td width=187 style='width:140.4pt;padding:0cm 5.4pt 0cm 5.4pt;height:21.0pt'>
+	  <p class=MsoBodyText align=center style='text-align:center'><span
+	  style='font-size:12.0pt;font-weight:normal'>Sobre la tierra</span></p>
+	  </td>
+	 </tr>
+	 <tr style='height:21.0pt'>
+	  <td width=187 style='width:140.4pt;padding:0cm 5.4pt 0cm 5.4pt;height:21.0pt'>
+	  <p class=MsoBodyText align=center style='text-align:center'><span
+	  style='font-size:12.0pt;font-weight:normal'>Aterrizaje</span></p>
+	  </td>
+	 </tr>
+	</table>
+
+
+	<p class=MsoNormal style='text-align:justify'><i><span lang=ES-TRAD
+	style='font-size:14.0pt'>Si la salida puede ser predicha completamente a partir
+	del estado inicial del sistema, este es <b>determinístic</b>o; pero si la
+	salida responde a una entrada dada con una cierta variación de acuerdo a una
+	distribución, el sistema es <b>estocástico</b>.</span></i></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Pero el sistema, por ejemplo, de la oficina de
+	atención, es estocástico, porque los tiempos de espera o atención de un cliente
+	varían acorde con cierta distribución que debe ser estudiada. </span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Finalmente, se reitera que el objeto de estudio del
+	presente curso es la modelación de sistemas estocásticos discretos, Modelos de
+	sistemas</span></p>
+
+	<p class=MsoBodyText style='margin-top:12.0pt;text-align:justify'><u><span
+	style='font-size:12.0pt;font-weight:normal'>Motor del Sistema </span></u></p>
+
+	<p class=MsoBodyText style='margin-top:12.0pt;text-align:justify'><span
+	style='font-size:12.0pt;font-weight:normal'>La preparación de  los modelos en
+	una parte integral del desarrollo de la modelación y simulación.</span></p>
+
+	<p class=MsoBodyText style='margin-top:12.0pt;text-align:justify'><span
+	style='font-size:12.0pt;font-weight:normal'>Tipos de modelos </span></p>
+
+	<p class=MsoBodyText style='margin-left:148.0pt;text-align:justify;text-indent:
+	-17.85pt'><span style='font-size:8.0pt;font-family:Symbol;font-weight:normal'>·<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span style='font-size:12.0pt;font-weight:normal'>Matemático              (Ojo)</span></p>
+
+	<p class=MsoBodyText style='margin-left:148.0pt;text-align:justify;text-indent:
+	-17.85pt'><span style='font-size:8.0pt;font-family:Symbol;font-weight:normal'>·<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span style='font-size:12.0pt;font-weight:normal'>Físicos</span></p>
+
+	<p class=MsoBodyText style='margin-left:148.0pt;text-align:justify;text-indent:
+	-17.85pt'><span style='font-size:8.0pt;font-family:Symbol;font-weight:normal'>·<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span style='font-size:12.0pt;font-weight:normal'>Descriptivos
+	variables </span></p>
+
+	<p class=MsoBodyText style='margin-left:148.0pt;text-align:justify;text-indent:
+	-17.85pt'><span style='font-size:8.0pt;font-family:Symbol;font-weight:normal'>·<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span style='font-size:12.0pt;font-weight:normal'>Diagramas de
+	flujo </span></p>
+
+	<p class=MsoBodyText style='margin-left:148.0pt;text-align:justify;text-indent:
+	-17.85pt'><span style='font-size:8.0pt;font-family:Symbol;font-weight:normal'>·<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span style='font-size:12.0pt;font-weight:normal'>Computacionales</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt;font-family:Wingdings'>Ø<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=ES-TRAD
+	style='font-size:11.0pt'>Por ejemplo, los orientados a cortes transversales en
+	el tiempo, intentan ver como cambia el sistema en todos sus aspectos a los
+	largo del tiempo, digamos en tiempos discretos t<sub>1</sub>, t<sub>2</sub>,...,
+	tn. Frecuentemente se utilizan para esto intervalos regulares de tiempo: t<sub>i</sub>-t<sub>i-1</sub>=h
+	(con h constante).</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>&nbsp;</span></p>
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt;font-family:Wingdings'>Ø<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=ES-TRAD
+	style='font-size:11.0pt'>Los modelos orientados a eventos focalizan su atención
+	sobre &quot;eventos&quot; vistos como &quot;cambios en el estado de las
+	variables&quot; en &quot;ciertos instantes de tiempo&quot; pero no
+	necesariamente regulares. En este caso, el sistema se observa de un evento a
+	otro, hasta que se complete una secuencia predeterminada de tales eventos o se
+	alcance un &quot;evento crítico&quot; (en lugar de un &quot;tiempo t<sub>n</sub>&quot;
+	final de la simulación).</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><b><span lang=ES-TRAD
+	style='font-size:14.0pt'>EJEMPLOS:</span></b></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Por ejemplo, las operaciones sobre una oficina que
+	atiende clientes pueden ser vistas por ambas tendencias.  En el enfoque
+	&quot;orientado a eventos&quot;,  la oficina se ve como una secuencia de
+	servicios o procesos relacionados con los clientes. Cada evento es un paso en
+	la interacción de la oficina con sus clientes. Una cadena de eventos comienza con
+	el arribo de un cliente. Este evento conduce a una interacción con la
+	recepcionista. Los siguientes pasos del cliente dentro de la oficina se ven
+	como una cadena de eventos, cada uno de los cuales genera el siguiente. El
+	tiempo transcurrido entre dos eventos se observa simplemente a lo largo de este
+	recorrido pero no es observado ni fijado &quot;a priori&quot;.</span></p>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>En la modelación orientada a &quot;cortes de
+	tiempo&quot; del mismo problema, la oficina se observa a intervalos fijos y
+	regulares de tiempo, y en cada momento se caracteriza el estado de todos los
+	elementos del modelo.  Puede ocurrir incluso, que algunos componentes (digamos
+	el estado de la recepcionista del piso &quot;n&quot;)  no haya cambiado de un
+	estado a otro. </span></p>
+	
+	<a name="modelo-sistema"></a>
+	<h2>Modelos de sistemas</h2>
+	<a name="modelo-sistema"></a>
+	<h2>Como trabaja y se usa la simulación</h2>
+	<a name="trabajo-uso"></a>
+	<h2>Como trabaja y se usa la simulación</h2>
+
+	<h2 style='text-align:justify'><span lang=ES-TRAD>Anexo A</span></h2>
+
+	<h3 style='text-align:justify'><span lang=ES-TRAD>Ejemplo de los ascensores
+	(para mostrar las componentes fundamentales de la modelación-simulación).</span></h3>
+
+	<h2 style='text-align:justify'><span lang=ES-TRAD>Anexo B</span></h2>
+
+	<h3 style='text-align:justify'><span lang=ES-TRAD>Ejemplo no trivial de modelos
+	determinísticos y estocásticos. Modelación de epidemias.</span></h3>
+</div>
+
+<div class="footer">
+  <p>
+		2013 SESimula (Software Educativo de Simulación)
+  </p>
+  <p>
+     Documentación creada por: <a title="tutor" href="mailto:asalgado@csd.uo.edu.cu">Antonio Salgado Castillo</a>
+  <p>
+	 Diseño de la web por: <a title="autor" href="mailto:alejandro.labrada@csd.uo.edu.cu,aleplusplus@facebook.com">Alejandro Labrada Diaz</a></p>
+ </p>
+ <p>
+    Bajo la licencia GPL <a href="http://www.gnu.org/licenses/fdl.html">GNU
+    Free Documentation License version 1.3</a>
+ </p>
+</div>
+</body>
+</html>

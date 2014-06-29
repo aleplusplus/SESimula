@@ -1,0 +1,2286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- qalgorithms.qdoc -->
+  <title>SESimula - Sistema, Modelación y Simulación</title>
+  <link rel="stylesheet" type="text/css" href="style/offline.css" />
+</head>
+<body>
+<div class="header" id="qtdocheader">
+  <div class="content">
+    <a href="index.html" class="qtref"><span>Documentación de Simulación</span></a>
+  </div>
+  <div class="breadcrumb toolblock">
+    <ul>
+      <li class="first"><a href="index.html">Home</a></li>
+      <li>Conferencia 2</li>
+    </ul>
+  </div>
+</div>
+<div class="content mainContent">
+    <p class="naviNextPrevious headerNavi">
+          [Anterior: <a href="Conferencia_1.html">Conferencia 1</a> ]
+          [Siguiente: <a href="Conferencia_3.html">Conferencia 3</a> ]
+    </p>
+    <div class="toc">
+        <h3><a name="toc">Contenido</a></h3>
+        <ul>
+        <li class="level1"><a href="#enfoque-procedimiento">Enfoque general del procedimiento</a></li>
+        <li class="level2"><a href="#analisis-formulacion">Análisis preliminar y formulación del problema</a></li>
+        <li class="level2"><a href="#primeros-modelos">Primeros modelos</a></li>
+		<li class="level2"><a href="#recolecion-analisis">Recolección y anlaisis de datos</a></li>
+        <li class="level2"><a href="#refinamiento-programacion-validacion">Refinamiento del modelo, programación y validación</a></li>
+        <li class="level2"><a href="#trabajo-grupo">El trabajo en grupos</a></li>
+        <li class="level2"><a href="#resumen-tareas">Resumen de tareas por etapas en el proceso general</a></li>
+		<li class="level2"><a href="#conclusiones">Conclusiones</a></li>
+        </ul>
+    </div>
+
+    <h1 class="title">Procedimeinto General de Simulación</h1>
+	
+	<h3>Introducción</h3>
+
+	<p>En la conferencia anterior se estudiaron conceptos
+	básicos relacionados con la simulación en general, y en particular se precisó
+	la  definición de la <i>simulación de procesos discretos estocásticos</i> que
+	será el objeto de estudio del presente curso; pero este estudio al nivel del
+	4to año de Ciencias de la Computación, persigue habilidades prácticas para el
+	futuro profesional, además de conocimientos teóricos y prácticos para desarrollar
+	una simulación.</p>
+
+	<p>P.C.  Suponga que resultan claros los conocimientos
+	teóricos y prácticos  básicos para desarrollar una simulación de un sistema o
+	modelo presumiblemente discreto y estocástico. ¿Cuál de los tópicos tratados en
+	la primera conferencia puede ser el más importante prácticamente para decidir
+	el emprender o no una tarea de simulación?</p>
+
+	<p>R/ El conocimiento de las ventajas y desventajas de
+	una simulación, porque ello ayuda a argumentarla ante los jefes.</p>
+
+	<p>En esta conferencia se tratarán otros temas
+	relacionados con la planeación de una simulación y las formas en que puede
+	lograrse el apoyo de los jefes. El objetivo de la conferencia es ilustrar el
+	procedimiento general o esquemático de desarrollar una simulación (suponemos
+	siempre la simulación de un proceso discreto y estocástico). El resto del curso
+	se ocupará de los detalles técnicos.</p>
+
+	<p>El procedimiento general esbozado aquí para el
+	desarrollo de una simulación es largo, complejo y caro de implementar. Pudiera
+	pensarse que se pueden hacer simplificaciones sustanciales cuando el sistema es
+	relativamente sencillo o ha sido bastante estudiado. Esto es cierto en
+	principio y se aboga por la simplificación de esta metodología en todos los
+	casos en que sea posible.</p>
+
+	<p>Sin embargo, ocurre con frecuencia que el desarrollo
+	mismo de la simulación permite descubrir que sistemas hipotéticamente sencillos
+	no lo son tanto. Por otra parte sistemas muy estudiados no son necesariamente
+	&quot;muy comprendidos&quot;. Desde este punto de vista vale la pena en general,
+	seguir el procedimiento general descrito aquí aunque parezca costoso en tiempo
+	y recursos.</p>
+
+    <a name="enfoque-procedimiento"></a>
+    <h2>Enfoque general del procedimiento</h2>
+	
+	<p>El desarrollo de una simulación (más bien del proceso
+	modelación-simulación) conlleva un conjunto de pasos, que pueden formularse de
+	una u otra manera por diferentes autores, pero concordantes en general con los
+	siguientes:</p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            Paso 1.  Análisis preliminar para
+	determinar si vale la pena la simulación</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            Paso 2.  Formulación del problema</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            Paso 3. Recolección y análisis de la
+	información pertinente</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            Paso 4. Construcción del modelo</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            Paso 5. Programación para la computadora</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            Paso 6. Validación </span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Algunos autores identifican los dos primeros pasos en
+	uno solo como &quot;análisis de prerequisitos&quot;. Otros subdividen el paso
+	de construcción del modelo en modelos primarios y refinamientos sucesivos. En
+	cualquier caso, todos sostienen que lo que aquí referiremos como los dos
+	primeros pasos, es imprescindible antes de cualquier otra cosa. Los pasos 3 al
+	6 pueden superponerse en alguna medida en el tiempo o formar lazos, de acuerdo
+	a las circunstancias; pero incluso esta superposición parcial en el tiempo debe
+	estar controlada para obtener un resultado unificado y comentaremos algunas
+	reglas para ello.</span></p>
+	
+	<a name="analisis-formulacion"></a>
+	<h2>Análisis preliminar. Formulación del problema.</h2>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>El objetivo del análisis preliminar, tal como lo
+	separamos en el paso 1 no es siquiera llegar a caracterizar el problema. Antes
+	que esto es llegar a decidir incluso si la simulación vale la pena o no. Maisel
+	comenta que en la mayoría de los casos un estudio de simulación se inicia por
+	una sugerencia ingenua, bien por parte de un especialista como un cibernético,
+	deseoso de hacer algo especial desde el punto de vista profesional, o bien por
+	parte de un directivo que ha oído hablar de la simulación en computadoras y
+	comenta la posibilidad de usar esta técnica con algún otro directivo de más
+	bajo nivel o un especialista. Lo cierto es que el especialista aprovecha este
+	interés inicial del jefe, solicita autorización para iniciar el desarrollo de
+	una simulación, probablemente lo justifica primariamente con la solución de un
+	problema particular y el jefe lo autoriza esperanzado en que aquella técnica
+	moderna e impresionante pudiera ser de interés para su empresa. Al cabo de 5
+	años la dirección aprende que aquella sugerencia inocente le ha salido quizás
+	muy cara...</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Se pueden evitar estudios infructuosos y caros cuando
+	el especialista comienza con un análisis preliminar cuidadoso, que es lo que
+	denominamos primer paso. Visto desde el punto de vista de la teoría general
+	esbozada en la primera conferencia, el objetivo del análisis preliminar es
+	conocer el sistema real, proyectar lo que la simulación podría lograr y
+	realizar un análisis de costos-beneficios para determinar hasta que punto vale
+	la pena desarrollar todo el proceso de modelación y simulación.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Lo primero que él debe hacer es revisar alguna
+	información, entrevistarse con otros empleados y dirigentes intermedios
+	relacionados con el sistema que debe simular y observar este sistema en
+	operación. El objetivo es obtener lo más rigurosamente posible respuesta a dos
+	preguntas:</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>¿Qué hace realmente
+	el sistema?</span></p>
+
+	<p class=MsoNormal style='margin-left:53.4pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>2.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>¿Cuánto realmente se
+	conoce sobre él?</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Desde el punto de vista de la conferencia 1 se trata
+	por tanto de comprender el SISTEMA REAL. A partir de allí, el  especialista que
+	hace o dirige el análisis preliminar debe hacer un estimado, lo más certero
+	posible de los recursos necesarios para la simulación y una descripción con el
+	mayor detalle también posible de qué la simulación puede resolver o de cómo
+	podría ser usada. En esencia, esto último representa el análisis de
+	costo/beneficio y es quién debe conducir a la conclusión de si vale la pena
+	continuar o no. Si es positivo, se emprenderá la formulación del problema. De
+	lo contrario, la simulación debe descartarse desde aquí. </span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>La estimación preliminar de los costos y beneficios y
+	de la relación costo/beneficio debe hacerse conforme a los dictámenes generales
+	de la ingeniería de software, porque en última instancia la simulación en un
+	software precedido de un análisis, quizás un tanto más profundo en el que
+	participan especialistas de Investigación de Operaciones y de Estadística,
+	además de los analistas de sistema</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Al estimar costo deben incluirse por tanto los costos
+	por equipos y componentes especiales para la simulación (por ejemplo sensores),
+	el costo de la modelación (entendida como análisis)  y el costo de la
+	simulación (entendida como programación). Para esta estimación inicial, de
+	costos se sugiere el clásico método de descomposición: a partir de estimaciones
+	iniciales de esfuerzo, medido en Personas-Año (PA) o Personas-Meses (PM)
+	estimar los costos de las diferentes fases de modelación y simulación teniendo
+	en cuenta la calificación de especialistas y las actividades y multiplicar por
+	una tarifa propia de cada actividad. Ver al final detalles sobre la estructura
+	de especialidades en el grupo o team de simulación.  A los fines del análisis
+	prospectivo de costo/beneficio, debe calcularse también los costos de
+	mantenimiento o actualización de la simulación en los primeros años o meses. Si
+	resultara esto difícil, pueden aplicarse normas internacionales en términos de
+	porcentajes del costo inicial.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>De forma análoga es deseable estimar con la mayor
+	certeza posible, los beneficios tangibles de la simulación si los hubiera. Entonces,
+	es posible utilizar diferentes técnicas de análisis de costo/beneficio para
+	argumentar preliminarmente la simulación. Entre las técnicas de costo/beneficio
+	más populares se encuentran:</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>a)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>Punto de equilibrio,
+	calculado como el momento en que el sistema &quot;precedente&quot; y el sistema
+	&quot;propuesto&quot; equilibran sus costos. Se  supone que el sistema
+	propuesto por la simulación tiene costos iniciales muy altos pero tiende a
+	reducirlos, mientras que el sistema &quot;actual&quot; o más bien &quot;tradicional&quot;
+	tiene costos que son crecientes. El punto de intersección, determinado numérica
+	o gráficamente es el denominado &quot;punto de equilibrio&quot;. Esta
+	metodología es raramente utilizada en simulación porque focaliza la comparación
+	del sistema &quot;propuesto&quot; con el sistema &quot;anterior&quot;, desde el
+	punto de vista de los costos, y no siempre existe o son definibles claramente,
+	los costos del sistema &quot;anterior&quot;.  En esta metodología se supone que
+	no hay cambios esenciales en los beneficios, o al menos, que ellos cambian con
+	menos intensidad que los costos. Con todo, el análisis de costo/beneficio de
+	una simulación, mediante esta técnica de punto de equilibrio puede ser útil
+	(sobre todo si se calcula en función de unidades vendidas y no de tiempo)
+	cuando una empresa está creciendo y el costo asociado al &quot;volumen de
+	producción&quot; resulta de gran relevancia en el costo global de la operación.</span></p>
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>b)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>Recuperación o
+	retorno de la inversión, calculado como el momento en que el sistema
+	&quot;propuesto&quot; (en este caso los resultados de la simulación) acumula
+	beneficios superiores a los &quot;costos acumulados&quot;.  Esto puede ser una
+	buena metodología  en el caso de que la simulación proporcione beneficios
+	tangibles crecientes en el tiempo y capaces de argumentar convincentemente su
+	alto costo.</span></p>
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>c)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>Análisis de flujo de
+	efectivos, calculado en cada momento prospectivo como la diferencia entre los
+	ingresos y los costos, en forma absoluta y acumulada a lo largo del tiempo. El
+	análisis de flujo de efectivos examina la dirección, la magnitud y el patrón de
+	flujo del efectivo que se asocia con el conjunto de programas de la simulación
+	propuesta. Si como consecuencia de la simulación se propusiera un reemplazo de
+	un viejo sistema por uno nuevo y éste no generara efectivos adicionales para la
+	empresa, únicamente habrá gastos de efectivo asociados a la simulación. En este
+	caso la simulación no podrá justificarse con base en las nuevas utilidades
+	obtenidas y deberá examinarse con mejor precisión en base de otros beneficios
+	tangibles, si es que se considera aun como factible. De esta forma, esta metodología
+	ayuda a precisar los beneficios de la simulación. Esta técnica  de análisis de
+	costo/beneficio, está más acorde con la simulación porque ella supone procesos
+	costosos, en los cuales, la ganancia real no se obtiene hasta el cabo de varios
+	años. Es particularmente recomendable en empresas relativamente pequeñas en
+	relación con el costo de la simulación, o en aquellas donde el negocio se vea
+	afectado de manera importante por una sangría de fondos. </span></p>
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>d)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>Análisis del valor
+	presente. El &quot;valor presente&quot; de una suma de dinero en cierto
+	instante del futuro es el monto que hay que depositar &quot;ahora&quot; para
+	obtener dicha cantidad en ese instante futuro, producto de los intereses. Esta
+	técnica de análisis de &quot;costo/beneficio&quot; supone comparar con los
+	datos a largo plazo, el valor presente de los beneficios calculados con el
+	valor presente de los costos.  Se convierte así en una manera de estimar todos
+	los recursos económicos a gastar en la modelación-simulación y generados a lo
+	largo de la vida útil del sistema, y todos los beneficios a largo plazo, pero
+	contabilizados y comparados en términos de su valor actual y creciente. Es
+	particularmente recomendable esta última metodología porque las tareas de
+	modelación-simulación tienen largos períodos de inversión, así como costos
+	elevados.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>En resumen, para el análisis preliminar de
+	costo/beneficio de una simulación se recomienda comenzar probando esta última
+	técnica (comparación de costos y beneficios en términos del valor presente),
+	sobre todo en todos aquellos proyectos que sean  a largo plazo y costosos. Si
+	la empresa además es pequeña en relación con la inversión en simulación, es
+	particularmente recomendable la técnica de análisis de flujo de efectivos. Los
+	anexos A y B ejemplifican estas técnicas, de acuerdo con lo descrito por
+	ejemplo, en [3].</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>En cualquier caso, el analista deberá informar al jefe
+	del más alto nivel los resultados de todo el análisis preliminar, bien para
+	obtener el respaldo de los recursos y solicitar ayuda en la formulación del
+	problema, o bien para explicarle por qué la simulación no parece factible.  </span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Una vez concluido el análisis preliminar con
+	resultados positivos se pasa a la etapa de formulación del problema. En esta,
+	la esencia es detectar la especificación de la <i>aplicación</i> que será
+	lograda en la simulación. Visto desde el punto de vista de la
+	 Conferencia 1, se trata de especificar el MARCO EXPERIMENTAL. Para esta tarea
+	se trata de usar directivos a todos los niveles. Una técnica productiva es
+	interrogarlos sobre <u>qué le pedirían al programa de simulación si estuviese
+	disponible:</u></span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:38.25pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>a)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>hoy </span></p>
+
+	<p class=MsoNormal style='margin-left:38.25pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>b)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>a mediano plazo
+	(2-3años)  </span></p>
+
+	<p class=MsoNormal style='margin-left:38.25pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>c)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>en el futuro menos
+	mediato </span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>En la mayoría de los casos prácticos se obtendrán
+	problemas o  preguntas vagas, insuficientemente precisas, y la tarea
+	fundamental de los simuladores iniciales es <i>reformular dichos problemas. </i>No
+	puede esperarse en general que los jefes formulen preguntas propias a un
+	sistema de simulación muy exactas, y  mucho menos que ayuden a los simuladores
+	a reformularlos en términos precisos. En estos casos, vale auxiliarse de los
+	asesores del jefe; pero es necesario jugar un papel activo. Finalmente, no
+	puede olvidarse consultar con el jefe los problemas &quot;reformulados&quot;.
+	Esto debe hacerse incluso por escrito hasta obtener su consentimiento. De lo
+	contrario, puede emprenderse una simulación con objetivos que no son
+	concordantes con los intereses de la institución.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Los problemas que desea plantear el jefe a la
+	simulación y que resultan más difíciles de precisar son aquellos que  formula
+	en términos vagos de una &quot;optimización&quot;. En estos casos, la
+	estrategia no es discutir con el jefe el concepto de que una simulación no
+	conduce necesariamente a una &quot;optimización&quot;,  más bien, es precisar
+	cual es su sentido intuitivo de optimización, o más exactamente cuál es su &quot;función
+	objetivo&quot; o el &quot;criterio de efectividad&quot;.  Las medidas de
+	eficiencia o efectividad que espera, pueden estar mas o menos claras en
+	dependencia del sistema concreto objeto de estudio. Por ejemplo: si se trata
+	del problema de demanda de los servicios de ascensores de un edificio, después
+	de varias entrevistas, puede quedar claro que lo que se pretende
+	&quot;minimizar&quot; es el tiempo de demora en el flujo &quot;entre
+	pisos&quot; de los clientes a través de los elevadores, o más bien, que la
+	eficiencia del &quot;sistema&quot; puede medirse en términos de la
+	&quot;reducción del tiempo de espera&quot; ante los ascensores y del
+	&quot;número de personas que los elevadores transportan por unidad de
+	tiempo&quot;.  En otros problemas, arribar a criterios de eficiencia, que
+	orienten el objetivo de la simulación como experimentación puede ser más
+	difícil. Ver en [1] un ejemplo relacionado con la simulación de un combate de
+	infantería en tierra.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'> La formulación del problema conduce naturalmente a la
+	definición inicial de las variables a considerar y desde este punto de vista, comienza
+	en sí la modelación. Por otra parte, la recolección y análisis de los datos
+	inciden en la refinación de los modelos. Por ello las etapas siguientes del
+	proceso pueden superponerse en tiempo. </span></p>
+
+	<a name="primeros-modelos"></a>
+	<h2>Primeros modelos.</h2>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Los primeros modelos se inician cuando se comienzan a
+	definir las variables a considerar y sus interacciones. Se trata aquí de
+	variables &quot;en un sentido general&quot;. Dichas &quot;variables&quot;
+	orientan, pero  no tienen que ser exactamente las variables que intervienen en
+	el &quot;análisis de los datos&quot;, las que intervienen en la
+	&quot;perfilación del modelo matemático&quot;  y en última instancia las que
+	aparecen &quot;en la programación de la simulación&quot;.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Desde el punto de vista de la
+	 Conferencia 1, inicia la fase de MODELACION. En realidad no se parte
+	necesariamente de un MODELO BASE que se ajuste a cualquier MARCO EXPERIMENTAL;
+	pero frecuentemente se parte de un MODELO BASTANTE GENERAL, en el cual no hay
+	demasiadas restricciones ni simplificaciones y según la formulación del
+	problema y al análisis de los datos, se emprende un proceso de refinamiento
+	sucesivo de este modelo. </span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Las variables generales que intervienen en el sistema
+	deben ser catalogadas en principio como endógenas o exógenas. Son variables
+	endógenas, aquellas relacionadas con la naturaleza interna del sistema objeto
+	de simulación. Por ejemplo, en el problema de los ascensores, el estado de la
+	recepcionista o servidor de cualquier piso (en las categorías de 0: No
+	disponible, 1: Disponible pero ocupado, 2: Disponible y desocupado) es una
+	variable endógena pues su valor depende del sistema internamente. En cambio, la
+	variable que pudiera representar el interés de un cliente de la oficina (por
+	ejemplo tipo de reclamación) pudiera considerarse exógena pues depende más de
+	la interacción entre el sistema y el entorno. También son exógenas variables
+	tales como el nivel económico social de la población que dicha oficina atiende,
+	porque puede influir en los servicios de la oficina y sin embargo es en
+	principio, externa a ella.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>En simulación resulta a veces cómodo distinguir
+	aquellas variables que representan una <i>entidad</i> o <i>componente </i>del
+	sistema. Por ejemplo, podría hablarse de una variable &quot;SERV_n&quot; (donde
+	n es un número concreto)  que representa el Servidor del piso &quot;n&quot; en
+	el problema de la simulación del servicio de ascensores. Tal variable es una
+	entidad porque representa una componente del sistema.  También son entidades
+	cada ascensor, cada cliente, cada reclamación, etc. Las variables <i>entidades</i>
+	tienen <i>atributos</i> los cuales en última instancia, son variables que van a
+	formar parte del modelo y probablemente de la programación. Así por ejemplo
+	&quot;SERV_n&quot; puede tener como atributos &quot;SSERV_n&quot; y
+	&quot;CSERV_n&quot; que representan respectivamente, el status de
+	&quot;SERV_n&quot; y el número de personas en la cola de &quot;SERV_n&quot;
+	(probablemente a los fines de la simulación en lugar del número de personas
+	haya que simular una lista de las personas en la cola) También se habla de <i>actividades</i>,
+	para hacer referencia a aquellas variables que de alguna forma describen el
+	proceso que se va a simular. Las actividades se reflejan muchas veces como
+	atributos de entidades, por ejemplo, la variable &quot;SSERV_n&quot; puede
+	considerarse una actividad. </span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Al  margen de este tipo de clasificaciones, que no es
+	única, ni exhaustiva, lo esencial es que en esta fase del proceso debe
+	disponerse de una idea preliminar del sistema, un conjunto adecuado de
+	problemas y una descripción inicial de las variables a considerar. Los primero
+	modelos para el caso de un proceso estocástico discreto se logran cuando se
+	precisa en alguna medida:</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>la lista de
+	componentes, o variables a considerar</span></p>
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>las interacciones
+	entre ellas</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>La lista de componentes o variables puede precisarse,
+	de acuerdo a la clasificación convencional anterior de la siguiente forma:</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt;font-family:Wingdings'>§<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=ES-TRAD
+	style='font-size:11.0pt'>Para cada variable es necesario dar una definición
+	precisa incluyendo su nivel de medición y de ser necesarias las unidades de
+	medición.</span></p>
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt;font-family:Wingdings'>§<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=ES-TRAD
+	style='font-size:11.0pt'>Si una entidad se considera una variable, es necesario
+	precisar sus atributos y el subsistema al que esta variable pertenece.</span></p>
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt;font-family:Wingdings'>§<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=ES-TRAD
+	style='font-size:11.0pt'>Si una variable del tipo atributo, aparece en más de
+	una entidad, especificar en cuáles.</span></p>
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt;font-family:Wingdings'>§<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=ES-TRAD
+	style='font-size:11.0pt'>Si se habla de actividades como atributos, especificar
+	las entidades relacionadas.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>A manera de ejemplo de especificación de la lista de
+	componentes o variables, reflejamos la siguiente, relativa al problema de
+	simulación de la demanda de ascensores [2].</span></p>
+
+
+
+	<table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0
+	 style='border-collapse:collapse;border:none'>
+	 <tr>
+	  <td width=96 valign=top style='width:72.0pt;border:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>SERV_n_k</span></p>
+	  </td>
+	  <td width=96 valign=top style='width:72.0pt;border:solid windowtext 1.0pt;
+	  border-left:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Entidad</span></p>
+	  </td>
+	  <td width=192 valign=top style='width:144.0pt;border:solid windowtext 1.0pt;
+	  border-left:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Representa el ente imaginario que resume los
+	  empleados de atención del piso &quot;n&quot; en el momento &quot;k</span></p>
+	  </td>
+	  <td width=137 valign=top style='width:102.5pt;border:solid windowtext 1.0pt;
+	  border-left:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Tiene como atributos SSERV_n_k  y CSERV_n_k</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=96 valign=top style='width:72.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>SSERV_n_k</span></p>
+	  </td>
+	  <td width=96 valign=top style='width:72.0pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Atributo</span></p>
+	  </td>
+	  <td width=192 valign=top style='width:144.0pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Describe el status de SERV_n como: 0: no disponible,
+	  1: disponible pero ocupado, 2: disponible y desocupado, todo en el instante
+	  de tiempo k</span></p>
+	  </td>
+	  <td width=137 valign=top style='width:102.5pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Atributo de SSERV_n_k. Puede ser considerado una
+	  actividad.</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=96 valign=top style='width:72.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>CSERV_n_k</span></p>
+	  </td>
+	  <td width=96 valign=top style='width:72.0pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Atributo</span></p>
+	  </td>
+	  <td width=192 valign=top style='width:144.0pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Describe la longitud de la cola de personas
+	  esperando iniciar su atención en el piso &quot;n&quot; en el instante
+	  &quot;k&quot;</span></p>
+	  </td>
+	  <td width=137 valign=top style='width:102.5pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Atributo de SSERV_n_k</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=96 valign=top style='width:72.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>PERS_k</span></p>
+	  </td>
+	  <td width=96 valign=top style='width:72.0pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Entidad</span></p>
+	  </td>
+	  <td width=192 valign=top style='width:144.0pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Describe al visitante que llega en el momento k</span></p>
+	  </td>
+	  <td width=137 valign=top style='width:102.5pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Se identifica con la entidad OBJREC_k</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=96 valign=top style='width:72.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>OBJREC_k</span></p>
+	  </td>
+	  <td width=96 valign=top style='width:72.0pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Entidad</span></p>
+	  </td>
+	  <td width=192 valign=top style='width:144.0pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Describe el objeto de la visita o asunto a tratar de
+	  PERS_k</span></p>
+	  </td>
+	  <td width=137 valign=top style='width:102.5pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Tiene como atributos TREC_k, SREC_k</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=96 valign=top style='width:72.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt;font-family:Symbol'>·</span></p>
+	  </td>
+	  <td width=96 valign=top style='width:72.0pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	  <td width=192 valign=top style='width:144.0pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	  <td width=137 valign=top style='width:102.5pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=96 valign=top style='width:72.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt;font-family:Symbol'>·</span></p>
+	  </td>
+	  <td width=96 valign=top style='width:72.0pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	  <td width=192 valign=top style='width:144.0pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	  <td width=137 valign=top style='width:102.5pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=96 valign=top style='width:72.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt;font-family:Symbol'>·</span></p>
+	  </td>
+	  <td width=96 valign=top style='width:72.0pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	  <td width=192 valign=top style='width:144.0pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	  <td width=137 valign=top style='width:102.5pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=96 valign=top style='width:72.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>TEASC_p_q</span></p>
+	  </td>
+	  <td width=96 valign=top style='width:72.0pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Atributo</span></p>
+	  </td>
+	  <td width=192 valign=top style='width:144.0pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Variable que describe el tiempo de espera del
+	  ascensor en el piso &quot;p&quot; en el tiempo &quot;q&quot;</span></p>
+	  </td>
+	  <td width=137 valign=top style='width:102.5pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Atributo de ASC_p</span></p>
+	  </td>
+	 </tr>
+	</table>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>En los modelos primarios, la definición de las
+	&quot;variables&quot; no tiene que ser tan detallada como se hace en un
+	&quot;diccionario de datos&quot; en el diseño de una base de datos, porque aún
+	estas no son variables definitivas. Lo importante realmente es precisar un poco
+	las variables que van a ser objeto de medición y el nivel de ésta.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Las interacciones entre variables deben explicar en si
+	el modelo para la a simulación y puede lograrse a través de diagramas de flujo,
+	junto con explicaciones complementarias. Por ejemplo, el siguiente diagrama
+	explica de manera muy general el flujo de un visitante o cliente por el
+	edificio cuyo sistema de demandas de ascensores quiere ser simulado [2] y
+	puede  ir acompañado de descripciones como las siguientes:</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt;font-family:Wingdings'>§<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=ES-TRAD
+	style='font-size:11.0pt'>Los visitantes arriban al edificio durante un día de
+	trabajo de acuerdo con una distribución de arribos medida experimentalmente y
+	con asuntos a tratar también aleatorios de acuerdo a distribuciones históricas.</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt;font-family:Wingdings'>§<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=ES-TRAD
+	style='font-size:11.0pt'>El estado del servidor del piso 0 y de cualquier
+	servidor, se determina por el horario y la cola existente</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt;font-family:Wingdings'>§<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=ES-TRAD
+	style='font-size:11.0pt'>La deserción en cada piso, cuando haya personas en la
+	cola se determina por probabilidades históricas condicionadas al tamaño de la
+	cola</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt;font-family:Wingdings'>§<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=ES-TRAD
+	style='font-size:11.0pt'>El estado de la cola de cada servidor se determina 
+	por el flujo de los visitantes anteriores (se simula realmente a través del
+	tiempo)</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt;font-family:Wingdings'>§<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=ES-TRAD
+	style='font-size:11.0pt'>El asunto a tratar determina por ciertas reglas, si el
+	servidor del piso 0 resuelve el problema y en caso contrario, dichas reglas 
+	determinan el piso al cual tiene que ser redireccionado el visitante.</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt;font-family:Wingdings'>§<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=ES-TRAD
+	style='font-size:11.0pt'>En los restantes pisos, la solución del problema o su
+	remisión a otro piso se determina por distribuciones históricas de carácter
+	probabilístico (que se corresponden con detalles específicos o complicaciones
+	del asunto a tratar)</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt;font-family:Wingdings'>§<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=ES-TRAD
+	style='font-size:11.0pt'>Los tiempos de atención de cada servidor, a cada
+	cliente, se determinan por el asunto a tratar y distribuciones probabilísticas.</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt;font-family:Wingdings'>§<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=ES-TRAD
+	style='font-size:11.0pt'>El proceso de toma del ascensor supone también un
+	tiempo de espera en la cola, tiempo de entrar al ascensor, tiempo de viaje y
+	tiempo de salida del mismo.</span></p>
+
+	<p class="centerAlign">
+	<img alt="" src="images/Conf_2/image001.gif"></img>
+	</p>
+	
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Nótese que en este diagrama no se detalla la espera,
+	toma, y abandono del ascensor. Probablemente ello se logra mejor relacionando
+	este diagrama de flujo con otro que indica el comportamiento del ascensor como
+	entidad y que es simulado a través del tiempo y en paralelo con el flujo de los
+	visitantes. Además hay que tener en cuenta si se habla de un edificio con uno o
+	varios ascensores.</span></p>
+
+
+	<a name="recolecion-analisis"></a>
+	<h2>Recolección y análisis de datos.</h2>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>El proceso de recolección y análisis de los datos
+	puede solaparse con el de la modelación y refinamiento sucesivo de los modelos.
+	La recolección de datos se hace a partir de diversas fuentes que pueden ser: <i>datos
+	existentes sobre el sistema, opiniones de expertos</i> y <i>estudios de campo</i>.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Entre los datos existentes debe contarse siempre con
+	los <i>datos o estadísticas regulares del sistema</i>. Son muy seguros pero no
+	siempre accesibles. Se pueden utilizar también los <i>informes de los
+	funcionarios a sus superiores</i>. Están usualmente archivados y en ese sentido
+	son más accesibles; pero pueden estar sesgados. Están también los <i>informes
+	finales o de balance periódicos</i> que tienen el valor de resumir información
+	pero la desventaja de que a veces no contienen la información con los detalles
+	que interesa.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Las <i>opiniones de expertos</i> deben ser aceptadas
+	como fuente de información siempre con reserva. Si se quiere una información
+	detallada a partir de los expertos, es necesario preparar cuidadosamente una
+	encuesta y aplicar técnicas de análisis de opiniones de expertos para utilizar
+	los resultados. Los expertos pueden ser más importantes cuando se desean
+	investigar un aspecto cualitativo del problema y en este sentido la entrevista
+	abierta es más productiva.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Los <i>estudios de campo</i> pueden proporcionar datos
+	muy fidedignos, por ejemplo sobre las distribuciones de variables de cuyo
+	comportamiento no existan datos previos. Sin embargo por ser caros y demorados,
+	deben utilizarse sólo en última instancia y además realizarse bien, para que
+	arrojen la información verdadera.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Cuando se hace un estudio de campo, es necesario
+	contemplar, operacionalmente: </span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt;font-family:Wingdings'>§<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=ES-TRAD
+	style='font-size:11.0pt'>un diseño del experimento y uso de técnicas de
+	muestreo si es necesario</span></p>
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt;font-family:Wingdings'>§<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=ES-TRAD
+	style='font-size:11.0pt'>un diseño adecuado de las encuestas o del sistema de
+	medición que va a utilizarse</span></p>
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt;font-family:Wingdings'>§<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=ES-TRAD
+	style='font-size:11.0pt'>el control y corrección de sesgos de observación  (las
+	personas no reaccionan igual cuando sienten que son observadas)</span></p>
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt;font-family:Wingdings'>§<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=ES-TRAD
+	style='font-size:11.0pt'>balance entre la riqueza necesaria del estudio y las
+	restricciones que pueda poner la empresa para realizar tales estudios</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Por otra parte, es necesario contemplar desde el punto
+	de vista organizativo:</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt;font-family:Wingdings'>§<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=ES-TRAD
+	style='font-size:11.0pt'>la selección de un personal confiable para la toma de
+	los datos necesarios</span></p>
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt;font-family:Wingdings'>§<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=ES-TRAD
+	style='font-size:11.0pt'>el entrenamiento a los recolectores de datos</span></p>
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt;font-family:Wingdings'>§<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=ES-TRAD
+	style='font-size:11.0pt'>un cronograma riguroso del trabajo de campo</span></p>
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt;font-family:Wingdings'>§<span
+	style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span lang=ES-TRAD
+	style='font-size:11.0pt'>la realización de un estudio &quot;piloto&quot; cuando
+	el estudio de campo sea grande (el objetivo del estudio piloto no es
+	coleccionar datos en sí sino comprobar que el proceso de captación se hace de
+	acuerdo a todas las especificaciones).</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>El análisis de los datos se auxiliará de paquetes
+	estadísticos y supone previamente la introducción de esos datos en ficheros
+	apropiados. Esto supone definir &quot;variables&quot; objeto de interés
+	adecuadamente estructuradas  de acuerdo al paquete de software a utilizar.
+	Utilizaremos el SPSS para Windows cuya forma general de uso se describe por
+	ejemplo en [4]. El objetivo del análisis de los datos puede ser caracterizar
+	las variables en general (digamos  la frecuencia de sus valores, si es
+	discreta; o  su tendencia central y variabilidad, cuando es continua). Si las
+	variables forman parte importante de la simulación, la caracterización será más
+	exigente. Se necesitará identificar  su distribución (su ajuste a una
+	distribución teórica o a cierta distribución empírica), comparar los valores de
+	esta variable entre entidades, etc. Los ejercicios de las primeras Clases
+	Prácticas persiguen estos objetivos. Como preparación puede repasarse el
+	proceso de entrada de datos en el SPSS [4] y el uso de las técnicas de análisis
+	descriptivo de datos en este paquete [5].</span></p>
+
+	<a name="refinamiento-programacion-validacion"></a>
+	<h2>Refinamiento del modelo, programación y validación.</h2>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>El refinamiento del modelo, no es expresión de
+	incapacidad de formulación, es intrínseco a la teoría de la modelación como lo
+	es el refinamiento sucesivo en el paradigma de la programación estructurada. De
+	hecho, el análisis y procesamiento de los datos obliga usualmente a una
+	refinación del modelo. La programación de la simulación en sí y su validación,
+	también determinan frecuentemente necesidades de modificación del modelo. En
+	última instancia recuerde que concebimos la simulación de un proceso
+	estocástico discreto como la elaboración de un conjunto de programas, sólo que
+	precedido de un análisis en que intervienen además de especialistas clásicos de
+	análisis de sistemas, otro tipo de analistas: de investigación de operaciones,
+	de estadística, que ayudan a precisar el modelo. Si se tiene en cuenta que
+	además existe un conjunto de &quot;paquetes&quot; orientados a tareas de
+	&quot;simulación&quot; se comprende fácilmente que lo más importante en sí es
+	la modelación y la concepción de la tarea a simular.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>La otra cuestión particular del uso de paquetes o de
+	la elaboración de software destinado a la simulación que merece un comentario
+	específico es la validación. La validez se garantiza en primer lugar durante el
+	proceso mismo de construcción de los programas de simulación y ello se logra
+	sólo si <i>se mantiene siempre en mente el sentido de la aplicación.</i> Son
+	aplicables aquí las técnicas de prueba de un software clásicamente orientadas
+	por la Teoría de la Programación y la
+	 Ingeniería de Software. Pero una vez terminada la versión del programa de
+	simulación o partes del mismo, su prueba o validación puede emprenderse
+	mediante otras vías fundamentales que responden directamente a los objetivos de
+	la modelación-simulación en sí: la <i>consulta de expertos </i> y el <i>uso de
+	estándares.</i></span></p>
+
+	<p class=MsoNormal style='text-align:justify'><i><span lang=ES-TRAD
+	style='font-size:11.0pt'>&nbsp;</span></i></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>La <i>consulta de expertos</i> se utiliza ejecutando
+	los programas, obteniendo resultados y sometiéndolos al criterio de expertos o
+	especialistas en la materia. No debe olvidarse que este tipo de consulta padece
+	de las deficiencias de todo sistema de consulta a expertos, en particular, la
+	posible divergencia de sus opiniones e incluso el sesgo (cuando están por
+	ejemplo, predispuestas hacia las computadoras o el team de simulación).
+	Pudieran evitarse estas dificultades, si fuera posible previamente investigar
+	con los expertos qué debería responder el experto ante una situación determinada,
+	o trabajando con sistemas de inteligencia artificial que ayuden a corregir el
+	sesgo de los expertos.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>El <i>uso de estándares</i> brinda un criterio de
+	validación más efectivo, pero depende de la existencia de éstos. Como
+	estándares,  se entiende un conjunto de situaciones ocurridas realmente ante un
+	flujo de entrada dado. Se trata en este caso de crear datos que se corresponden
+	a la situación estándar, ejecutar la simulación y comparar estadísticamente las
+	salidas de los programas con lo que ocurrió en la realidad. </span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>En cualquier caso, so los resultados de la validación
+	fueran negativos, hay que analizar si se trata de que los datos no fueron
+	adecuadamente preparados o si es un problema de la programación o del modelo.
+	Esto último conduciría al perfeccionamiento del modelo, lo segundo a la
+	corrección del programa y lo primero a la nueva definición de los datos. Cuando
+	se utiliza la <i>consulta de expertos </i> y también los <i>estándares</i> la
+	decisión de que es lo que está mal es el resultado del análisis que debe hacer
+	el llamado &quot;team de control&quot; que trabaja paralelamente e
+	independientemente del &quot;team de simulación&quot; de acuerdo al siguiente
+	epígrafe.</span></p>
+
+
+	<a name="trabajo-grupo"></a>
+	<h2>El trabajo en grupos.</h2>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Por su complejidad y alcance, los trabajos de
+	modelación-simulación raramente pueden emprenderse por especialistas trabajando
+	individualmente. El trabajo interdisciplinario es imprescindible, e incluso,
+	dentro de una misma especialidad (digamos Ciencias de la
+	 Computación) pueden requerirse especialistas en diferentes ramas: Bases de
+	Datos, Programación, Inteligencia Artificial, etc.; pero lo que caracteriza el
+	trabajo multidisciplinario en este tipo de tareas en normalmente, la necesidad
+	de especialistas matemáticos en Investigación de Operaciones y/o Estadística, y
+	la necesidad de especialistas de la materia objeto de simulación y directivos
+	del sistema formando parte de un &quot;team&quot;, &quot;equipo&quot; o
+	&quot;grupo&quot; de simulación&quot;.  </span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Así, el team de simulación está compuesto
+	esencialmente de tres grupos de profesionales:</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>Directivos y
+	especialistas de la materia</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>2.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>Matemáticos que
+	actúan como analistas desde el punto de vista de la
+	 Investigación de Operaciones o la
+	 Estadística</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>3.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>Analistas de
+	sistemas, programadores, o especialistas en Ciencias de la
+	 Computación en sí</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>En dependencia de la complejidad de la tarea, el team
+	de simulación puede descomponerse en varios grupos, que atiendan la modelación
+	y la programación de determinados &quot;bloques&quot;, &quot;subsistemas&quot;,
+	u &quot;objetos&quot;. En este caso, los programadores, como
+	&quot;codificadores&quot; pueden estar organizados &quot;ad-hoc&quot;,
+	subordinados a diferentes subgrupos en cada momento bajo la dirección de
+	analistas o de un &quot;programador principal&quot;. La organización de la
+	programación a su vez, puede ser automatizada optimizándola con técnicas de
+	ruta crítica, que además actualizan los costos de la labor en una forma
+	efectiva. Pueden utilizarse herramientas como el Microsoft Project </span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>La dirección y control de todo este proceso, así como
+	la validación de la simulación y la decisión en cada momento sobre el
+	desarrollo sucesivo exigen la definición de un &quot;team de control&quot;.  En
+	principio este &quot;team&quot;  puede tener la misma estructura profesional
+	que cada &quot;team de simulación&quot; pero es imprescindible que al menos el
+	representante de los directivos y de los especialistas de la materia tenga
+	autoridad administrativa. Se requiere además que el analista, especialista en
+	IO / Estadística de este team tenga la formación más versátil posible. El
+	&quot;analista de este team&quot; actúa como &quot;programador principal&quot;
+	coordinando tareas y el programador de este team de control es el responsable
+	de ejecutar las pruebas de validación a ciegas con los restantes programadores.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>El nivel de conocimiento del sistema, la visión
+	general de la simulación y los detalles de sus pasos por cada miembro del team
+	de simulación y del team de control puede ser diferente, de acuerdo a sus
+	funciones. A continuación, se proporciona una tabla que puede ayudar a la
+	conformación óptima de estos equipos.</span></p>
+
+
+
+	<table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0
+	 style='border-collapse:collapse'>
+	 <tr style='page-break-inside:avoid'>
+	  <td width=144 valign=top style='width:108.0pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	  <td width=173 colspan=3 valign=top style='width:129.6pt;border-top:none;
+	  border-left:solid windowtext 3.0pt;border-bottom:solid windowtext 3.0pt;
+	  border-right:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Equipo de Simulación</span></p>
+	  </td>
+	  <td width=173 colspan=3 valign=top style='width:129.6pt;border-top:none;
+	  border-left:solid windowtext 1.0pt;border-bottom:solid windowtext 3.0pt;
+	  border-right:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Equipo de control</span></p>
+	  </td>
+	  <td width=67 rowspan=2 style='width:50.3pt;border-top:none;border-left:solid windowtext 1.0pt;
+	  border-bottom:solid windowtext 3.0pt;border-right:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Dirección más arriba</span></p>
+	  </td>
+	 </tr>
+	 <tr style='page-break-inside:avoid'>
+	  <td width=144 valign=top style='width:108.0pt;border:none;border-bottom:solid windowtext 3.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;border-top:none;border-left:solid windowtext 3.0pt;
+	  border-bottom:solid windowtext 3.0pt;border-right:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Directivos o Especia-listas de la Materia</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;border:none;border-bottom:solid windowtext 3.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Especia-listas de IO o Estadística</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;border:none;border-bottom:solid windowtext 3.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Analistas de Sistemas y Programa-dores</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;border-top:none;border-left:solid windowtext 1.0pt;
+	  border-bottom:solid windowtext 3.0pt;border-right:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Directivos o Especia-listas de la Materia</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;border:none;border-bottom:solid windowtext 3.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Especia-listas de IO o Estadística</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;border:none;border-bottom:solid windowtext 3.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Analistas de Sistemas y Programa-dores</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=144 valign=top style='width:108.0pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Conceptos</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;border:none;border-left:solid windowtext 3.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>X</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>X</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>X</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;border:none;border-left:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>X</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>X</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>+</span></p>
+	  </td>
+	  <td width=67 valign=top style='width:50.3pt;border:none;border-left:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>+</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=144 valign=top style='width:108.0pt;border-top:solid windowtext 1.0pt;
+	  border-left:none;border-bottom:solid windowtext 1.0pt;border-right:none;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Visión general del proceso</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;border-top:solid windowtext 1.0pt;
+	  border-left:solid windowtext 3.0pt;border-bottom:solid windowtext 1.0pt;
+	  border-right:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>X</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;border-top:solid windowtext 1.0pt;
+	  border-left:none;border-bottom:solid windowtext 1.0pt;border-right:none;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>X</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;border-top:solid windowtext 1.0pt;
+	  border-left:none;border-bottom:solid windowtext 1.0pt;border-right:none;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>+</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;border:solid windowtext 1.0pt;
+	  border-right:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>X</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;border-top:solid windowtext 1.0pt;
+	  border-left:none;border-bottom:solid windowtext 1.0pt;border-right:none;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>X</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;border-top:solid windowtext 1.0pt;
+	  border-left:none;border-bottom:solid windowtext 1.0pt;border-right:none;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>+</span></p>
+	  </td>
+	  <td width=67 valign=top style='width:50.3pt;border:solid windowtext 1.0pt;
+	  border-right:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>+</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=144 valign=top style='width:108.0pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Modelo</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;border:none;border-left:solid windowtext 3.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>+</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>X</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>+</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;border:none;border-left:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>+</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>X</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>+</span></p>
+	  </td>
+	  <td width=67 valign=top style='width:50.3pt;border:none;border-left:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=144 valign=top style='width:108.0pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Análisis de Sistema</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;border:none;border-left:solid windowtext 3.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>+</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>X</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>X</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;border:none;border-left:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>+</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>+</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>X</span></p>
+	  </td>
+	  <td width=67 valign=top style='width:50.3pt;border:none;border-left:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=144 valign=top style='width:108.0pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Programación de la simulación</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;border:none;border-left:solid windowtext 3.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>+</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>+</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>X</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;border:none;border-left:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>+</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>+</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>X</span></p>
+	  </td>
+	  <td width=67 valign=top style='width:50.3pt;border:none;border-left:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=144 valign=top style='width:108.0pt;border:none;border-bottom:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Prueba o validación</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;border-top:none;border-left:solid windowtext 3.0pt;
+	  border-bottom:solid windowtext 1.0pt;border-right:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>X</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;border:none;border-bottom:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>+</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;border:none;border-bottom:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>+</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;border-top:none;border-left:solid windowtext 1.0pt;
+	  border-bottom:solid windowtext 1.0pt;border-right:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>X</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;border:none;border-bottom:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>X</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;border:none;border-bottom:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>X</span></p>
+	  </td>
+	  <td width=67 valign=top style='width:50.3pt;border-top:none;border-left:solid windowtext 1.0pt;
+	  border-bottom:solid windowtext 1.0pt;border-right:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=144 valign=top style='width:108.0pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;border:none;border-left:solid windowtext 3.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;border:none;border-left:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	  <td width=58 valign=top style='width:43.2pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	  <td width=67 valign=top style='width:50.3pt;border:none;border-left:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	 </tr>
+	 <tr style='page-break-inside:avoid'>
+	  <td width=144 valign=top style='width:108.0pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	  <td width=173 colspan=3 valign=top style='width:129.6pt;border:none;
+	  border-left:solid windowtext 3.0pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>X: necesario</span></p>
+	  </td>
+	  <td width=173 colspan=3 valign=top style='width:129.6pt;border:none;
+	  border-left:solid windowtext 1.0pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>+: Preferible</span></p>
+	  </td>
+	  <td width=67 valign=top style='width:50.3pt;border:none;border-left:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	 </tr>
+	</table>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Se incluye en la tabla anterior la dirección &quot;más
+	arriba&quot; que se supone que es la que financia o autoriza la simulación.</span></p>
+
+	<a name="resumen-tareas"></a>
+	<h2>Resumen de tareas por etapas en el proceso general.</h2>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>A manera de resumen de las tareas a ejecutar en el
+	procedimiento general de una simulación, se brinda la siguiente tabla. Puede
+	resultar particularmente interesante el papel del especialista en Ciencias de la
+	 Computación entre el personal requerido representado en la parte superior de
+	esta tabla por una flecha. En nuestro criterio personal, el  especialista en
+	Ciencias de la Computación debe estar preparado para acometer tareas
+	particulares en cualquiera de estos niveles;  pero sobre todo, está llamado a
+	jugar un role de conexión, que estimule el trabajo interdisciplinario.</span></p>
+
+	<p class="centerAlign">
+	<img alt="" src="images/Conf_2/image002.gif"></img>
+	</p>
+
+	<table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0
+	 style='border-collapse:collapse;border:none'>
+	 <tr style='page-break-inside:avoid'>
+	  <td width=120 valign=top style='width:89.8pt;border:solid windowtext 1.0pt;
+	  border-bottom:solid windowtext 3.0pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	  <td width=432 colspan=3 valign=top style='width:324.0pt;border-top:solid windowtext 1.0pt;
+	  border-left:none;border-bottom:solid windowtext 3.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'><br clear=ALL>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Tareas / Personal requerido</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=120 valign=top style='width:89.8pt;border-top:none;border-left:
+	  solid windowtext 1.0pt;border-bottom:solid windowtext 1.0pt;border-right:
+	  none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Estado de desarrollo de la simulación</span></p>
+	  </td>
+	  <td width=144 valign=top style='width:108.0pt;border-top:none;border-left:
+	  solid windowtext 3.0pt;border-bottom:solid windowtext 1.0pt;border-right:
+	  none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Directivos y Especialistas de la Materia</span></p>
+	  </td>
+	  <td width=144 valign=top style='width:108.0pt;border-top:none;border-left:
+	  solid windowtext 1.0pt;border-bottom:solid windowtext 1.0pt;border-right:
+	  none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Especialistas de  IO  y Estadística</span></p>
+	  </td>
+	  <td width=144 valign=top style='width:108.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Analistas de Sistemas y Programadores</span></p>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=120 valign=top style='width:89.8pt;border-top:none;border-left:
+	  solid windowtext 1.0pt;border-bottom:solid windowtext 1.0pt;border-right:
+	  none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Planificación y preparación</span></p>
+	  </td>
+	  <td width=144 valign=top style='width:108.0pt;border-top:none;border-left:
+	  solid windowtext 3.0pt;border-bottom:solid windowtext 1.0pt;border-right:
+	  none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Conjunto de preguntas</span></p>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Establecimiento de objetivos</span></p>
+	  </td>
+	  <td width=144 valign=top style='width:108.0pt;border-top:none;border-left:
+	  solid windowtext 1.0pt;border-bottom:solid windowtext 1.0pt;border-right:
+	  none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Lista de variables y parámetros</span></p>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Especificaciones conforme a los objetivos</span></p>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Conjunto de problemas de prueba o validación</span></p>
+	  </td>
+	  <td width=144 valign=top style='width:108.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Programación de chequeo de errores</span></p>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Especificaciones para el chequeo del proceso de
+	  programación (debugging)</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=120 valign=top style='width:89.8pt;border-top:none;border-left:
+	  solid windowtext 1.0pt;border-bottom:solid windowtext 1.0pt;border-right:
+	  none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Modelación</span></p>
+	  </td>
+	  <td width=144 valign=top style='width:108.0pt;border-top:none;border-left:
+	  solid windowtext 3.0pt;border-bottom:solid windowtext 1.0pt;border-right:
+	  none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Aportar datos históricos </span></p>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Opiniones de Expertos</span></p>
+	  </td>
+	  <td width=144 valign=top style='width:108.0pt;border-top:none;border-left:
+	  solid windowtext 1.0pt;border-bottom:solid windowtext 1.0pt;border-right:
+	  none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Dirigir estudios de campo</span></p>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Elaborar modelos matemáticos y definir algoritmos</span></p>
+	  </td>
+	  <td width=144 valign=top style='width:108.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Programas para computadoras</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=120 valign=top style='width:89.8pt;border-top:none;border-left:
+	  solid windowtext 1.0pt;border-bottom:solid windowtext 1.0pt;border-right:
+	  none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Validación y Aplicación</span></p>
+	  </td>
+	  <td width=144 valign=top style='width:108.0pt;border-top:none;border-left:
+	  solid windowtext 3.0pt;border-bottom:solid windowtext 1.0pt;border-right:
+	  none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Revisar el &quot;buen sentido&quot; de los
+	  resultados</span></p>
+	  </td>
+	  <td width=144 valign=top style='width:108.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Diseñar corridas de validación y aplicación</span></p>
+	  </td>
+	  <td width=144 valign=top style='width:108.0pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Reprogramación </span></p>
+	  </td>
+	 </tr>
+	</table>
+	
+	<a name="conclusiones"></a>
+	<h2>Conclusiones</h2>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>El procedimiento general de elaboración de una
+	simulación sigue las ideas generales de la ingeniería de software;  pero se
+	distingue en particular por varias razones:</span></p>
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>Se trata de un
+	software costoso y cuya elaboración requiere inversiones a largo plazo. Las
+	técnicas de análisis de prerequisitos condicionan las estimaciones de
+	costo/beneficio a estas particularidades.</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>2.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>El &quot;clásico
+	análisis de sistema&quot; va precedido de la elaboración de modelos que
+	requieren la participación de múltiples especialistas, en especial de
+	matemáticos, o de especialistas (pueden ser Ingenieros o Licenciados en 
+	Computación) con alta formación matemática, capaces de realizar el proceso de
+	modelación.</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>3.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>La definición de los
+	modelos, y por tanto la simulación de procesos estocásticos discretos está
+	condicionada en buena medida por un proceso riguroso de captación y análisis
+	estadístico de datos, que  exige muchas veces  un trabajo previo y arduo.</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>4.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>La validación de la
+	simulación (como programación), por partes, y en su conjunto, es fuente para el
+	refinamiento sucesivo de los modelos y en última instancia, el criterio de
+	efectividad de la simulación. No debe olvidarse que la simulación de procesos
+	estocásticos discretos es una técnica de experimentación.</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>5.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>El trabajo
+	multidisciplinario para realizar una simulación debe ser organizado en equipos.
+	Se han dado recomendaciones prácticas sobre la conformación de tales equipos, y
+	el papel que deben jugar en cada etapa del proceso.</span></p>
+
+
+	<h2>Bibliografía</h2>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=EN-GB
+	style='font-size:11.0pt'>[1]  Maisel Herbert y Gnugnoli Giuliano,
+	&quot;Simulation of Discrete Stochastic Systems&quot;, Science Research
+	Associates Inc. </span><span lang=ES-TRAD style='font-size:11.0pt'>USA</span><span
+	lang=ES-TRAD style='font-size:11.0pt'>, 1972, Cap. 2</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>[2] Moreno C. R.  &quot;Modelación y Simulación&quot;,
+	Universidad de La Habana, versión en disco, Cap. I.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>[3]  Wilcox, K. A. y San Miguel, J. G.
+	&quot;Contabilidad financiera&quot;, 1994, pag. 244</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>[4]  Grau, R. &quot;Introducción al SPSS para
+	Windows&quot;, Curso de Postgrado sobre Estadística Aplicada a las Ciencias
+	Sociales, Ibagué, Colombia 1996, Conferencia 1, (versión en disco) </span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>[5] Grau, R &quot;Análisis descriptivo de datos con el
+	SPSS&quot;, Curso de Postgrado sobre Estadística Aplicada a las Ciencias
+	Sociales, Ibagué, Colombia 1996, (versión en disco) </span></p>
+
+
+	<h2 style='text-align:justify'><span lang=ES-TRAD>Anexo A. </span></h2>
+
+
+	<h3 style='text-align:justify'><span lang=ES-TRAD>Ejemplo de análisis de
+	costo/beneficio a partir de la metodología de flujo efectivo:</span></h3>
+
+
+	<table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0
+	 style='border-collapse:collapse'>
+	 <tr>
+	  <td width=144 valign=top style='width:108.0pt;border:none;border-bottom:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:solid windowtext 1.0pt;
+	  border-bottom:solid windowtext 1.0pt;border-right:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Julio</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border:none;border-bottom:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Agosto</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border:none;border-bottom:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Septiembre</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border:none;border-bottom:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Octubre</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border:none;border-bottom:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Noviembre</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=144 valign=top style='width:108.0pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Ingresos</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border:none;border-left:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>35000</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>36000</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>42000</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>48000</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>57000</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=144 valign=top style='width:108.0pt;border:none;border-bottom:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Costos totales</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:solid windowtext 1.0pt;
+	  border-bottom:solid windowtext 1.0pt;border-right:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>53000</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border:none;border-bottom:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>37730</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border:none;border-bottom:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>25600</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border:none;border-bottom:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>27600</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border:none;border-bottom:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>29740</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=144 valign=top style='width:108.0pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Flujo efectivo</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border:none;border-left:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>-18000</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>-1730</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>16400</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>20400</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>28260</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=144 valign=top style='width:108.0pt;border:none;border-bottom:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Flujo acumulado</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:solid windowtext 1.0pt;
+	  border-bottom:solid windowtext 1.0pt;border-right:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>-18000</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border:none;border-bottom:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>-19730</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border:none;border-bottom:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>-3330</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border:none;border-bottom:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>17070</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border:none;border-bottom:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>45330</span></p>
+	  </td>
+	 </tr>
+	</table>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>El flujo efectivo se calcula a partir de la diferencia
+	entre ingresos y costos totales. El flujo efectivo acumulado se calcula de
+	forma evidente. En este ejemplo, la empresa obtendría utilidades en el mes de
+	septiembre en el sentido de que el flujo efectivo comienza a ser positivo. La
+	recuperación acumulada del flujo se logra en octubre. </span></p>
+
+
+	<h3 style='text-align:justify'><span lang=ES-TRAD>Ejemplo de análisis de
+	costo/beneficio a partir del valor presente:</span></h3>
+
+
+	<table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0
+	 style='border-collapse:collapse;border:none'>
+	 <tr>
+	  <td width=144 valign=top style='width:108.0pt;border:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Factor de conversión del valor dado en valor
+	  presente</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border:solid windowtext 1.0pt;
+	  border-left:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Años</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border:solid windowtext 1.0pt;
+	  border-left:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Costos</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border:solid windowtext 1.0pt;
+	  border-left:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Valor Presente de Costos</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border:solid windowtext 1.0pt;
+	  border-left:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Beneficios</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border:solid windowtext 1.0pt;
+	  border-left:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Valor Presente de Beneficios </span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=144 valign=top style='width:108.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.55</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>1</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>33000</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span
+	  lang=ES-TRAD style='font-size:11.0pt'>18150</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>21000</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span
+	  lang=ES-TRAD style='font-size:11.0pt'>11550</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=144 valign=top style='width:108.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.31</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>2</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>34600</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span
+	  lang=ES-TRAD style='font-size:11.0pt'>10726</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>26200</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span
+	  lang=ES-TRAD style='font-size:11.0pt'>8122</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=144 valign=top style='width:108.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.17</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>3</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>36300</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span
+	  lang=ES-TRAD style='font-size:11.0pt'>6171</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>32700</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span
+	  lang=ES-TRAD style='font-size:11.0pt'>5559</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=144 valign=top style='width:108.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.095</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>4</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>38100</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span
+	  lang=ES-TRAD style='font-size:11.0pt'>3620</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>40800</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span
+	  lang=ES-TRAD style='font-size:11.0pt'>3876</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=144 valign=top style='width:108.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.052</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>5</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>40000</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span
+	  lang=ES-TRAD style='font-size:11.0pt'>2080</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>51000</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span
+	  lang=ES-TRAD style='font-size:11.0pt'>2652</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=144 valign=top style='width:108.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>0.028</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>6</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>42000</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span
+	  lang=ES-TRAD style='font-size:11.0pt'>1176</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>63700</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span
+	  lang=ES-TRAD style='font-size:11.0pt'>1784</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=144 valign=top style='width:108.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=144 valign=top style='width:108.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Totales</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span
+	  lang=ES-TRAD style='font-size:11.0pt'>224000</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span
+	  lang=ES-TRAD style='font-size:11.0pt'>41923</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span
+	  lang=ES-TRAD style='font-size:11.0pt'>235400</span></p>
+	  </td>
+	  <td width=77 valign=top style='width:57.6pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal style='text-align:justify'><span
+	  lang=ES-TRAD style='font-size:11.0pt'>33606</span></p>
+	  </td>
+	 </tr>
+	</table>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>En este caso se está utilizando como factor de
+	conversión del valor dado al presente, la fórmula F=1/(1+i)<sup>n</sup> con
+	i=0.8 y n el número de años. El ejemplo es ilustrativo en el sentido de que la
+	comparación tradicional de costo/beneficio puede resultar favorable a partir
+	del cuarto año; pero desde el punto de vista del valor presente, la empresa
+	debe rechazar esa inversión prospectiva pues las utilidades devengadas como
+	diferencia de los beneficios y los costos no se evidencian en el valor presente
+	de los mismos. En otras palabras, la empresa puede lograr mejores resultados
+	sobre la base de los intereses del dinero y sin acometer el proyecto.</span></p>
+
+
+</div>
+<div class="footer">
+  <p>
+		2013 SESimula (Software Educativo de Simulación)
+  </p>
+  <p>
+     Documentación creada por: <a title="tutor" href="mailto:asalgado@csd.uo.edu.cu">Antonio Salgado Castillo</a>
+  <p>
+	 Diseño de la web por: <a title="autor" href="mailto:alejandro.labrada@csd.uo.edu.cu,aleplusplus@facebook.com">Alejandro Labrada Diaz</a></p>
+ </p>
+ <p>
+    Bajo la licencia GPL <a href="http://www.gnu.org/licenses/fdl.html">GNU
+    Free Documentation License version 1.3</a>
+ </p>
+</div>
+</body>
+</html>

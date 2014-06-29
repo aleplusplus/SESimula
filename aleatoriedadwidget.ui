@@ -1,0 +1,643 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AleatoriedadWidget</class>
+ <widget class="QWidget" name="AleatoriedadWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>643</width>
+    <height>477</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QSplitter" name="splitter_2_1">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <widget class="QSplitter" name="splitter_2_2">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <widget class="QGroupBox" name="groupBox_2_3">
+       <property name="title">
+        <string>Generadores de Números Aleatorios</string>
+       </property>
+       <property name="flat">
+        <bool>false</bool>
+       </property>
+       <property name="checkable">
+        <bool>false</bool>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_25">
+        <item>
+         <widget class="QComboBox" name="comboBox_2_1">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Selector de Generadores:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Muestra en un ambiente amigable&lt;/p&gt;&lt;p&gt;los distintos generadores, los cuales&lt;/p&gt;&lt;p&gt;podra seleccionar facilmente.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="editable">
+           <bool>false</bool>
+          </property>
+          <property name="currentIndex">
+           <number>1</number>
+          </property>
+          <item>
+           <property name="text">
+            <string>Por Defecto</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Generador Congruencial Mixto</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Generador Congruencial Multiplicativo</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Generador Congruencial Aditvo</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Generador Cuadratico</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Generador Multiplicativo</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item>
+         <widget class="QWidget" name="widget_2_1" native="true">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <layout class="QFormLayout" name="formLayout_3">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_2_1">
+             <property name="text">
+              <string>A =</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QSpinBox" name="spinBox_2_1">
+             <property name="accelerated">
+              <bool>true</bool>
+             </property>
+             <property name="maximum">
+              <number>99999999</number>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_2_2">
+             <property name="text">
+              <string>Semilla =</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QSpinBox" name="spinBox_2_2">
+             <property name="accelerated">
+              <bool>true</bool>
+             </property>
+             <property name="maximum">
+              <number>99999999</number>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_2_3">
+             <property name="text">
+              <string>C =</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QSpinBox" name="spinBox_2_3">
+             <property name="accelerated">
+              <bool>true</bool>
+             </property>
+             <property name="maximum">
+              <number>99999999</number>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_2_4">
+             <property name="text">
+              <string>M =</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QSpinBox" name="spinBox_2_4">
+             <property name="accelerated">
+              <bool>true</bool>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>99999999</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QGroupBox" name="groupBox_2_4">
+       <property name="title">
+        <string>Funciones de Distribución</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_26">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2_3">
+          <item>
+           <widget class="QLabel" name="label_2_5">
+            <property name="text">
+             <string>Continuas:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboBox_2_2">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Selector de Distribuciones Continua:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Muestra en un ambiente amigable&lt;/p&gt;&lt;p&gt;las distintas distribuciones continuas que &lt;/p&gt;&lt;p&gt;podra seleccionar facilmente.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="currentIndex">
+             <number>1</number>
+            </property>
+            <item>
+             <property name="text">
+              <string>-----------------------------------------------------</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Uniforme</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Arco Seno</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Beta</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Cauchy</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Chi-Cuadrado</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Coseno</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Double Log</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Erlang</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Exponencial</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Valor Extremo</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>F Ratio</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Gamma</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Normal (Gaussian)</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Laplace</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Logaritmmic</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Logistic</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Lognormal</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Parabolica</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Pareto</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Pearson Tipo 5</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Pearson Tipo 6</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Power</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Rayleigh</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Students T</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Triangular</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Weibull</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2_2">
+          <item>
+           <widget class="QLabel" name="label_2_6">
+            <property name="text">
+             <string>Discretas:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboBox_2_3">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Selector de Distribuciónes Discretas:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Muestra en un ambiente amigable&lt;/p&gt;&lt;p&gt;las distintas distribuciones discretas que &lt;/p&gt;&lt;p&gt;podra seleccionar facilmente.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <item>
+             <property name="text">
+              <string>-----------------------------------------------------</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Uniforme</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Bernoulli</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Binomial</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Geometric</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Hypergeometric</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Binomial Negativa</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Pascal</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Poisson</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_2_5">
+          <property name="title">
+           <string>Parámetros</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_27">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QWidget" name="widget_2_2" native="true">
+             <layout class="QFormLayout" name="formLayout_4">
+              <property name="fieldGrowthPolicy">
+               <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+              </property>
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_2_7">
+                <property name="text">
+                 <string>Minimo</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QDoubleSpinBox" name="doubleSpinBox_2_1">
+                <property name="wrapping">
+                 <bool>false</bool>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                </property>
+                <property name="accelerated">
+                 <bool>true</bool>
+                </property>
+                <property name="decimals">
+                 <number>4</number>
+                </property>
+                <property name="maximum">
+                 <double>999999999.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_2_8">
+                <property name="text">
+                 <string>Maximo</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QDoubleSpinBox" name="doubleSpinBox_2_2">
+                <property name="accelerated">
+                 <bool>true</bool>
+                </property>
+                <property name="decimals">
+                 <number>4</number>
+                </property>
+                <property name="maximum">
+                 <double>999999999.000000000000000</double>
+                </property>
+                <property name="value">
+                 <double>1.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_2_9">
+                <property name="text">
+                 <string>TextLabel</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QDoubleSpinBox" name="doubleSpinBox_2_3">
+                <property name="accelerated">
+                 <bool>true</bool>
+                </property>
+                <property name="decimals">
+                 <number>4</number>
+                </property>
+                <property name="maximum">
+                 <double>999999999.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0">
+               <widget class="QLabel" name="label_2_10">
+                <property name="text">
+                 <string>TextLabel</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QDoubleSpinBox" name="doubleSpinBox_2_4">
+                <property name="accelerated">
+                 <bool>true</bool>
+                </property>
+                <property name="decimals">
+                 <number>4</number>
+                </property>
+                <property name="maximum">
+                 <double>999999999.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_2_2">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="title">
+       <string>Tabla de Números Generados</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_28">
+       <item>
+        <widget class="QTableWidget" name="tableWidget_2">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Tabla de números generados:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Muestra en un ambiente amigable&lt;/p&gt;&lt;p&gt;los números generados.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="statusTip">
+          <string/>
+         </property>
+         <property name="whatsThis">
+          <string/>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Sunken</enum>
+         </property>
+         <property name="verticalScrollBarPolicy">
+          <enum>Qt::ScrollBarAsNeeded</enum>
+         </property>
+         <property name="editTriggers">
+          <set>QAbstractItemView::NoEditTriggers</set>
+         </property>
+         <property name="dragDropOverwriteMode">
+          <bool>true</bool>
+         </property>
+         <property name="gridStyle">
+          <enum>Qt::SolidLine</enum>
+         </property>
+         <property name="rowCount">
+          <number>0</number>
+         </property>
+         <property name="columnCount">
+          <number>1</number>
+         </property>
+         <attribute name="horizontalHeaderDefaultSectionSize">
+          <number>150</number>
+         </attribute>
+         <column>
+          <property name="text">
+           <string>#</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2_1">
+         <item>
+          <widget class="QSpinBox" name="spinBox_2">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Cantidad de números a generar.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="accelerated">
+            <bool>true</bool>
+           </property>
+           <property name="keyboardTracking">
+            <bool>false</bool>
+           </property>
+           <property name="minimum">
+            <number>0</number>
+           </property>
+           <property name="maximum">
+            <number>999999</number>
+           </property>
+           <property name="value">
+            <number>0</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_2">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Actualiza la tabla.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>Actualizar</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_2_1">
+      <property name="title">
+       <string>Definiciones Importantes</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="0" column="0">
+        <widget class="QTextBrowser" name="textBrowser_2">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Vista rapida:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Muestra en un ambiente amigable&lt;/p&gt;&lt;p&gt;algunos conceptos importantes.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

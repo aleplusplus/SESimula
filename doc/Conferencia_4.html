@@ -1,0 +1,2169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- qalgorithms.qdoc -->
+  <title>SESimula - Sistema, Modelación y Simulación</title>
+  <link rel="stylesheet" type="text/css" href="style/offline.css" />
+</head>
+<body>
+<div class="header" id="qtdocheader">
+  <div class="content">
+    <a href="index.html" class="qtref"><span>Documentación de Simulación</span></a>
+  </div>
+  <div class="breadcrumb toolblock">
+    <ul>
+      <li class="first"><a href="index.html">Home</a></li>
+      <li>Conferencia 4</li>
+    </ul>
+  </div>
+</div>
+<div class="content mainContent">
+    <p class="naviNextPrevious headerNavi">
+          [Anterior: <a href="Conferencia_3.html">Conferencia 3</a> ]
+          [Siguiente: <a href="Conferencia_5.html">Conferencia 5</a> ]
+    </p>
+    <div class="toc">
+        <h3><a name="toc">Contenido</a></h3>
+        <ul>
+        <li class="level1"><a href="#teorema-fundamental">El Teorema fundamental de la transformación integral</a></li>
+        <li class="level2"><a href="#otros-generales">Otros métodos generales de generación de números aleatorios con distribución no uniforme</a></li>
+        <li class="level2"><a href="#distribuciones-especificas">Algunos métodos para distribuciones específicas</a></li>
+        <li class="level2"><a href="#distribuciones-empiricas">Generación de números aleatorios con distribuciones empíricas</a></li>
+        <li class="level2"><a href="#disponibilidad-metodos">Disponibilidad de métodos de generación y prueba en paquetes</a></li>
+        <li class="level2"><a href="#conclusiones">Conclusiones</a></li>
+        </ul>
+    </div>
+
+    <h1 class="title">Números Aletorios con Cualquier Distribución</h1>
+
+	<h3 style='text-align:justify'><span lang=ES-TRAD>Introducción</span></h3>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>El comportamiento estocástico de muchos sistemas
+	reales no puede ser siempre caracterizado por una distribución uniforme. De
+	hecho aparecen mucho más frecuentemente otras distribuciones: normal,
+	exponencial, Poisson, Binomial, etc.; en muchos casos ni siquiera una
+	distribución teórica se ajusta bien a la aleatoriedad de los datos y es
+	necesario trabajar con distribuciones empíricas. Por  ello las tareas de
+	simulación exigen en particular conocer de métodos generales que permitan
+	generar números aleatorios con cualquier distribución así como técnicas de
+	prueba de bondad de ajuste a una distribución arbitraria, entre las teóricas
+	clásicas o una empírica.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Se comienza esta conferencia enunciando el Teorema
+	fundamental de la transformación integral, que brinda una solución general a
+	esta problemática. Se comentan algunos otros métodos generales, y métodos
+	específicos para ciertas distribuciones. Finalmente se resume la disponibilidad
+	de generadores y sistemas de prueba en algunos paquetes de software actuales.</span></p>
+
+	<a name="teorema-fundamental"></a>
+	<h2>El Teorema fundamental
+	de la transformación integral</h2>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Sea <i>X</i> una variable con función de distribución
+	acumulativa <i>F(x)=</i>Prob<i>(X</i></span><i><span lang=ES-TRAD
+	style='font-size:11.0pt;font-family:Symbol'>£</span></i><i><span lang=ES-TRAD
+	style='font-size:11.0pt'>x)</span></i><span lang=ES-TRAD style='font-size:11.0pt'>.
+	Sin pérdida de generalidad suponemos que el conjunto de valores
+	&quot;posibles&quot; de <i>X,</i>   y por tanto, el dominio de <i>F(x)</i> es
+	todo el intervalo real, y asignamos por <i>F(x)</i> probabilidad 0
+	 a los valores o intervalos de valores realmente no probables. Así abarcamos el
+	caso tanto de variables discretas y continuas. Con independencia del carácter
+	discreto o continuo de <i>X</i> se tiene que  <i>F(x)</i> es una función no
+	decreciente, con valores en [0,1] y tal que:</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <sub><img width=292 height=36
+	src="images/Conf_4/image001.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>pero <i>F(x)</i> no necesariamente es una función
+	estrictamente creciente ni continua. De hecho, si <i>X</i> es discreta, <i>F(x)</i>
+	es una función escalonada (desde 0 hasta 1) con puntos de discontinuidad en
+	cada valor <i>x</i><sub>i</sub>,<i>  </i>para el cual  <i>p<sub>i</sub>=</i>Prob(X=<i>x</i><sub>i</sub>)
+	&gt; 0 (en estos puntos <i>F(x)</i> muestra al menos continuidad por la
+	derecha). Aun siendo <i>X</i> continua, <i>F(x) </i>no tiene que ser
+	estrictamente creciente, pues puede haber un subintervalos del eje real donde <i>F(x)</i>
+	mantenga un valor constante. </span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>De esta forma, dada una función de distribución cualquiera:</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify;text-indent:35.4pt'><span
+	lang=ES-TRAD style='font-size:11.0pt'><sub><img width=240 height=23
+	src="images/Conf_4/image002.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>no existe en general la función inversa <i>x=F</i><sup>-1</sup><i>(u)</i>.
+	El Teorema de la transformación integral trabaja con la definición de una
+	función  <i>F</i><sup>-1</sup>   que es &quot;inversa por la izquierda&quot; de
+	<i>F</i>, definida por:</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <sub><img width=233 height=27
+	src="images/Conf_4/image003.gif"></sub> </span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            </span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Puede verse claramente que <i>F</i><sup>-1</sup> es
+	inversa de <i>F</i> por la izquierda</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <sub><img width=281 height=27
+	src="images/Conf_4/image004.gif"></sub></span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>porque </span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <sub><img width=308 height=21
+	src="images/Conf_4/image005.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>pero <i>F</i><sup>-1</sup> no es inversa de <i>F</i>
+	por la derecha. Más precisamente, ocurre que:</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <sub><img width=97 height=24
+	src="images/Conf_4/image006.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>por la propia definición de <i>F</i><sup>-1</sup><i>(u).</i></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Después de observar que tanto <i>F</i> como <i>F</i><sup>-1</sup>
+	son no decrecientes, la demostración del siguiente Teorema será clara:</span></p>
+
+
+	<h3 style='text-align:justify'><u><span lang=ES-TRAD>Teorema fundamental de la
+	transformación integral.</span></u></h3>
+
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>a)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>Sea <i>U</i>  una
+	variable con distribución uniforme en [0,1] y sea <i>F: </i>(-</span><span
+	lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>¥</span><span
+	lang=ES-TRAD style='font-size:11.0pt'>,</span><span lang=ES-TRAD
+	style='font-size:11.0pt;font-family:Symbol'>¥</span><span lang=ES-TRAD
+	style='font-size:11.0pt'>)</span><span lang=ES-TRAD style='font-size:11.0pt;
+	font-family:Symbol'>®</span><span lang=ES-TRAD style='font-size:11.0pt'>[0,1] 
+	una función de distribución acumulativa <u>cualquiera</u>. Sea <i>F</i><sup>-1</sup>
+	: [0,1] la inversa por la izquierda de <i>F, </i>definida como antes:</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'><sub><img width=232 height=27
+	src="images/Conf_4/image007.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>y sea <i>X </i>la variable aleatoria<i>
+	X=F</i><sup>-1</sup><i>(U)</i>. Entonces <i>X</i> tiene distribución <i>F(x).</i></span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>b)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>Recíprocamente, sea <i>X</i> 
+	una variable aleatoria con distribución <i>F(x)</i> y supongamos adicionalmente
+	que F es continua y estrictamente creciente en un intervalo real a la izquierda
+	del cual <i>F(x)=</i>0 y a la derecha del cual <i>F(x)=</i>1.  Sea <i>U</i> la
+	variable aleatoria <i>U=F(X)</i>. Entonces <i>U</i> tiene distribución uniforme
+	en [0,1]. </span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><u><span lang=ES-TRAD
+	style='font-size:11.0pt'>Demostración:</span></u></p>
+
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>a)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>Partimos de <i>U</i>
+	con distribución uniforme, esto es Prob [<i>U </i></span><i><span lang=ES-TRAD
+	style='font-size:11.0pt;font-family:Symbol'>£</span></i><i><span lang=ES-TRAD
+	style='font-size:11.0pt'> u</span></i><span lang=ES-TRAD style='font-size:11.0pt'>]
+	= <i>u</i>  para cualquier <i>u</i></span><i><span lang=ES-TRAD
+	style='font-size:11.0pt;font-family:Symbol'>Î</span></i><span lang=ES-TRAD
+	style='font-size:11.0pt'> [0,1]. Construimos <i>X=F</i><sup>-1</sup><i>(U). </i>Dado
+	cualquier <i>x</i></span><i><span lang=ES-TRAD style='font-size:11.0pt;
+	font-family:Symbol'>Î</span></i><span lang=ES-TRAD style='font-size:11.0pt'> <i> </i>(-</span><span
+	lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>¥</span><span
+	lang=ES-TRAD style='font-size:11.0pt'>,</span><span lang=ES-TRAD
+	style='font-size:11.0pt;font-family:Symbol'>¥</span><span lang=ES-TRAD
+	style='font-size:11.0pt'>), llamemos <i>u=F(x) </i></span><i><span
+	lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>Î</span></i><span
+	lang=ES-TRAD style='font-size:11.0pt'> [0,1]. Se tiene</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify;text-indent:18.0pt'><span
+	lang=ES-TRAD style='font-size:11.0pt'><sub><img width=304 height=24
+	src="images/Conf_4/image008.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify;text-indent:18.0pt'><span
+	lang=ES-TRAD style='font-size:11.0pt'>Entonces:</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify;text-indent:18.0pt'><span
+	lang=ES-TRAD style='font-size:11.0pt'><sub><img width=549 height=24
+	src="images/Conf_4/image009.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify;text-indent:18.0pt'><span
+	lang=ES-TRAD style='font-size:11.0pt'>como se quería demostrar en este inciso</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>b)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>Partimos ahora de <i>X</i>
+	con distribución <i>F(x).</i> Suponemos adicionalmente  que <i>F </i><u>es
+	estrictamente continua y creciente</u><i> </i>y construimos <i>U=F(X)</i>. En
+	tal caso, la inversa por la izquierda de <i>F</i>  es también inversa por la
+	derecha de <i>F </i>en el intervalo donde <i>F(x)</i> es diferente de cero y
+	uno<i>. </i>Por tanto, si partimos de cualquier <i>u</i></span><i><span
+	lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>Î</span></i><i><span
+	lang=ES-TRAD style='font-size:11.0pt'>[0,1]</span></i><span lang=ES-TRAD
+	style='font-size:11.0pt'>, obtenemos <i>x=F</i><sup>-1</sup>(<i>u</i>) en dicho
+	intervalo y se tendrá:</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify;text-indent:18.0pt'><span
+	lang=ES-TRAD style='font-size:11.0pt'><sub><img width=352 height=24
+	src="images/Conf_4/image010.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify;text-indent:18.0pt'><span
+	lang=ES-TRAD style='font-size:11.0pt'>Ello permite deducir que:</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'><sub><img width=521 height=21
+	src="images/Conf_4/image011.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>Nótese que esta cadena de igualdades no
+	es válida sin saber que <i>F</i><sup>-1</sup> es también inversa por la derecha
+	de <i>F</i>. Así queda demostrado también el &quot;recíproco&quot; para
+	distribuciones específicas.       L.Q.Q.D.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>El inciso a) de este Teorema es importante porque
+	permite obtener una variable <i>X</i> con distribución cualquiera <i>F(x)</i> a
+	partir de una variable <i>U</i> con distribución uniforme en [0,1]. Entonces en
+	particular, si queremos generar una muestra de <i>X</i> con distribución <i>F(x)</i>:
+	<i>x</i><sub>1</sub>, <i>x</i><sub>2</sub>, ... , <i>x</i><sub>n</sub>   será
+	suficiente generar una muestra de números aleatorios con distribución uniforme:
+	<i>u</i><sub>1</sub>, <i>u</i><sub>2</sub>, ... , <i>u</i><sub>n</sub>  y luego
+	determinar:</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <sub><img width=211 height=25
+	src="images/Conf_4/image012.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>donde <i>F</i><sup>-1</sup><i>(u) </i> es la inversa
+	por la izquierda de <i>F. </i>Este resultado resuelve por tanto en general el
+	problema de la generación de números aleatorios con cualquier distribución.  Es
+	especialmente útil cuando es factible encontrar una expresión para <i>F<sup>-1</sup>(u)</i>
+	en términos de funciones elementales; pero es aplicable en última instancia
+	utilizando métodos aproximados de cálculo de <i>F<sup>-1</sup>(u)</i> cuando <i>F(x)</i>
+	tiene una expresión complicada e incluso cuando es una función de distribución
+	empírica.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>El inciso b) del Teorema tiene también una importancia
+	práctica no trivial. En el caso de distribuciones continuas y estrictamente
+	crecientes (como son muchas de las distribuciones continuas que se presentan en
+	la práctica) la transformación <i>F(x)</i> permite convertirla en una
+	distribución uniforme en [0,1]. Por tanto, si tenemos que probar que una serie
+	de números: <i>x</i><sub>1</sub>, <i>x</i><sub>2</sub>, ... , <i>x</i><sub>n </sub> se
+	ajusta a la distribución <i>F(x)</i>, bastará obtener los correspondientes
+	números </span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify;text-indent:35.4pt'><span
+	lang=ES-TRAD style='font-size:11.0pt'><sub><img width=207 height=24
+	src="images/Conf_4/image013.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>y demostrar entonces que <i>u</i><sub>1</sub>, <i>u</i><sub>2</sub>,
+	... , <i>u</i><sub>n</sub>  se ajustan a una distribución uniforme. Así, se
+	resuelve el problema de la prueba de bondad de ajuste a un tipo de
+	distribuciones bastante general: aquellas que son continuas y estrictamente
+	crecientes en el intervalo donde son diferentes de cero. Para otras
+	distribuciones, por ejemplo, discretas, se puede utilizar como prueba el test
+	Chi-cuadrado. Para distribuciones que son continuas pero no estrictamente
+	crecientes en su intervalo esencial de definición (donde son diferentes de las
+	constantes 0 y 1), dicho intervalo puede ser subdividido en subintervalos y
+	sobre ellos calcular frecuencias esperadas (de acuerdo con <i>F(x)</i>)  y
+	comparar con las frecuencias observadas en la muestra, a través también de un
+	test Chi-cuadrado.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Ejemplos:</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>1)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>Supongamos que se
+	desea buscar una muestra de números aleatorios con distribución normal con
+	media </span><i><span lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>m</span></i><span
+	lang=ES-TRAD style='font-size:11.0pt'> y varianza </span><i><span lang=ES-TRAD
+	style='font-size:11.0pt;font-family:Symbol'>s</span></i><sup><span
+	lang=ES-TRAD style='font-size:11.0pt'>2</span></sup><span lang=ES-TRAD
+	style='font-size:11.0pt'>.  En este caso:</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	17.4pt'><span lang=ES-TRAD style='font-size:11.0pt'><sub><img width=177
+	height=51
+	src="images/Conf_4/image014.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>que es continua y estrictamente creciente
+	en todo el eje real. Dicha función y su inversa <i>F</i><sup>-1</sup> no son
+	expresables en términos de funciones elementales; pero se encuentran tabuladas
+	y su cálculo numérico aproximado se encuentra implementado en muchos paquetes,
+	e incluso en lenguajes de programación (como función error).</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>Lo cierto, es que para obtener los
+	números aleatorios con la distribución deseada, generamos (por cualquiera de
+	las vías formuladas en la conferencia anterior), <i>n </i> números aleatorios
+	con distribución uniforme en [0,1]:</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>      <sub><img width=75 height=24
+	src="images/Conf_4/image015.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>y luego determinamos <i>x</i><sub>i</sub>
+	de manera que:</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	17.4pt'><span lang=ES-TRAD style='font-size:11.0pt'>            <sub><img
+	width=347 height=51
+	src="images/Conf_4/image016.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>haciendo uso de las implementaciones de
+	esta función o su inversa en el lenguaje de programación. Ello equivale a
+	buscar en una tabla de la distribución normal normalizada, el punto crítico de
+	esta distribución con significación de una cola igual a 1-<i>u<sub>i</sub></i>.
+	Recíprocamente, si queremos saber si: <i>x</i><sub>1</sub>, <i>x</i><sub>2</sub>,...,
+	<i>x</i><sub>n </sub> son números aleatorios con distribución <i>Normal (</i></span><i><span
+	lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>m</span></i><i><span
+	lang=ES-TRAD style='font-size:11.0pt'>,</span></i><i><span lang=ES-TRAD
+	style='font-size:11.0pt;font-family:Symbol'>s</span></i><i><sup><span
+	lang=ES-TRAD style='font-size:11.0pt'>2</span></sup></i><i><span lang=ES-TRAD
+	style='font-size:11.0pt'>), </span></i><span lang=ES-TRAD style='font-size:
+	11.0pt'>calculamos </span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	17.4pt'><span lang=ES-TRAD style='font-size:11.0pt'>            <sub><img
+	width=343 height=51
+	src="images/Conf_4/image017.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify;text-indent:18.0pt'><span
+	lang=ES-TRAD style='font-size:11.0pt'>y probamos que <i>u</i><sub>1</sub>, <i>u</i><sub>2</sub>,...,
+	<i>u</i><sub>n</sub>  son aleatorios con distribución  uniforme en [0,1]</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify;text-indent:
+	-18.0pt'><span lang=ES-TRAD style='font-size:11.0pt'>2)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:11.0pt'>Supongamos ahora que
+	queremos generar <i>N</i> números aleatorios: <i>x</i><sub>1</sub>, <i>x</i><sub>2</sub>,
+	... , <i>x</i><sub>N </sub> con distribución <i>Binomial(n,p)</i></span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>En este caso, la variable a muestrear es
+	discreta con valores posibles <i>X=</i>0, 1,2,...,<i> n.</i> La probabilidad de
+	cada uno de estos valores se determina por:</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'><sub><img width=419 height=48
+	src="images/Conf_4/image018.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>La función de distribución acumulada <i>F(x)</i> 
+	para esta distribución tiene un carácter escalonado:</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'><sub><img width=501 height=216
+	src="images/Conf_4/image019.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>Entonces, buscamos  los <i>N</i> números
+	con distribución uniforme: <i>u</i><sub>1</sub>, <i>u</i><sub>2</sub>,..., <i>u</i><sub>N
+	</sub> y para cada <i>i=</i>1,2,...,<i> N, </i>definimos <i>x</i><sub>i</sub>
+	(que debe ser uno de los valores posibles de: 0, 1,2,...<i>n</i>) de manera que</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>      <sub><img width=429 height=27
+	src="images/Conf_4/image020.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>Esto supone encontrar <i>k=k (u<sub>i</sub>)</i>,
+	de manera que se pueda<i> </i>localizar <i>u<sub>i</sub> </i>en un intervalo
+	semiaberto de la forma:</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>      <sub><img width=437 height=24
+	src="images/Conf_4/image021.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>(Si <i>k=</i>0, la suma del miembro
+	izquierdo de la desigualdad anterior, debe considerarse como 0). Entonces el
+	número <i>x</i><sub>i</sub> correspondiente es igual a <i>k</i>. En efecto,
+	para todo <i>x</i> tal que <i>k</i></span><i><span lang=ES-TRAD
+	style='font-size:11.0pt;font-family:Symbol'>£</span></i><i><span lang=ES-TRAD
+	style='font-size:11.0pt'>x&lt;k+</span></i><span lang=ES-TRAD style='font-size:
+	11.0pt'>1, ocurre que <i>F(x)=p</i><sub>0</sub>+<i>p</i><sub>1</sub>+...+<i>p</i><sub>k</sub>
+	</span><span lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>³</span><span
+	lang=ES-TRAD style='font-size:11.0pt'> <i>u<sub>i</sub></i>  y <i>k</i> es el
+	menor de los valores de <i>x</i> que satisface lo anterior. Por ello <i>x<sub>i</sub>=k=k(u<sub>i</sub>).</i></span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>Observe que la localización de <i>u<sub>i</sub></i></span><i><span
+	lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>Î</span></i><span
+	lang=ES-TRAD style='font-size:11.0pt'>[0,1] en un tal subintervalo dependiente
+	de <i>k </i>es siempre posible y única porque las sumas parciales:</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'><sub><img width=416 height=24
+	src="images/Conf_4/image022.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>constituyen una partición del intervalo
+	semiabierto (0,1].  La única duda posible podría ser que <i>u</i><sub>i</sub> 
+	fuera 0 para algún <i>i</i> pero esto tiene probabilidad cero. De ser así,
+	probablemente se trate de un número de la forma 0+</span><i><span lang=ES-TRAD
+	style='font-size:11.0pt;font-family:Symbol'>x</span></i><span lang=ES-TRAD
+	style='font-size:11.0pt'>  con </span><i><span lang=ES-TRAD style='font-size:
+	11.0pt;font-family:Symbol'>x</span></i><i><span lang=ES-TRAD style='font-size:
+	11.0pt'>&gt;</span></i><span lang=ES-TRAD style='font-size:11.0pt'>0 pero
+	suficientemente pequeño para no ser precisable en la aritmética. Entonces, se
+	toma el <i>k </i> correspondiente igual a 0.</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-align:justify'><span
+	lang=ES-TRAD style='font-size:11.0pt'>Nótese además que por ser en este caso <i>F(x)</i>
+	una distribución discreta, no es aplicable el inciso b) del Teorema. De hecho,
+	debe quedar claro en el ejemplo, que <i>X=F<sup>-1</sup>(U)</i> tiene la
+	distribución binomial esperada, pero si a esta variable le aplicamos <i>F:
+	U'=F(X)</i>, no recuperamos la variable <i>U</i> uniformemente distribuida
+	inicial pues <i>U'</i>  alcanza de hecho, sólo un conjunto finito de valores
+	entre 0 y 1: 0, <i>p</i><sub>0</sub>, <i>p</i><sub>0</sub>+p<sub>1</sub>, <i>p</i><sub>0</sub>+<i>p</i><sub>1</sub>+<i>p</i><sub>2</sub>,...,1.
+	Si se quisiera probar que un conjunto dado de valores <i>x</i><sub>1</sub>, <i>x</i><sub>2</sub>,...,
+	<i>x</i><sub>N</sub> (con cada <i>x</i><sub>i</sub>=0, 1,2,...,<i> n),</i>
+	tienen distribución <i>Binomial(n, p)</i>, lo correcto es medir la frecuencia <i>f</i><sub>i</sub>
+	de cada valor <i>x</i><sub>i</sub> y compararla con la frecuencia esperada <i>p</i><sub>i</sub>*<i>N</i>
+	utilizando el test Chi-cuadrado.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>La idea del ejemplo 2 es fácilmente generalizable a
+	cualquier variable discreta con un número finito o contable de valores
+	posibles. Estos ejemplos son suficientes para ilustrar la potencia general del
+	Teorema fundamental de la transformación integral. No obstante, no es el único
+	método para generar números aleatorios con una distribución dada. Hay otros
+	métodos generales y hay otros (algunos muy ingeniosos) válidos para
+	distribuciones específicas que pueden ser más eficientes que el cálculo de <i>F</i><sup>-1</sup>(<i>u)</i>
+	o que se derivan de éste en una forma fácilmente implementable.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Para sólo citar un ejemplo, supóngase que se quiere
+	generar números aleatorios acorde con la distribución <i>F(x)=x<sup>2</sup></i> 
+	para 0</span><span lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>£</span><i><span
+	lang=ES-TRAD style='font-size:11.0pt'>x</span></i><span lang=ES-TRAD
+	style='font-size:11.0pt;font-family:Symbol'>£</span><span lang=ES-TRAD
+	style='font-size:11.0pt'>1.  En este intervalo, <i>F </i>tiene una inversa <i>F</i><sup>-1</sup>(<i>u</i>)=<i>u</i><sup>1/2</sup>.
+	La aplicación del Teorema sugeriría entonces tomar <i>N</i> números aleatorios
+	con distribución uniforme y a cada uno, calcularle la raíz cuadrada, para
+	obtener los números aleatorios con la distribución deseada. Una alternativa
+	ingeniosa es generar parejas de números aleatorios independientes: (<i>U</i><sub>1</sub>,<i>
+	U2</i>) y tomar <i>X=</i>max (<i>U</i><sub>1</sub>,<i> U2</i>). En efecto,</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <sub><img width=431 height=48
+	src="images/Conf_4/image023.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Así, surge la regla alternativa de que para generar <i>N
+	</i>números aleatorios con distribución <i>F(x)=x<sup>2</sup>, </i> es
+	suficiente generar <i>N </i>parejas de números aleatorios independientes con
+	distribución uniforme y de cada pareja tomar el máximo.</span></p>
+
+	<a name="otros-generales"></a>
+	<h2>Otros métodos generales
+	de generación de números aleatorios con distribución no uniforme.</h2>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Además del método general, vía el Teorema fundamental
+	de la transformación integral, se han discutido otros métodos de generación de
+	números aleatorios de cierto grado de generalidad. Aquí se comentan los
+	enunciados en [1]:</span></p>
+
+	<h3 style='text-align:justify'><span lang=ES-TRAD>Método del rechazo</span></h3>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Supongamos que se quiere seleccionar un número
+	aleatorio <i>x,</i> <i>a</i></span><i><span lang=ES-TRAD style='font-size:11.0pt;
+	font-family:Symbol'>£</span></i><i><span lang=ES-TRAD style='font-size:11.0pt'>x</span></i><i><span
+	lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>£</span></i><i><span
+	lang=ES-TRAD style='font-size:11.0pt'>b</span></i><span lang=ES-TRAD
+	style='font-size:11.0pt'> con distribución continua <i>F(x)</i> que es
+	diferente de cero y 1 en este intervalo (<i>F(x)=</i>0 para <i>x&lt;a</i> y <i>F(x)=</i>1
+	para <i>x</i></span><i><span lang=ES-TRAD style='font-size:11.0pt;font-family:
+	Symbol'>³</span></i><i><span lang=ES-TRAD style='font-size:11.0pt'>b</span></i><span
+	lang=ES-TRAD style='font-size:11.0pt'>) y que <i>F(x)</i> es continua y con
+	derivada acotada <i>f(x)=F'(x)</i>  con  K=max {|<i>f(x)|   x</i></span><i><span
+	lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>Î</span></i><i><span
+	lang=ES-TRAD style='font-size:11.0pt'> </span></i><span lang=ES-TRAD
+	style='font-size:11.0pt'>[<i>a</i>,<i> b</i>]}. La función derivada <i>f(x)</i>
+	es la función de densidad de probabilidad (fdp) y puede ser
+	&quot;escalada&quot; en la forma: k<i>* f(x)</i>  donde <i>k=1/K, </i> para que
+	tome valores en [0,1]. La idea del método es generar una pareja de números
+	aleatorios: <i>(u</i><sub>1</sub><i>, u2) </i> cada uno de los cuales tiene
+	distribución uniforme en [0,1]. A partir de <i>u<sub>2</sub></i> se genera el
+	número x<sub>1</sub><i> </i> por una transformación lineal que lo lleva al
+	intervalo [<i>a, b</i>]:</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify;text-indent:35.4pt'><span
+	lang=ES-TRAD style='font-size:11.0pt'><sub><img width=127 height=23
+	src="images/Conf_4/image024.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Si el número <i>x</i><sub>1</sub> fuera siempre
+	escogido como salida del generador, resultaría distribuido uniformemente en [<i>a,
+	b</i>] porque la transformación lineal convierte distribuciones uniformes en
+	uniformes; pero el número <i>x<sub>1</sub> </i>es seleccionado a veces como
+	salida y otras es rechazado (de ahí el nombre de &quot;método de
+	rechazo&quot;). Concretamente, <i>x</i><sub>1</sub> se acepta como salida del
+	generador si y sólo si <i>u</i><sub>1</sub></span><span lang=ES-TRAD
+	style='font-size:11.0pt;font-family:Symbol'>£</span><i><span lang=ES-TRAD
+	style='font-size:11.0pt'>k*f</span></i><span lang=ES-TRAD style='font-size:
+	11.0pt'>(<i>x</i><sub>1</sub>).  Se demuestra (no hay que hacerlo aquí en
+	detalles) que esto garantiza que los valores no rechazados tienen la función de
+	densidad de probabilidad deseada <i>f(x)</i>. En última instancia esto es
+	consecuencia de que se acepta <i>x</i><sub>1</sub> con probabilidad <i>k*f(x</i><sub>1</sub><i>)</i>
+	porque:</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify;text-indent:35.4pt'><span
+	lang=ES-TRAD style='font-size:11.0pt'><sub><img width=229 height=23
+	src="images/Conf_4/image025.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>ya que <i>U</i><sub>1</sub> tiene distribución
+	uniforme en [0,1].</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>A manera de ejemplo, reconsidérese el caso de la
+	búsqueda de números aleatorios con distribución <i>F(x)=x</i><sup>2</sup> en el
+	intervalo [0,1]. En este caso <i>f(x)=F'(x)=2x,</i> <i>K=</i>2 y <i>k=1/K=1/2</i>.
+	Por tanto la fdp escalonada es <i>k*f(x)=x. </i>Se generan parejas de números
+	aleatorios (<i>u</i><sub>1</sub>,<i> u2)</i>  y el segundo número se transforma
+	por la ecuación lineal:</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <sub><img width=156 height=23
+	src="images/Conf_4/image026.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Este número se toma como salida del generador si y
+	sólo si:</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <sub><img width=153 height=23
+	src="images/Conf_4/image027.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>En otras palabras, se selecciona <i>u</i><sub>2</sub>
+	si y solo si es el máximo de (<i>u</i><sub>1</sub>,<i> u2</i>), lo cual
+	coincide con la idea comentada antes para esta distribución.</span></p>
+
+
+	<h3 style='text-align:justify'><span lang=ES-TRAD>Método de la superposición</span></h3>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Suponga que se desea generar números aleatorios con
+	una función de distribución <i>F(x) </i>y<i> </i>suponga que dicha función de
+	distribución puede descomponerse en la superposición de <i>N </i>funciones de
+	distribución <i>F<sub>i</sub>(x)</i> para <i>i</i>=-1,2,...,<i> n</i> de la
+	forma siguiente:</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <sub><img width=348 height=45
+	src="images/Conf_4/image028.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>donde</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <sub><img width=60 height=45
+	src="images/Conf_4/image029.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>o en otras palabras, los coeficientes <i>a</i><sub>i</sub><i>
+	</i>miden probabilísticamente el aporte de <i>F</i><sub>i</sub>(<i>x</i>) a <i>F(x)</i>.
+	Cuando se logra esta representación de <i>F(x)</i>, el problema de la
+	generación de un número aleatorio con esta distribución se reduce a la
+	generación de números aleatorios con distribución <i>F<sub>i</sub>(x)</i>.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Para ilustrar con un ejemplo, supóngase que <i>F(x)</i>
+	es continua con una función de densidad de probabilidad (fdp)  <i>f(x)=F'(x)</i>
+	que tiene la forma:</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><img width=12 height=23
+	src="images/Conf_4/image030.gif"><br
+	clear=ALL>
+	<span lang=ES-TRAD style='font-size:11.0pt'>            <sub><img width=149
+	height=120
+	src="images/Conf_4/image031.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>donde  <i>h</i><sub>1</sub> &lt; <i>h</i><sub>3</sub><i>
+	&lt;h</i><sub>2</sub>.  </span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Como <i>f(x)</i> es una fdp, debemos tener:</span></p>
+
+
+
+
+
+	<p class=MsoNormal style='text-align:justify;text-indent:35.4pt'><span
+	lang=ES-TRAD style='font-size:11.0pt'><sub><img width=227 height=24
+	src="images/Conf_4/image032.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Ahora bien, queremos descomponer <i>f(x)</i> en la
+	forma:</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify;text-indent:35.4pt'><span
+	lang=ES-TRAD style='font-size:11.0pt'><sub><img width=229 height=24
+	src="images/Conf_4/image033.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>donde</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify;text-indent:35.4pt'><span
+	lang=ES-TRAD style='font-size:11.0pt'><sub><img width=420 height=41
+	src="images/Conf_4/image034.gif"></sub>            </span><span
+	lang=ES-TRAD style='font-size:11.0pt'><sub><img width=436 height=41
+	src="images/Conf_4/image035.gif"></sub></span></p>
+
+	<p class=MsoNormal style='text-align:justify;text-indent:35.4pt'><span
+	lang=ES-TRAD style='font-size:11.0pt'><sub><img width=447 height=41
+	src="images/Conf_4/image036.gif"></sub></span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Para determinar </span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify;text-indent:35.4pt'><span
+	lang=ES-TRAD style='font-size:11.0pt'><sub><img width=92 height=24
+	src="images/Conf_4/image037.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>se construye el siguiente sistema de ecuaciones:</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify;text-indent:35.4pt'><span
+	lang=ES-TRAD style='font-size:11.0pt'><sub><img width=219 height=23
+	src="images/Conf_4/image038.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify;text-indent:35.4pt'><span
+	lang=ES-TRAD style='font-size:11.0pt'><sub><img width=285 height=24
+	src="images/Conf_4/image039.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify;text-indent:35.4pt'><span
+	lang=ES-TRAD style='font-size:11.0pt'><sub><img width=345 height=24
+	src="images/Conf_4/image040.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>De allí se obtiene:</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify;text-indent:35.4pt'><span
+	lang=ES-TRAD style='font-size:11.0pt'><sub><img width=311 height=47
+	src="images/Conf_4/image041.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Se puede comprobar que la suma de estos tres
+	coeficientes es efectivamente 1 porque:</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify;text-indent:35.4pt'><span
+	lang=ES-TRAD style='font-size:11.0pt'><sub><img width=400 height=24
+	src="images/Conf_4/image042.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>En general, una vez obtenida la descomposición de <i>f(x)</i>
+	como superposición de <i>f<sub>i</sub>(x) </i>con coeficientes de probabilidad <i>a<sub>1</sub>,
+	a<sub>2</sub>, ...,a<sub>n</sub>, </i>para la generación de números aleatorios
+	con distribución <i>f(x)</i> se puede proceder de varias maneras. Una de las
+	técnicas más frecuentes es generar un número aleatorio </span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <sub><img width=113 height=21
+	src="images/Conf_4/image043.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>y localizarlo entre los subintervalos:</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <sub><img width=380 height=24
+	src="images/Conf_4/image044.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Si resulta</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <sub><img width=115 height=45
+	src="images/Conf_4/image045.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>la salida del generador será el número <i>X </i>generado
+	por <i>f<sub>m</sub>(x).</i></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>En el ejemplo anterior con tres componentes uniformes,
+	se concreta así. Se genera <i>r</i> como un número aleaorio con  distribución
+	uniforme en (0,1).</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            Si resulta         <i>0&lt;r&lt;a<sub>1</sub>            </i>      
+	     entonces <i>x</i> se genera con <i>f<sub>1</sub>(x)</i></span></p>
+
+	<p class=MsoNormal style='text-align:justify'><i><span lang=ES-TRAD
+	style='font-size:11.0pt'>            </span></i><span lang=ES-TRAD
+	style='font-size:11.0pt'>Si resulta         <i>a<sub>1</sub>&lt;r&lt;a<sub>1</sub>+a<sub>2</sub></i>     entonces
+	<i>x</i> se genera con <i>f<sub>2</sub>(x)</i></span></p>
+
+	<p class=MsoNormal style='text-align:justify'><i><span lang=ES-TRAD
+	style='font-size:11.0pt'>            </span></i><span lang=ES-TRAD
+	style='font-size:11.0pt'>Si resulta         <i>a<sub>1</sub>+a<sub>2</sub>&lt;r&lt;1      </i>entonces
+	<i>x </i>se genera con <i>f<sub>3</sub>(x)</i></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'><br>
+	Como una ilustración de este método se puede ver la discusión que hace Knuth
+	sobre cómo generar números aleatorios con distribución normal a partir de 145
+	distribuciones, 48 de las cuáles son distribuciones uniformes</span></p>
+
+	<a name="distribuciones-especificas"></a>
+	<h2>Algunos métodos para
+	distribuciones específicas</h2>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Discutamos ahora cómo se concretan algunos métodos de
+	generación para distribuciones específicas:</span></p>
+
+
+	<h3 style='text-align:justify'><span lang=ES-TRAD>Distribución de Bernoulli</span></h3>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Supóngase que queremos generar <i>X </i></span><i><span
+	lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>Î</span></i><i><span
+	lang=ES-TRAD style='font-size:11.0pt'>  Bernoulli(p)</span></i><span
+	lang=ES-TRAD style='font-size:11.0pt'>. Generamos números aleatorios <i> R </i>con
+	distribución uniforme en (0,1). Entonces tomamos</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <i>X = </i>1  si y solo si    <i>R &lt; p</i> 
+	. En otro caso, tomamos <i>X = </i>0.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>La fundamentación de esta idea es clara. Téngase
+	presente que por ser <i>R </i></span><i><span lang=ES-TRAD style='font-size:
+	11.0pt;font-family:Symbol'>Î</span></i><i><span lang=ES-TRAD style='font-size:
+	11.0pt'> Uniform(0,1)</span></i></p>
+
+
+
+
+
+	<p class=MsoNormal style='text-align:justify'><i><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <sub><img width=228 height=21
+	src="images/Conf_4/image046.gif"></sub></span></i></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>mientras que </span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <sub><img width=128 height=21
+	src="images/Conf_4/image047.gif"></sub></span></p>
+
+	<h3 style='text-align:justify'><span lang=ES-TRAD>Distribución binomial</span></h3>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Supóngase que queremos generar  <i> X </i></span><i><span
+	lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>Î</span></i><i><span
+	lang=ES-TRAD style='font-size:11.0pt'>  Binomial(n,p). </span></i><span
+	lang=ES-TRAD style='font-size:11.0pt'>Recuérdese que</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <sub><img width=352 height=48
+	src="images/Conf_4/image048.gif"></sub></span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>y se interpreta como la probabilidad de que aparezcan
+	&quot;k&quot; valores 1 en &quot;n&quot; repeticiones de un experimento de
+	Bernoulli.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Entonces para generar cada número <i>X, </i> generamos
+	<i>n </i> números aleatorios uniformes en (0,1):</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <i>R<sub>1</sub>, R<sub>2</sub>, ..., R<sub>n</sub></i></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Y tomamos</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <sub><img width=300 height=27
+	src="images/Conf_4/image049.gif"></sub></span></p>
+
+	<h3 style='text-align:justify'><span lang=ES-TRAD>Distribución geométrica</span></h3>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Se quiere generar <i>X </i></span><i><span
+	lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>Î</span></i><i><span
+	lang=ES-TRAD style='font-size:11.0pt'> Geométrica(p)</span></i><span
+	lang=ES-TRAD style='font-size:11.0pt'>, esto es </span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <sub><img width=316 height=24
+	src="images/Conf_4/image050.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Comenzamos en principio, utilizando el teorema fundamental.
+	La distribución acumulativa <i>F(x) </i> de <i>X</i> se determina así:</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <sub><img width=413 height=48
+	src="images/Conf_4/image051.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>porque </span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <sub><img width=393 height=47
+	src="images/Conf_4/image052.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>De acuerdo con el Teorema fundamental, es suficiente
+	entonces generar  <i>R </i></span><i><span lang=ES-TRAD style='font-size:11.0pt;
+	font-family:Symbol'>Î</span></i><i><span lang=ES-TRAD style='font-size:11.0pt'>
+	Uniform(0,1)</span></i><span lang=ES-TRAD style='font-size:11.0pt'>  y
+	seleccionar X=k, donde k es tal que </span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <sub><img width=196 height=24
+	src="images/Conf_4/image053.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>porque</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify;text-indent:35.4pt'><span
+	lang=ES-TRAD style='font-size:11.0pt'><sub><img width=393 height=24
+	src="images/Conf_4/image054.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Aunque ya esto es un procedimiento, se puede
+	simplificar notablemente. Observe que la selección de &quot;<i>k</i>&quot; a
+	partir de <i>R, </i>es equivalente a </span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <sub><img width=197 height=24
+	src="images/Conf_4/image055.gif"></sub></span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>o bien</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <sub><img width=132 height=44
+	src="images/Conf_4/image056.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Por tanto <i>k</i> es prácticamente la parte entera de
+	ln(1-R)/ln(1-p).  Por último, como (1-<i>R</i>) es también uniforme en (0,1),
+	bastará generar <i>R </i> y tomar</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <sub><img width=100 height=48
+	src="images/Conf_4/image057.gif"></sub></span></p>
+
+	<h3 style='text-align:justify'><span lang=ES-TRAD>Distribución de Poisson</span></h3>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Supongamos que se quiera generar  <i>X</i></span><i><span
+	lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>Î</span></i><i><span
+	lang=ES-TRAD style='font-size:11.0pt'> Poisson(</span></i><i><span
+	lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>l</span></i><i><span
+	lang=ES-TRAD style='font-size:11.0pt'>). </span></i><span lang=ES-TRAD
+	style='font-size:11.0pt'>A partir de la ley de probabilidad:</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <sub><img width=276 height=44
+	src="images/Conf_4/image058.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>se puede construir la función acumulativa <i>F(x) </i>y
+	generar los números como en otra distribución discreta. Sin embargo se puede
+	demostrar que dichos números pueden conseguirse por la siguiente regla, de carácter
+	más práctico.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Para generar un valor de <i>X</i></span><i><span
+	lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>Î</span></i><i><span
+	lang=ES-TRAD style='font-size:11.0pt'> Poisson(</span></i><i><span
+	lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>l</span></i><i><span
+	lang=ES-TRAD style='font-size:11.0pt'>)</span></i><span lang=ES-TRAD
+	style='font-size:11.0pt'>, se generan &quot;<i>n</i>&quot;  números aleatorios
+	uniformes:</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <i>R<sub>1</sub>, R<sub>2</sub>, ...,R<sub>n</sub></i></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>hasta el primer valor de <i>&quot;n&quot;</i>  para el
+	cual se cumpla  que <i>R<sub>1</sub>*R<sub>2</sub>*...*R<sub>n</sub>&lt; e<sup>-</sup></i></span><sup><span
+	lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>l</span></sup><span
+	lang=ES-TRAD style='font-size:11.0pt'>. Entonces se toma <i>X=n-1</i>. Así, si <i>R<sub>1</sub>&lt;</i>
+	<i>e<sup>-</sup></i></span><sup><span lang=ES-TRAD style='font-size:11.0pt;
+	font-family:Symbol'>l</span></sup><span lang=ES-TRAD style='font-size:11.0pt'> 
+	se toma <i>X=0</i>. En caso contrario, se genera <i>R<sub>2</sub>. </i>Si
+	resulta <i>R<sub>1</sub>*R<sub>2</sub>&lt; e<sup>-</sup></i></span><sup><span
+	lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>l</span></sup><span
+	lang=ES-TRAD style='font-size:11.0pt'>, se toma <i>X=1</i>. En caso contrario
+	se genera <i>R<sub>3</sub>, </i>y así sucesivamente.</span></p>
+
+	<h3 style='text-align:justify'><span lang=ES-TRAD>Distribución exponencial</span></h3>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Suponga que queremos generar <i>X </i></span><i><span
+	lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>Î</span></i><i><span
+	lang=ES-TRAD style='font-size:11.0pt'> Exponencial(</span></i><i><span
+	lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>l</span></i><i><span
+	lang=ES-TRAD style='font-size:11.0pt'>). </span></i><span lang=ES-TRAD
+	style='font-size:11.0pt'> Será suficiente aprender a generar <i>X</i></span><i><span
+	lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>Î</span></i><i><span
+	lang=ES-TRAD style='font-size:11.0pt'>Exponencial(1), </span></i><span
+	lang=ES-TRAD style='font-size:11.0pt'>porque puede demostrarse fácilmente que</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            Si   <i> X </i></span><i><span
+	lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>Î</span></i><i><span
+	lang=ES-TRAD style='font-size:11.0pt'> Exponencial(1)  </span></i><span
+	lang=ES-TRAD style='font-size:11.0pt'>entonces  </span><i><span lang=ES-TRAD
+	style='font-size:11.0pt;font-family:Symbol'>l</span></i><i><span lang=ES-TRAD
+	style='font-size:11.0pt'> X </span></i><i><span lang=ES-TRAD style='font-size:
+	11.0pt;font-family:Symbol'>Î</span></i><i><span lang=ES-TRAD style='font-size:
+	11.0pt'> Exponencial(</span></i><i><span lang=ES-TRAD style='font-size:11.0pt;
+	font-family:Symbol'>l</span></i><i><span lang=ES-TRAD style='font-size:11.0pt'>)</span></i></p>
+
+	<h3 style='text-align:justify'><span lang=ES-TRAD style='font-size:11.0pt;
+	font-family:"Times New Roman","serif"'>Ahora bien, la función de distribución
+	acumulativa de <i>X </i>tiene la forma:</span></h3>
+
+	<h3 style='text-align:justify'><span lang=ES-TRAD style='font-size:11.0pt;
+	font-family:"Times New Roman","serif"'>            <sub><img width=175
+	height=51
+	src="images/Conf_4/image059.gif"></sub></span></h3>
+
+	<h3 style='text-align:justify'><span lang=ES-TRAD style='font-size:11.0pt;
+	font-family:"Times New Roman","serif"'>Por tanto</span></h3>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <i>F<sup>-1</sup>(r)     </i> es el valor <i> x</i> 
+	tal que  <i>1-e<sup>-x</sup>=r</i>,  esto es,   <i>x = -ln (1-r)</i></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Como (1-R) es tan uniforme como el propio R, llegamos
+	a la siguiente regla práctica de generación:</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            Si  <i>R</i></span><i><span lang=ES-TRAD
+	style='font-size:11.0pt;font-family:Symbol'>Î</span></i><i><span lang=ES-TRAD
+	style='font-size:11.0pt'> Uniform(0,1)</span></i><span lang=ES-TRAD
+	style='font-size:11.0pt'>  entonces   <i>X = -ln (R)  </i></span><i><span
+	lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>Î</span></i><i><span
+	lang=ES-TRAD style='font-size:11.0pt'> Exponencial(1)</span></i></p>
+
+	<h3 style='text-align:justify'><span lang=ES-TRAD>Distribución normal:</span></h3>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Es suficiente analizar la generación de <i>X</i></span><i><span
+	lang=ES-TRAD style='font-size:11.0pt;font-family:Symbol'>Î</span></i><i><span
+	lang=ES-TRAD style='font-size:11.0pt'> Normal(0,1)</span></i><span
+	lang=ES-TRAD style='font-size:11.0pt'> pues si se quiere generar <i>X </i>con
+	otra media o varianza, basta luego hacer una transformación lineal:</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>En el libro de Mugnoli se pueden consultar varios
+	métodos para la generación de números aleatorios normalmente distribuidos.
+	Entre ellos se recomienda un método propuesto por Muller y que se formula a
+	continuación sin demostraciones. </span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Se comienza generando 16 números aleatorios con
+	distribución uniforme:</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>      <i>R<sub>1</sub>,R<sub>2</sub>,...,R<sub>16</sub></i></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>y se calcula</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>      <sub><img width=123 height=48
+	src="images/Conf_4/image060.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Luego se calcula</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>      <sub><img width=301 height=25
+	src="images/Conf_4/image061.gif"></sub></span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>donde</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>      <i>C<sub>1</sub></i> = 0.029899776</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>      <i>C<sub>2</sub></i> = 0.008355968</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>      <i>C<sub>3</sub></i> = 0.076542912</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>      <i>C<sub>4</sub></i> = 0.252408784</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>      <i>C<sub>5</sub></i> = 3.949846138</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Entonces <i>X</i></span><i><span lang=ES-TRAD
+	style='font-size:11.0pt;font-family:Symbol'>Î</span></i><i><span lang=ES-TRAD
+	style='font-size:11.0pt'> Normal(0,1)</span></i></p>
+
+
+	<a name="distribuciones-empiricas"></a>
+	<h2>Generación de números
+	aleatorios con distribuciones empíricas</h2>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>La generación de números aleatorios con una
+	distribución empírica no es un problema tan difícil como puede parecer. En
+	particular:</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Si dicha función viene definida por una tabla de
+	frecuencias, con un conjunto relativamente pequeño de valores posibles, se
+	construye <i>F(x)</i> a partir de la tabla y se utiliza el Teorema fundamental
+	para la generación.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Si la función es continua, o prácticamente continua, y
+	no se asemeja a una distribución conocida, lo mejor es ajustar una función de
+	distribución acumulada por regresión; pero debe tenerse presente que tiene que 
+	cumplirse que <i>F(x)</i> tiende a 0 y 1 respectivamente cuando x tiende a los
+	extremos de su intervalo de definición. Ello determina ciertas restricciones
+	adicionales sobre los coeficientes de la regresión. Por suerte, las técnicas de
+	regresión no lineal desarrolladas e implementadas hoy en día en paquetes como
+	el SPSS, permiten hacer esto sin mayores dificultades. Finalmente se utiliza el
+	teorema fundamental para la generación.</span></p>
+
+	<a name="disponibilidad-metodos"></a>
+	<h2>Disponibilidad de
+	métodos de generación y prueba en paquetes.</h2>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>A continuación se muestran las técnicas de generación
+	y prueba disponibles en los paquetes de propósito general: Excel, SPSS y
+	Mathematica</span></p>
+
+
+	<h3 style='text-align:justify'><span lang=FR>Excel (a partir de Office 97)</span></h3>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Excel dispone de un conjunto de macros, que se
+	instalan con los Complementos y entre ellas hay una de generación de números
+	aleatorios, capaz de generar bloques de datos aleatorios asociados a las
+	siguientes distribuciones:  Uniforme, Normal, Bernoulli, Binomial, Poisson y
+	Discreta en general.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Como funciones directas, para introducir en una celda
+	como fórmula o como parte de una fórmula, el Excel dispone también de las
+	siguientes funciones de distribución acumulada:</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <i>Discretas:  </i>Binomial (Binomdist),
+	Hypergeométrica (Hypergeomdist), Binomial Negativa (Negbinomdist) y Poisson
+	(Poissondist). Para la función binomial, existe además la inversa, Critbinom</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            Continuas: Beta (Betadist), Chi-cuadrado
+	(Chi-dist), Fisher (Fdist), Exponencial (Expondist), Gamma (Gammadist)
+	Lognormal (Lognnomaldist), Normal (Normaldist), Normal estandarizada
+	(Normsdist), T de Student (Tdist) y Weibull (Weibulldist).  Para cada una de
+	estas funciones, exceptuando la Exponencial y la de Weibull, están
+	implementadas también las funciones inversas (Betainv, Chiinv, Finv, etc.)</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Como test de pruebas, está implementado el Chitest
+	para probar si un rango de datos observado se corresponde con un rango de datos
+	esperado. Las funciones de distribución continuas acumulativas pueden ser
+	utilizadas para probar aleatoriedad reduciéndola a aleatoriedad uniforme.</span></p>
+
+
+
+
+	<h3 style='text-align:justify'><span lang=ES-TRAD>SPSS for Windows (Versión
+	9.0)</span></h3>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>El SPSS tiene tres lotes de funciones importantes, un
+	lote para generación, otro para la función de distribución acumulada y otro
+	para la función inversa (en el caso de distribuciones continuas). Los lotes
+	abarcan a las distribuciones de acuerdo a la siguiente tabla:</span></p>
+
+
+
+	<table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0
+	 style='border-collapse:collapse;border:none'>
+	 <tr>
+	  <td width=151 valign=top style='width:113.2pt;border:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><i><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Ditribución</span></i></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border:solid windowtext 1.0pt;
+	  border-left:none;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><i><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Generación</span></i></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border:solid windowtext 1.0pt;
+	  border-left:none;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><i><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Función acumulativa</span></i></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border:solid windowtext 1.0pt;
+	  border-left:none;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><i><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Función inversa</span></i></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=151 valign=top style='width:113.2pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=151 valign=top style='width:113.2pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Bernoulli</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>RV.Bernoulli</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>CDF.Bernoulli</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=151 valign=top style='width:113.2pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Binomial</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>RV.Binomial</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>CDF.Binomial</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=151 valign=top style='width:113.2pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Geométrica</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>RV.Geom</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>CDF.Geom</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=151 valign=top style='width:113.2pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Hipergeométrica</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>RV.Hyper</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>CDF.Hyper</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=151 valign=top style='width:113.2pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Binomial Negativa</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>RV.Negbin</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>CDF.Negbin</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=151 valign=top style='width:113.2pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Poisson</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>RV.Poisson</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>CDF.Poisson</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=151 valign=top style='width:113.2pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>&nbsp;</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=151 valign=top style='width:113.2pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Beta</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>RV.Beta</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>CDF.Beta</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>IDF.Beta</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=151 valign=top style='width:113.2pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Cauchy</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>RV.Cauchy</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>CDF.Cauchy</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>IDF.Cauchy</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=151 valign=top style='width:113.2pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Chi-cuadrado</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>RV.Chisq</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>CDF.Chisq</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>IDF.Chisq</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=151 valign=top style='width:113.2pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Exponencial</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>RV.Exp</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>CDF.Exp</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>IDF.Exp</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=151 valign=top style='width:113.2pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Fisher</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>RV.F</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>CDF.F</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>IDF.F</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=151 valign=top style='width:113.2pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Gamma</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>RV.Gamma</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>CDF.Gamma</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>IDF.Gamma</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=151 valign=top style='width:113.2pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Laplace</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>RV.Laplace</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>CDF.Laplace</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>IDF.Laplace</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=151 valign=top style='width:113.2pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Logistic</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>RV.Logistic</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>CDF.Logistic</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>IDF.Logistic</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=151 valign=top style='width:113.2pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Lognormal</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>RV.Lnormal</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>CDF.Lognormal</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>IDF.Lognormal</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=151 valign=top style='width:113.2pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Normal</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>RV.Normal</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>CDF.Normal</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>IDF.Normal</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=151 valign=top style='width:113.2pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Pareto</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>RV.Pareto</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>CDF.Pareto</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>IDF.Pareto</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=151 valign=top style='width:113.2pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>T de Student</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>RV.T</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>CDF.T</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>IDF.T</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=151 valign=top style='width:113.2pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Uniforme</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>RV.Uniform</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>CDF.Uniform</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>IDF.Uniform</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=151 valign=top style='width:113.2pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>Weibull</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>RV.Weibull</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>CDF.Weibull</span></p>
+	  </td>
+	  <td width=151 valign=top style='width:113.2pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 5.4pt 0cm 5.4pt'>
+	  <p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	  style='font-size:11.0pt'>IDF.Weibull</span></p>
+	  </td>
+	 </tr>
+	</table>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>El SPSS contiene además funciones de distribución no
+	centradas, que no utilizaremos en este curso. Por último es conocido que entre
+	las pruebas directas de aleatoriedad están implementadas el Test Chi-cuadrado
+	para variables discretas y el Test de Kolmogorov Smirnov para la distribución
+	Uniforme, la Normal, la Exponencial y la de Poisson</span></p>
+
+	<h3 style='text-align:justify'><span lang=ES-TRAD>Mathematica (Versión 3.0)</span></h3>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Tiene un generador de números aleatorios que se puede
+	resumir en una única función:</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            Random[ <i>type, range, n </i>]</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>El primer parámetro: <i> type  </i> puede ser:
+	Integer, Real o Complex. Esto significa que Random puede generar números
+	aleatorios &quot;uniformemente distribuidos&quot; enteros, reales o complejos.
+	El segundo parámetro <i>range</i> se especifica en la forma {min,max}. Cuando
+	se trata de números complejos, estos dos valores son números complejos y
+	determinan los vértices opuestos un rectángulo del plano donde se generan los
+	números. Finalmente, el parámetro <i>n </i> se especifica opcionalmente cuando los
+	números a generar no son de tipo entero y con el se precisa el número de cifras
+	decimales con que se quiere la generación.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>El paquete estándar de estadística tiene varios
+	subpaquetes de trabajo con funciones de distribución implementadas. En
+	definitiva ellas se resumen así:</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            <i>Discretas: </i> Bernoulli, Binomial,
+	Uniforme discreta, Geométrica, Hipergeométrica, Binomial negativa, Log series y
+	Poisson</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            Continuas: Chi-cuadrado, Fisher, Normal, T
+	de Student, Beta, Cauchy, Exponencial, Valores Extremos, Gamma, Seminormal,
+	Laplace, Logistica, Lognormal, Pareto, Raylkeigh, Uniforme y Weibull.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Todas estas distribuciones se identifican por su
+	nombre completo y sus parámetros, por ejemplo:</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>            NormalDistribution[mean, sigma]</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Ahora, las funciones de densidad de probabilidad se
+	calculan con la función auxiliar PDF[<i>distribution, x</i>]. La función
+	acumulativa de distribución se calcula con la función auxiliar CDF[<i>distribution,
+	x</i>] y la función de distribución inversa se calcula con la función auxiliar
+	Quantile[<i>distribution, p</i>]. En cada caso, el parámetro <i>distribution</i>
+	se sustituye por el nombre completo de la distribución como antes se comentó.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Mathematica tiene también distribuciones no centrales,
+	que no vamos a utilizar en este curso; pero entre los tres paquetes mencionados
+	es el único que tiene varias distribuciones multivariadas, en particular, la
+	distribución Multinormal, la T Multivarada, la de Wishart, la
+	 T de Hotelling y la distribución de Forma Cuadrática. Todas ellas se pueden
+	trabajar también con las funciones auxiliares PDF, CDF y Quantile.</span></p>
+
+	<a name="conclusiones"></a>
+	<h2>Conclusiones</h2>
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Las tareas de simulación exigen conocer de técnicas
+	para la generación de números aleatorios con diferente tipo de distribución que
+	la uniforme, así como de pruebas para verificar que una secuencia de números
+	aleatorios se ajusta efectivamente a una distribución especificada. El Teorema
+	fundamental es siempre una herramienta de última instancia, para la generación.
+	El propio teorema es también una herramienta de prueba  en el caso de variables
+	continuas. En el caso de variables discretas, las mejores pruebas se obtienen
+	con un test Chi-cuadrado de ajuste de frecuencias observadas a esperadas.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Pero aparte de la vía que proporciona el teorema
+	fundamental, se pueden formular (y se continúan formulando hoy en día) métodos
+	generales de generación y métodos específicos, a veces, bastante ingeniosos,
+	para distribuciones concretas, como los que se han visto aquí. Conocer tales
+	métodos es importante para la programación, cuando se quiere implementar desde
+	un lenguaje general una tarea de simulación o de otro tipo que requiera
+	generación de números aleatorios con ciertas distribuciones no triviales.</span></p>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:11.0pt'>Para la resolución de tareas con ayuda de paquetes,
+	los productos de software de Simulación y de hecho, productos de software de propósito
+	más general como el Excel, el SPSS y el Mathematica incluyen suficientes
+	herramientas de generación y prueba.</span></p>
+
+
+
+
+
+	<h3 style='text-align:justify'><span lang=ES-TRAD>Bibliografía</span></h3>
+
+
+	<p class=MsoBodyTextIndent><span lang=ES-TRAD style='font-size:11.0pt'>[1] 
+	Parzen, E.Manuel &quot;Modern Probability theory and its applications&quot;,
+	Edición Revolucionaria, Instituto Cubano del Libro, 1960</span></p>
+
+	<p class=MsoBodyTextIndent><span lang=EN-GB style='font-size:11.0pt'>[2] 
+	Maisel H., Gnugnoli G. “Simulations of Discrete Stochastic Systems”, Science
+	Research Associates, Inc.    Chicago, 1972, Capítulo 7</span></p>
+
+	<p class=MsoNormal style='margin-left:14.2pt;text-align:justify;text-indent:
+	-14.2pt'><span lang=EN-GB style='font-size:11.0pt'>[3]  Knuth D. E. “The Art of
+	Computer Programming, Vol 2 Seminumerical Algorithms” Reading, Mass.   Addison-Wesley Publishing Co. , 1969</span></p>
+
+	<p class=MsoNormal style='margin-left:14.2pt;text-align:justify;text-indent:
+	-14.2pt'><span lang=EN-GB style='font-size:11.0pt'>[4]  Ayuda en línea de
+	paquetes de software: Excel para Office 97, SPSS for Windows, verión9.0, y
+	Mathematica, Versión 3.0</span></p>
+
+</div>
+<div class="footer">
+  <p>
+		2013 SESimula (Software Educativo de Simulación)
+  </p>
+  <p>
+     Documentación creada por: <a title="tutor" href="mailto:asalgado@csd.uo.edu.cu">Antonio Salgado Castillo</a>
+  <p>
+	 Diseño de la web por: <a title="autor" href="mailto:alejandro.labrada@csd.uo.edu.cu,aleplusplus@facebook.com">Alejandro Labrada Diaz</a></p>
+ </p>
+ <p>
+    Bajo la licencia GPL <a href="http://www.gnu.org/licenses/fdl.html">GNU
+    Free Documentation License version 1.3</a>
+ </p>
+</div>
+</body>
+</html>

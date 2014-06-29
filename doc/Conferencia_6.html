@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- qalgorithms.qdoc -->
+  <title>SESimula - Sistema, Modelación y Simulación</title>
+  <link rel="stylesheet" type="text/css" href="style/offline.css" />
+</head>
+<body>
+<div class="header" id="qtdocheader">
+  <div class="content">
+    <a href="index.html" class="qtref"><span>Documentación de Simulación</span></a>
+  </div>
+  <div class="breadcrumb toolblock">
+    <ul>
+      <li class="first"><a href="index.html">Home</a></li>
+      <li>Conferencia 6</li>
+    </ul>
+  </div>
+</div>
+<div class="content mainContent">
+    <p class="naviNextPrevious headerNavi">
+          [Anterior: <a href="Conferencia_5.html">Conferencia 5</a> ]
+          [Siguiente: <a href="Conferencia_7.html">Conferencia 7</a> ]
+    </p>
+    <div class="toc">
+        <h3><a name="toc">Contenido</a></h3>
+        <ul>
+        <li class="level1"><a href="#formulacion-definicion">Formulación de un problema. Definición inicial de las variables a considerar</a></li>
+        <li class="level2"><a href="#recoleccion-analisis">Recolección y análisis de la información pertinente</a></li>
+        <li class="level2"><a href="#construccion-modelo">Construcción del Modelo</a></li>
+        <li class="level2"><a href="#conclusiones">Conclusiones</a></li>
+        </ul>
+    </div>
+
+    <h1 class="title">Simulación Orientada a Bloques de Entrada</h1>
+
+	<a name="formulacion-definicion"></a>
+	<h2>Formulación de un
+	problema. Definición inicial de las variables a considerar.</h2>
+
+
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:12.0pt'>Veamos como resolver un problema sencillo de
+	simulación, desarrollaremos la simulación del Banco de Esperanza para el caso
+	mas elemental: una caja y una mesa, como sigue:</span></p>
+
+
+
+	<p align="center">
+	<img src="images/Conf_6/image001.jpg">
+	</p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:12.0pt'>Variables a Considerar:</span></p>
+
+
+
+	<p class=MsoNormal style='margin-top:2.0pt;margin-right:0cm;margin-bottom:2.0pt;
+	margin-left:0cm;text-align:justify'><b><u><span lang=ES-TRAD style='font-size:
+	12.0pt'>i</span></u></b><span lang=ES-TRAD style='font-size:12.0pt'>: usuario
+	i-ésimo que entra al banco</span></p>
+
+	<p class=MsoNormal style='margin-top:2.0pt;margin-right:0cm;margin-bottom:2.0pt;
+	margin-left:49.5pt;text-align:justify;text-indent:-49.5pt'><b><u><span
+	lang=ES-TRAD style='font-size:12.0pt'>Tarribos</span></u></b><span
+	lang=ES-TRAD style='font-size:12.0pt'>: Tiempo que transcurre entre la llegada
+	de un usuario y otro, para el primer usuario Tarribo=0. </span></p>
+
+	<p class=MsoNormal style='margin-top:2.0pt;margin-right:0cm;margin-bottom:2.0pt;
+	margin-left:0cm;text-align:justify'><b><u><span lang=ES-TRAD style='font-size:
+	12.0pt'>Mllegada</span></u></b><span lang=ES-TRAD style='font-size:12.0pt'>:
+	Momento de llegada al banco</span></p>
+
+	<p class=MsoNormal style='margin-top:2.0pt;margin-right:0cm;margin-bottom:2.0pt;
+	margin-left:0cm;text-align:justify'><b><u><span lang=ES-TRAD style='font-size:
+	12.0pt'>Dmesa</span></u></b><span lang=ES-TRAD style='font-size:12.0pt'>: % de
+	personas que deciden ir a mesa</span></p>
+
+	<p class=MsoNormal style='margin-top:2.0pt;margin-right:0cm;margin-bottom:2.0pt;
+	margin-left:0cm;text-align:justify'><b><u><span lang=ES-TRAD style='font-size:
+	12.0pt'>Dcaja</span></u></b><span lang=ES-TRAD style='font-size:12.0pt'>: % de
+	personas que deciden ir a caja</span></p>
+
+	<p class=MsoNormal style='margin-top:2.0pt;margin-right:0cm;margin-bottom:2.0pt;
+	margin-left:0cm;text-align:justify'><b><u><span lang=ES-TRAD style='font-size:
+	12.0pt'>Tesperamesa</span></u></b><span lang=ES-TRAD style='font-size:12.0pt'>:
+	tiempo de espera en mesa </span></p>
+
+	<p class=MsoNormal style='margin-top:2.0pt;margin-right:0cm;margin-bottom:2.0pt;
+	margin-left:0cm;text-align:justify'><b><u><span lang=ES-TRAD style='font-size:
+	12.0pt'>Tesperacaja</span></u></b><span lang=ES-TRAD style='font-size:12.0pt'>:
+	tiempo de espera en caja</span></p>
+
+	<p class=MsoNormal style='margin-top:2.0pt;margin-right:0cm;margin-bottom:2.0pt;
+	margin-left:0cm;text-align:justify'><b><u><span lang=ES-TRAD style='font-size:
+	12.0pt'>Tmesa</span></u></b><span lang=ES-TRAD style='font-size:12.0pt'>:
+	tiempo de trabajo en mesa</span></p>
+
+	<p class=MsoNormal style='margin-top:2.0pt;margin-right:0cm;margin-bottom:2.0pt;
+	margin-left:0cm;text-align:justify'><b><u><span lang=ES-TRAD style='font-size:
+	12.0pt'>Tcaja</span></u></b><span lang=ES-TRAD style='font-size:12.0pt'>:
+	tiempo de trabajo en caja</span></p>
+
+	<p class=MsoNormal style='margin-top:2.0pt;margin-right:0cm;margin-bottom:2.0pt;
+	margin-left:0cm;text-align:justify'><b><u><span lang=ES-TRAD style='font-size:
+	12.0pt'>Ncolamesa</span></u></b><span lang=ES-TRAD style='font-size:12.0pt'>:
+	Cola de la mesa</span></p>
+
+	<p class=MsoNormal style='margin-top:2.0pt;margin-right:0cm;margin-bottom:2.0pt;
+	margin-left:0cm;text-align:justify'><b><u><span lang=ES-TRAD style='font-size:
+	12.0pt'>Ncolacaja</span></u></b><span lang=ES-TRAD style='font-size:12.0pt'>:
+	Cola de la caja</span></p>
+
+	<p class=MsoNormal style='margin-top:2.0pt;margin-right:0cm;margin-bottom:2.0pt;
+	margin-left:0cm;text-align:justify'><b><u><span lang=ES-TRAD style='font-size:
+	12.0pt'>Msalidamesa</span></u></b><span lang=ES-TRAD style='font-size:12.0pt'>:
+	Momento de salida de la mesa</span></p>
+
+	<p class=MsoNormal style='margin-top:2.0pt;margin-right:0cm;margin-bottom:2.0pt;
+	margin-left:0cm;text-align:justify'><b><u><span lang=ES-TRAD style='font-size:
+	12.0pt'>Msalidacaja</span></u></b><span lang=ES-TRAD style='font-size:12.0pt'>:
+	Momento de salida de la caja</span></p>
+
+	<p class=MsoNormal style='margin-top:2.0pt;margin-right:0cm;margin-bottom:2.0pt;
+	margin-left:0cm;text-align:justify'><b><u><span lang=ES-TRAD style='font-size:
+	12.0pt'>Tiempototal</span></u></b><span lang=ES-TRAD style='font-size:12.0pt'>:
+	Tiempo total de permanencia en el Banco</span></p>
+
+
+
+	<p class=MsoNormal style='margin-top:3.0pt;margin-right:0cm;margin-bottom:3.0pt;
+	margin-left:0cm;text-align:justify;line-height:120%'><span lang=ES-TRAD
+	style='font-size:12.0pt;line-height:120%'>Hay que suponer que en la mesa y en
+	la caja se pueden formar colas, usaremos orden FIFO </span><span
+	style='font-size:12.0pt;line-height:120%'>(First In First Out)</span><span
+	lang=ES-TRAD style='font-size:12.0pt;line-height:120%'>, esto nos hace pensar
+	en las variables tiempo de espera en mesa, tiempo de espera en caja, también se
+	habla de tiempo de servicio en ambos lugares.</span></p>
+
+	<p class=MsoNormal style='margin-top:3.0pt;margin-right:0cm;margin-bottom:3.0pt;
+	margin-left:0cm;text-align:justify;line-height:120%'><span lang=ES-TRAD
+	style='font-size:12.0pt;line-height:120%'>Hemos definido la
+	 Simulación como un problema de experimentación y no de optimización, es por
+	ello que en este caso sería bueno pensar en diferentes alternativas de trabajo
+	y comparar los tiempos de permanencia en el banco en cada una.</span></p>
+
+	<p class=MsoNormal style='margin-top:3.0pt;margin-right:0cm;margin-bottom:3.0pt;
+	margin-left:0cm;text-align:justify;line-height:120%'><span lang=ES-TRAD
+	style='font-size:12.0pt;line-height:120%'>En principio se piensa en tres
+	alternativas:</span></p>
+
+	<p class=MsoNormal style='margin-top:2.0pt;margin-right:0cm;margin-bottom:2.0pt;
+	margin-left:18.0pt;text-align:justify;text-indent:-18.0pt'><span lang=ES-TRAD
+	style='font-size:12.0pt'>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:12.0pt'>La que se planteo en
+	el problema original.</span></p>
+
+	<p class=MsoNormal style='margin-top:2.0pt;margin-right:0cm;margin-bottom:2.0pt;
+	margin-left:18.0pt;text-align:justify;text-indent:-18.0pt'><span lang=ES-TRAD
+	style='font-size:12.0pt'>2.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:12.0pt'>Hacer una reducción
+	del tiempo de personas que necesitan ir a mesa.</span></p>
+
+	<p class=MsoNormal style='margin-top:2.0pt;margin-right:0cm;margin-bottom:2.0pt;
+	margin-left:18.0pt;text-align:justify;text-indent:-18.0pt'><span lang=ES-TRAD
+	style='font-size:12.0pt'>3.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-size:12.0pt'>Eliminar las mesas.</span></p>
+
+
+	<a name="recoleccion-analisis"></a>
+	<h2>Recolección y análisis de
+	la información pertinente.</h2>
+
+	<p class=MsoNormal style='margin-top:3.0pt;margin-right:0cm;margin-bottom:3.0pt;
+	margin-left:0cm;text-align:justify;line-height:120%'><span lang=ES-TRAD
+	style='font-size:12.0pt;line-height:120%'>En cada una de las alternativas hay
+	que analizar como se va hacer la recolección y análisis de datos, esto puede
+	incluir poner un cronometro midiendo el tiempo interarribos, se puede suponer
+	que este tiempo se distribuye uniforme 3 </span><span lang=ES-TRAD
+	style='font-size:12.0pt;line-height:120%;font-family:Symbol'>±</span><span
+	lang=ES-TRAD style='font-size:12.0pt;line-height:120%'> 2 minutos, o sea
+	Tarribos </span><span lang=ES-TRAD style='font-size:16.0pt;line-height:120%;
+	font-family:Symbol'>~</span><span lang=ES-TRAD style='font-size:16.0pt;
+	line-height:120%'> </span><span lang=ES-TRAD style='font-size:12.0pt;
+	line-height:120%'>Uniforme (1,5).</span></p>
+
+	<p class=MsoNormal style='margin-top:3.0pt;margin-right:0cm;margin-bottom:3.0pt;
+	margin-left:0cm;text-align:justify;line-height:120%'><span lang=ES-TRAD
+	style='font-size:12.0pt;line-height:120%'>En la alternativa original Dmesa </span><span
+	lang=ES-TRAD style='font-size:16.0pt;line-height:120%;font-family:Symbol'>~</span><span
+	lang=ES-TRAD style='font-size:16.0pt;line-height:120%'> </span><span
+	lang=ES-TRAD style='font-size:12.0pt;line-height:120%'>Bernoulli (0.7) y Dcaja </span><span
+	lang=ES-TRAD style='font-size:16.0pt;line-height:120%;font-family:Symbol'>~</span><span
+	lang=ES-TRAD style='font-size:16.0pt;line-height:120%'> </span><span
+	lang=ES-TRAD style='font-size:12.0pt;line-height:120%'>Bernoulli (0.3).</span></p>
+
+	<p class=MsoNormal style='margin-top:3.0pt;margin-right:0cm;margin-bottom:3.0pt;
+	margin-left:0cm;text-align:justify;line-height:120%'><span lang=ES-TRAD
+	style='font-size:12.0pt;line-height:120%'>El tiempo de trabajo en la mesa y en
+	la caja se puede estudiar lo que significa hacer mediciones por ejemplo, días
+	distintos durante una semana y probar que se ajustan a determinada
+	distribución, supongamos que: Tmesa </span><span lang=ES-TRAD style='font-size:
+	16.0pt;line-height:120%;font-family:Symbol'>~</span><span lang=ES-TRAD
+	style='font-size:12.0pt;line-height:120%'> Uniforme (1,3) y Tcaja </span><span
+	lang=ES-TRAD style='font-size:16.0pt;line-height:120%;font-family:Symbol'>~</span><span
+	lang=ES-TRAD style='font-size:16.0pt;line-height:120%'> </span><span
+	lang=ES-TRAD style='font-size:12.0pt;line-height:120%'>Uniforme (1,7).</span></p>
+
+	<p class=MsoBodyText style='margin-top:3.0pt;margin-right:0cm;margin-bottom:
+	3.0pt;margin-left:0cm;text-align:justify;line-height:120%'><span lang=ES-TRAD>Por
+	ejemplo si se trabaja en la alternativa que elimina todas las mesas, hay que
+	hacer un ensayo del banco sin mesas, al menos un día para poder estudiar el
+	comportamiento del Banco en esta situación, si se trabaja en la alternativa que
+	plantea reducir el porciento de personas que deben usar la mesa, hay que
+	estudiar estas proporciones, por ejemplo que un 35 % de las personas visite las
+	mesas.</span></p>
+
+	<a name="construccion-modelo"></a>
+	<h2>Construcción del Modelo</h2>
+
+	<p class=MsoBodyText style='text-align:justify'><span lang=ES-TRAD>Aquí hay que
+	tener en cuenta las variables que se van a “medir” y las que se van a calcular,
+	todo antes de empezar a programar.</span></p>
+
+	<p class=MsoNormal style='text-align:justify'><span lang=ES-TRAD
+	style='font-size:12.0pt'>Por lo que hemos visto hasta ahora unas variables se
+	generan y otras se calculan, veamos como calcular estas variables:</span></p>
+
+
+
+	<p class=MsoNormal style='margin-top:3.0pt;margin-right:0cm;margin-bottom:3.0pt;
+	margin-left:0cm;text-align:justify'><span lang=ES-TRAD style='font-size:12.0pt'><sub><img
+	width=203 height=23
+	src="images/Conf_6/image002.gif"></sub></span></p>
+
+	<p class=MsoNormal style='margin-top:3.0pt;margin-right:0cm;margin-bottom:3.0pt;
+	margin-left:0cm;text-align:justify'><span lang=ES-TRAD style='font-size:12.0pt'><sub><img
+	width=291 height=48
+	src="images/Conf_6/image003.gif"></sub></span></p>
+
+	<p class=MsoNormal style='margin-top:3.0pt;margin-right:0cm;margin-bottom:3.0pt;
+	margin-left:0cm;text-align:justify'><span lang=ES-TRAD style='font-size:12.0pt'>Variables
+	relacionadas con la mesa:</span></p>
+
+	<p class=MsoNormal style='margin-top:3.0pt;margin-right:0cm;margin-bottom:3.0pt;
+	margin-left:0cm;text-align:justify'><span lang=ES-TRAD style='font-size:12.0pt'><sub><img
+	width=217 height=48
+	src="images/Conf_6/image004.gif"></sub> </span></p>
+
+	<p class=MsoNormal style='margin-top:3.0pt;margin-right:0cm;margin-bottom:3.0pt;
+	margin-left:0cm;text-align:justify'><span lang=ES-TRAD style='font-size:12.0pt'><sub><img
+	width=188 height=23
+	src="images/Conf_6/image005.gif"></sub></span></p>
+
+	<p class=MsoNormal style='margin-top:3.0pt;margin-right:0cm;margin-bottom:3.0pt;
+	margin-left:0cm;text-align:justify'><span lang=ES-TRAD style='font-size:12.0pt'><sub><img
+	width=405 height=23
+	src="images/Conf_6/image006.gif"></sub></span></p>
+
+	<p class=MsoNormal style='margin-top:3.0pt;margin-right:0cm;margin-bottom:3.0pt;
+	margin-left:0cm;text-align:justify'><span lang=ES-TRAD style='font-size:12.0pt'><sub><img
+	width=381 height=23
+	src="images/Conf_6/image007.gif"></sub></span></p>
+
+	<p class=MsoNormal style='margin-top:3.0pt;margin-right:0cm;margin-bottom:3.0pt;
+	margin-left:0cm;text-align:justify'><span lang=ES-TRAD style='font-size:12.0pt'><sub><img
+	width=351 height=48
+	src="images/Conf_6/image008.gif"></sub></span></p>
+
+	<p class=MsoNormal style='margin-top:3.0pt;margin-right:0cm;margin-bottom:3.0pt;
+	margin-left:0cm;text-align:justify;line-height:120%'><u><span lang=ES-TRAD
+	style='font-size:12.0pt;line-height:120%'>Ncolamesa</span></u><span
+	lang=ES-TRAD style='font-size:12.0pt;line-height:120%'>: cantidad de personas
+	que están en la cola de la mesa cuando llega a ella el usuario i. Esto se puede
+	calcular como la cantidad de personas anteriores al usuario i  cuyo tiempo de
+	salida de la mesa es mayor que el momento de llegada del usuario i.  </span></p>
+
+	<p class=MsoNormal style='margin-top:3.0pt;margin-right:0cm;margin-bottom:3.0pt;
+	margin-left:0cm;text-align:justify'><span lang=ES-TRAD style='font-size:12.0pt'><sub><img
+	width=541 height=23
+	src="images/Conf_6/image009.gif"></sub></span></p>
+
+	<p class=MsoNormal style='margin-top:3.0pt;margin-right:0cm;margin-bottom:3.0pt;
+	margin-left:0cm;text-align:justify'><span lang=ES-TRAD style='font-size:12.0pt'>Variables
+	relacionadas con la caja:</span></p>
+
+	<p class=MsoNormal style='margin-top:3.0pt;margin-right:0cm;margin-bottom:3.0pt;
+	margin-left:0cm;text-align:justify'><span lang=ES-TRAD style='font-size:12.0pt'><sub><img
+	width=211 height=48
+	src="images/Conf_6/image010.gif"></sub></span></p>
+
+	<p class=MsoNormal style='margin-top:3.0pt;margin-right:0cm;margin-bottom:3.0pt;
+	margin-left:0cm;text-align:justify'><span lang=ES-TRAD style='font-size:12.0pt'><sub><img
+	width=183 height=23
+	src="images/Conf_6/image011.gif"></sub></span></p>
+
+	<p class=MsoNormal style='margin-top:3.0pt;margin-right:0cm;margin-bottom:3.0pt;
+	margin-left:0cm;text-align:justify'><span lang=ES-TRAD style='font-size:12.0pt'><sub><img
+	width=405 height=23
+	src="images/Conf_6/image012.gif"></sub></span></p>
+
+	<p class=MsoNormal style='margin-top:3.0pt;margin-right:0cm;margin-bottom:3.0pt;
+	margin-left:0cm;text-align:justify'><span lang=ES-TRAD style='font-size:12.0pt'><sub><img
+	width=393 height=23
+	src="images/Conf_6/image013.gif"></sub></span></p>
+
+	<p class=MsoNormal style='margin-top:3.0pt;margin-right:0cm;margin-bottom:3.0pt;
+	margin-left:0cm;text-align:justify;line-height:120%'><u><span lang=ES-TRAD
+	style='font-size:12.0pt;line-height:120%'>Ncolacaja</span></u><span
+	lang=ES-TRAD style='font-size:12.0pt;line-height:120%'>: cantidad de personas
+	que están en la cola de la caja cuando llega a ella el usuario i. Esto se puede
+	calcular como la cantidad de personas anteriores al usuario i  cuyo tiempo de
+	salida de la caja es mayor que el momento de llegada del usuario I a la caja.
+	Obsérvese que al final todos los usuarios pasan por la caja, ya sea
+	directamente o que salen de mesa. </span></p>
+
+	<p class=MsoNormal style='margin-top:3.0pt;margin-right:0cm;margin-bottom:3.0pt;
+	margin-left:0cm;text-align:justify'><span lang=ES-TRAD style='font-size:12.0pt'><sub><img
+	width=479 height=23
+	src="images/Conf_6/image014.gif"></sub></span></p>
+
+
+	<p class=MsoNormal style='margin-top:3.0pt;margin-right:0cm;margin-bottom:3.0pt;
+	margin-left:0cm;text-align:justify'><span lang=ES-TRAD style='font-size:12.0pt'><sub><img
+	width=300 height=23
+	src="images/Conf_6/image015.gif"></sub></span></p>
+
+
+	<a name="conclusiones"></a>
+	<h2>Conclusiones</h2>
+
+	<p class=MsoBodyText style='margin-top:3.0pt;margin-right:0cm;margin-bottom:
+	3.0pt;margin-left:45.0pt;text-align:justify;text-indent:-18.0pt;line-height:
+	120%'><span lang=ES-TRAD>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>Realizando la simulación de esta forma se
+	presentan algunas dificultades, por ejemplo no es cierto que la disciplina de
+	las colas sea siempre FIFO, no es cierto que el usuario antes que yo sea el
+	último en caja, pues puede suceder que el usuario i -1 llegue primero que yo a
+	caja si él decidió no ir a mesa, por otra parte el esquema de cálculo que es
+	válido en mesa no necesariamente lo es en caja.</span></p>
+
+	<p class=MsoBodyText style='margin-top:3.0pt;margin-right:0cm;margin-bottom:
+	3.0pt;margin-left:45.0pt;text-align:justify;text-indent:-18.0pt;line-height:
+	120%'><span lang=ES-TRAD>2.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>En el esquema de simulación visto se trata por
+	separado la mesa de la caja, como si fueran bloques diferentes, primero se
+	trató todo lo relacionado con la mesa y después todo lo relacionado con la
+	caja, en la práctica se sabe que esto no ocurre exactamente así. Todo este
+	proceso se complica notablemente si existiera un ciclo. De ahí que sea
+	necesario estudiar otras estrategias de simulación.</span></p>
+
+
+
+
+</div>
+<div class="footer">
+  <p>
+		2013 SESimula (Software Educativo de Simulación)
+  </p>
+  <p>
+     Documentación creada por: <a title="tutor" href="mailto:asalgado@csd.uo.edu.cu">Antonio Salgado Castillo</a>
+  <p>
+	 Diseño de la web por: <a title="autor" href="mailto:alejandro.labrada@csd.uo.edu.cu,aleplusplus@facebook.com">Alejandro Labrada Diaz</a></p>
+ </p>
+ <p>
+    Bajo la licencia GPL <a href="http://www.gnu.org/licenses/fdl.html">GNU
+    Free Documentation License version 1.3</a>
+ </p>
+</div>
+</body>
+</html>

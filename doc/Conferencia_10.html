@@ -1,0 +1,1376 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- qalgorithms.qdoc -->
+  <title>SESimula - Sistema, Modelación y Simulación</title>
+  <link rel="stylesheet" type="text/css" href="style/offline.css" />
+</head>
+<body>
+<div class="header" id="qtdocheader">
+  <div class="content">
+    <a href="index.html" class="qtref"><span>Documentación de Simulación</span></a>
+  </div>
+  <div class="breadcrumb toolblock">
+    <ul>
+      <li class="first"><a href="index.html">Home</a></li>
+      <li>Conferencia 10</li>
+    </ul>
+  </div>
+</div>
+<div class="content mainContent">
+    <p class="naviNextPrevious headerNavi">
+          [Anterior: <a href="Conferencia_9.html">Conferencia 9</a> ]
+          [Siguiente: <a href="Conferencia_11y12.html">Conferencia 11 y 12</a> ]
+    </p>
+    <div class="toc">
+        <h3><a name="toc">Contenido</a></h3>
+        <ul>
+        <li class="level1"><a href="#concepcion-implementacion">Concepción general del modelo. Implementación en un programa</a></li>
+        <li class="level2"><a href="#ejemplo-modelo">Ejemplo particular en el modelo usuarios-computadora</a></li>
+        <li class="level2"><a href="#comparacion-estrategias">Comparación de las estrategias de modelación y simulación basadas en eventos</a></li>
+        <li class="level2"><a href="#propiedades-estrategias">Propiedades de las estrategias para la construcción y utilización de modelos</a></li>
+        <li class="level2"><a href="#conclusiones">Conclusiones</a></li>
+        </ul>
+    </div>
+
+    <h1 class="title">Estrategia de modelación y Simulación Orientada a Procesos</h1>
+
+	<h3><span lang=ES-TRAD>Introducción</span></h3>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>La llamada estrategia orientada a
+	procesos (OP) es realmente un proceso combinado de la estrategia orientada a
+	eventos (OE) y la estrategia orientada a eventos con rastreo de actividades
+	(RA). Su característica distintiva es que la descripción de una componente
+	puede ser implementada como una unidad, en vez de estar separada en eventos no
+	conectados o procedimientos de condiciones y actividades. Informalmente
+	hablando, un &quot;proceso&quot; es todo lo que puede ocurrir en una componente
+	activa y sus influencias, incluyendo condiciones y actividades. </span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>La nueva estrategia no es tan
+	&quot;nueva&quot;. Las ideas básicas de los descriptores de estado y los
+	tiempos remanentes se mantienen como en la estrategia RA, permitiendo incluso
+	que estos últimos sean menores o iguales a cero cuando una componente está
+	lista internamente para activarse pero depende de otras componentes que
+	influyen sobre él. La idea es sumergir el concepto de las influyentes y las
+	condiciones junto a las actividades dentro de un único &quot;proceso&quot;
+	típico de la componente. La ventaja es que la estructura del programa de
+	simulación mantiene una relación más cercana a la estructura del modelo y por
+	tanto puede &quot;verse&quot; desde el programa. Esto incrementa la
+	verosimilitud de una implementación, así como facilita una puesta a punto más
+	rápida.</span></p>
+
+	
+
+	<p class=MsoNormal><span lang=ES-TRAD>En el orden práctico es una buena
+	estrategia a seguir con lenguajes de programación orientados a simulación
+	porque acerca los procedimientos al modelo y esto permite combinarla por
+	ejemplo, con la simulación gráfica. </span></p>
+
+	<a name="concepcion-implementacion"></a>
+	<h2>Concepción general del modelo. Implementación en
+	un programa</h2>
+
+	
+
+	<p class=MsoNormal><span lang=ES-TRAD>Para explicar la estrategia refinaremos
+	la especificación del modelo visto para la RA. En aquel caso, la función de
+	transición:</span></p>
+
+	
+
+	<p class=MsoNormal><span lang=ES-TRAD><sub><img width=417 height=24
+	src="images/Conf_10/image001.gif"></sub></span></p>
+
+	
+
+	<p class=MsoNormal><span lang=ES-TRAD>se caracterizaba esencialmente por dos
+	partes: el predicado o condición <i>Cond</i></span><i><sub><span lang=ES-TRAD
+	style='font-family:Symbol'>a</span></sub><span lang=ES-TRAD> </span></i><span
+	lang=ES-TRAD>y la acción<i> Acción</i></span><i><sub><span lang=ES-TRAD
+	style='font-family:Symbol'>a</span></sub></i><span lang=ES-TRAD> . Estos dos
+	procedimientos eran lo que en la práctica se implementaban en el programa
+	particular, y el programa general hacía lo que teóricamente haría </span><i><span
+	lang=ES-TRAD style='font-family:Symbol'>d</span></i><i><sub><span lang=ES-TRAD
+	style='font-family:Symbol'>a</span></sub></i><sub><span lang=ES-TRAD> </span></sub><span
+	lang=ES-TRAD>.</span></p>
+
+	
+
+	<p class=MsoNormal><span lang=ES-TRAD>Ahora, cada una de estas partes <i>Cond</i></span><i><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>a</span></sub><span lang=ES-TRAD> </span></i><span
+	lang=ES-TRAD>y <i>Acción</i></span><i><sub><span lang=ES-TRAD style='font-family:
+	Symbol'>a</span></sub><span lang=ES-TRAD> </span></i><span lang=ES-TRAD>se
+	dividirán en varias piezas, asociadas a un &quot;subestado&quot; de la
+	componente activa </span><span lang=ES-TRAD style='font-family:Symbol'>a</span><span
+	lang=ES-TRAD> (lo que antes hemos denominado &quot;status&quot;) y que ahora
+	determina el &quot;estado de control&quot; del programa que implementa a </span><i><span
+	lang=ES-TRAD style='font-family:Symbol'>d</span></i><i><sub><span lang=ES-TRAD
+	style='font-family:Symbol'>a</span></sub></i><sub><span lang=ES-TRAD> </span></sub><span
+	lang=ES-TRAD>. Las restantes componentes del estado de la componente activa </span><span
+	lang=ES-TRAD style='font-family:Symbol'>a</span><span lang=ES-TRAD>, van a ser
+	&quot;memorizadas&quot;, pero no forman parte esencial de su &quot;status&quot;
+	o estado de control.</span></p>
+
+	
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>Para realizar esto, dividimos el valor de <b>e</b></span><b><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>a</span></sub><span lang=ES-TRAD>= <i>Estado(</i></span></b><b><i><span
+	lang=ES-TRAD style='font-family:Symbol'>a</span><span lang=ES-TRAD>)</span></i></b><span
+	lang=ES-TRAD> en los valores <b>i</b></span><b><sub><span lang=ES-TRAD
+	style='font-family:Symbol'>a</span></sub><span lang=ES-TRAD>= <i>Control(</i></span></b><b><i><span
+	lang=ES-TRAD style='font-family:Symbol'>a</span><span lang=ES-TRAD>)</span></i></b><span
+	lang=ES-TRAD> y <b>v</b></span><b><sub><span lang=ES-TRAD style='font-family:
+	Symbol'>a</span></sub><span lang=ES-TRAD>= <i>Memorias(</i></span></b><b><i><span
+	lang=ES-TRAD style='font-family:Symbol'>a</span><span lang=ES-TRAD>)</span></i></b><span
+	lang=ES-TRAD>, <b>i</b></span><b><sub><span lang=ES-TRAD style='font-family:
+	Symbol'>a</span><span lang=ES-TRAD> </span></sub></b><sub><span lang=ES-TRAD> </span></sub><span
+	lang=ES-TRAD>será el &quot;status&quot; y se convierte en el &quot;contador de
+	instrucciones&quot; (digamos <b>i</b></span><b><sub><span lang=ES-TRAD
+	style='font-family:Symbol'>a</span><i><span lang=ES-TRAD> </span></i></sub></b><span
+	lang=ES-TRAD style='font-family:Symbol'>Î</span><span lang=ES-TRAD>
+	{0,1,2,...,m}, como era  <b>st <sub>Usu  i</sub></b> o <b>st<sub> Ope</sub></b>
+	) y <b>v</b></span><b><sub><span lang=ES-TRAD style='font-family:Symbol'>a</span></sub><span
+	lang=ES-TRAD> </span></b><span lang=ES-TRAD>representará las otras variables
+	que hay que memorizar y que terminan de caracterizar <b>e</b></span><b><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>a</span></sub><span lang=ES-TRAD> </span></b><span
+	lang=ES-TRAD>(digamos por ejemplo, <b>v <sub>Usu i</sub></b><sub> </sub>= {</span><span
+	lang=ES-TRAD style='font-family:Symbol'>t</span><sub><span lang=ES-TRAD>ed i</span></sub><span
+	lang=ES-TRAD>, </span><span lang=ES-TRAD style='font-family:Symbol'>t</span><span
+	lang=ES-TRAD> <sub>proc i</sub> } en el ejemplo de usuarios-computadora, el
+	Operador no tiene variables de memoria). Las componentes pasivas pueden tener
+	definido su estado como en las estrategias anteriores (digamos por ejemplo la
+	cola)</span></p>
+
+	
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD>2.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>De manera general, si el control <b>i</b></span><b><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>a</span><span lang=ES-TRAD> </span></sub></b><span
+	lang=ES-TRAD>tiene m+1 valores posibles: 0,1,2,...,m, las funciones <i>Cond</i></span><i><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>a</span></sub><span lang=ES-TRAD> </span></i><span
+	lang=ES-TRAD>y<i> Acción</i></span><i><sub><span lang=ES-TRAD style='font-family:
+	Symbol'>a</span></sub></i><span lang=ES-TRAD>   se van a implementar en un
+	único proceso que tiene m+1 &quot;instrucciones&quot;, una para cada valor de <b>i</b></span><b><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>a</span></sub></b><span lang=ES-TRAD>.
+	Teóricamente:</span></p>
+
+	
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=ES-TRAD><sub><img
+	width=536 height=69
+	src="images/Conf_10/image002.gif"></sub></span></p>
+
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=ES-TRAD>Similarmente:</span></p>
+
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=ES-TRAD><sub><img
+	width=549 height=69
+	src="images/Conf_10/image003.gif"></sub></span></p>
+
+	
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD>3.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>Estos 2 * (m+1)  procedimientos para la
+	componente activa </span><span lang=ES-TRAD style='font-family:Symbol'>a</span><span
+	lang=ES-TRAD>, se unen en un &quot;único&quot; proceso, que típicamente tendría
+	la forma siguiente, en un leguaje de programación general:</span></p>
+
+	
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=ES-TRAD>procedure 
+	Proceso</span><sub><span lang=ES-TRAD style='font-family:Symbol'>a</span></sub><span
+	lang=ES-TRAD> (var i:: Integer)</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=ES-TRAD>        begin</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=ES-TRAD>                       Cambios:=False;</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=ES-TRAD>                       </span><span
+	lang=EN-US>Case i of</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=EN-US>                                       0:
+	If Cond<sub>0,</sub></span><sub><span lang=ES-TRAD style='font-family:Symbol'>a</span></sub><span
+	lang=EN-US> then  Accion<sub>0,</sub></span><sub><span lang=ES-TRAD
+	style='font-family:Symbol'>a</span></sub><span lang=EN-US> {incluyendo
+	Cambios:=True}</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=EN-US>                                       1:
+	If Cond<sub>1,</sub></span><sub><span lang=ES-TRAD style='font-family:Symbol'>a</span></sub><span
+	lang=EN-US> then Accion<sub>1,</sub></span><sub><span lang=ES-TRAD
+	style='font-family:Symbol'>a</span></sub><sub><span lang=ES-TRAD> </span></sub><span
+	lang=EN-US> {idem}</span></p>
+
+	<p class=MsoNormal style='margin-left:88.8pt;text-indent:17.4pt'><span
+	lang=EN-US>2: If Cond<sub>2,</sub></span><sub><span lang=ES-TRAD
+	style='font-family:Symbol'>a</span></sub><span lang=EN-US> then Accion<sub>2,</sub></span><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>a</span></sub><span lang=EN-US> {idem}</span></p>
+
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>                                               m:<sub>
+	</sub>If Cond<sub>m,</sub></span><sub><span lang=ES-TRAD style='font-family:
+	Symbol'>a</span></sub><span lang=ES-TRAD> then Accion<sub>m,</sub></span><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>a</span></sub><span lang=ES-TRAD>
+	{incluyendo Cambios:=True}</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=ES-TRAD>        end</span></p>
+
+
+	<p class=MsoNormal style='margin-left:13.5pt;text-indent:-13.5pt'><sub><span
+	lang=ES-TRAD>        </span></sub><span lang=ES-TRAD>o en  un lenguaje
+	específico orientado a simulación, 0,1,2,...,m son realmente los números de
+	instrucciones o   de ciertos bloques de instrucciones. Así, si  </span><span
+	lang=ES-TRAD style='font-family:Symbol'>a</span><span lang=ES-TRAD> es una
+	componente activa Proceso</span><sub><span lang=ES-TRAD style='font-family:
+	Symbol'>a</span></sub><span lang=ES-TRAD> representará el proceso asociado a
+	esta componente el cual estará dividido en m+1 bloques, uno para cada valor de
+	Control</span><sub><span lang=ES-TRAD style='font-family:Symbol'>a</span></sub><span
+	lang=ES-TRAD> y cada uno formulado como un If en que intervienen Cond(</span><span
+	lang=ES-TRAD style='font-family:Symbol'>a</span><span lang=ES-TRAD>) y Acción(</span><span
+	lang=ES-TRAD style='font-family:Symbol'>a</span><span lang=ES-TRAD>) para el
+	valor específico de Control(</span><span lang=ES-TRAD style='font-family:Symbol'>a</span><span
+	lang=ES-TRAD>).</span></p>
+
+
+	<p class=MsoNormal style='margin-left:13.5pt;text-indent:-13.5pt'><span
+	lang=ES-TRAD>      En principio, la ejecución de un proceso asociado a una
+	componente </span><span lang=ES-TRAD style='font-family:Symbol'>a</span><span
+	lang=ES-TRAD>, puede comenzar en cualquiera de los m+1 puntos de activación de
+	Proceso(</span><span lang=ES-TRAD style='font-family:Symbol'>a</span><span
+	lang=ES-TRAD>). En un lenguaje de programación general, el punto donde se
+	quiere activar se puede pasar como un parámetro: i</span><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>a</span></sub><span lang=ES-TRAD> (i</span><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>a</span></sub><span lang=ES-TRAD> = 0,
+	1, 2, ..., m) que analiza un case. En un lenguaje específicamente orientado a
+	simulación se puede lograr esto con un puntero hacia una instrucción o bloque
+	del proceso y una vez que se ejecutan todas las instrucciones del bloque
+	encabezado por i</span><sub><span lang=ES-TRAD style='font-family:Symbol'>a</span><span
+	lang=ES-TRAD> </span></sub><span lang=ES-TRAD>dicho puntero apuntará al inicio
+	del bloque siguiente si no se realiza ningún salto o al comienzo de otro bloque
+	especificado dentro del bloque actual.</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD>4.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>Como cuestión general, consideremos que el
+	simulador mantendrá una <b>ListaDeActivacionesFuturas, </b>cuyos elementos será
+	triplos de la forma <b>(Proceso</b></span><b><sub><span lang=ES-TRAD
+	style='font-family:Symbol'>a</span></sub><span lang=ES-TRAD>, i</span></b><b><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>a</span></sub><span lang=ES-TRAD> , t</span></b><b><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>a</span></sub><span lang=ES-TRAD> ) </span></b><span
+	lang=ES-TRAD>que indica que el proceso <b>Proceso</b></span><b><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>a</span></sub><span lang=ES-TRAD> </span></b><span
+	lang=ES-TRAD>se ejecutará a partir de la instrucción <b>i</b></span><b><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>a</span></sub><span lang=ES-TRAD> </span></b><span
+	lang=ES-TRAD>en el tiempo<b> t</b></span><b><sub><span lang=ES-TRAD
+	style='font-family:Symbol'>a</span></sub><span lang=ES-TRAD>. </span></b><span
+	lang=ES-TRAD>En todos los elementos de esta lista <b>t</b></span><b><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>a</span></sub><span lang=ES-TRAD>&gt;Reloj</span></b><span
+	lang=ES-TRAD>. Estos triplos se ordenan en la lista de acuerdo con el campo <b>t</b></span><b><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>a</span></sub><span lang=ES-TRAD>.</span></b><span
+	lang=ES-TRAD> Esta lista es el análogo funcional de la ListaDeEventos en la
+	estrategia OE.</span></p>
+
+	
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=ES-TRAD>Existirá
+	también una <b>ListaDeActivacionesActuales, </b>con triplos de la misma forma <b>(Proceso</b></span><b><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>a</span></sub><span lang=ES-TRAD>, i</span></b><b><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>a</span></sub><span lang=ES-TRAD> , t</span></b><b><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>a</span></sub><span lang=ES-TRAD> )</span></b><span
+	lang=ES-TRAD> que representan los procesos que deben ser activados en el tiempo
+	actual, o aquellos que ya debían ser activados pero para los cuales no se
+	cumplieron las condiciones de activación (<b>t</b></span><b><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>a</span></sub><span lang=ES-TRAD>&lt;=Reloj,
+	</span></b><span lang=ES-TRAD>esto es, </span><span lang=ES-TRAD
+	style='font-family:Symbol'>s</span><sub><span lang=ES-TRAD style='font-family:
+	Symbol'>a</span></sub><span lang=ES-TRAD>&lt;=0). Estos triplos se insertan de
+	forma ordenada de acuerdo a las prioridades entre las componentes,
+	especificadas si se quiere por una <b>ListaDePrioridades </b>como en la
+	estrategia RA<b>. </b>Pero de hecho, la <b>ListaDeActivacionesActuales</b> es
+	la que es funcionalmente equivalente a la ListaDePrioridades <b> </b>de la
+	estrategia RA con la diferencia de que no contendrá actividades futuras y se
+	actualiza constantemente por el programa. El programa general de hecho debe
+	ocuparse de modificar la <b>ListaDeActivacionesFuturas </b>y la <b>ListaDeActivacionesActuales,
+	</b>incluyendo el movimiento de un triplo de una  a otra lista.</span></p>
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD>5.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>Para especificar el algoritmo utilizaremos de
+	nuevo un puntero <b>P</b> que recorrerá la <b>ListaDeActivaciones Actuales, </b>supuestamente
+	ya ordenada como se especificó antes. He aquí el Programa general (<b>n</b> es
+	como siempre el número total de componentes y <b>a</b> el número de componentes
+	activas)</span></p>
+
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=EN-US>Program</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=EN-US>        Begin</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=EN-US>              
+	{Inicialización}</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=EN-US>               Reloj:=TiempoInicio</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=EN-US>               
+	For i=1,2,...,a </span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=EN-US>                  
+	begin</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=EN-US>                     
+	i</span><sub><span lang=ES-TRAD style='font-family:Symbol'>a</span></sub><sub><span
+	lang=EN-US> i</span></sub><span lang=EN-US> = i</span><sub><span lang=ES-TRAD
+	style='font-family:Symbol'>a</span></sub><sub><span lang=EN-US> i</span></sub><sup><span
+	lang=EN-US> 0</span></sup><span lang=EN-US> </span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=EN-US>                     
+	v</span><sub><span lang=ES-TRAD style='font-family:Symbol'>a</span></sub><sub><span
+	lang=EN-US> i</span></sub><span lang=EN-US> = v</span><sub><span lang=ES-TRAD
+	style='font-family:Symbol'>a</span></sub><sub><span lang=EN-US> i</span></sub><sup><span
+	lang=EN-US> 0</span></sup><span lang=EN-US> </span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=EN-US>                     
+	</span><span lang=ES-TRAD style='font-family:Symbol'>s</span><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>a</span></sub><sub><span lang=EN-US> i </span></sub><span
+	lang=EN-US>= </span><span lang=ES-TRAD style='font-family:Symbol'>s</span><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>a</span></sub><sub><span lang=EN-US> i</span></sub><sup><span
+	lang=EN-US>0</span></sup></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=EN-US>                     
+	If  </span><span lang=ES-TRAD style='font-family:Symbol'>s</span><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>a</span></sub><sub><span lang=EN-US> i</span></sub><span
+	lang=EN-US> &gt; 0 Insertar (Proceso</span><sub><span lang=ES-TRAD
+	style='font-family:Symbol'>a</span></sub><sub><span lang=EN-US>  i</span></sub><span
+	lang=EN-US> , i</span><sub><span lang=ES-TRAD style='font-family:Symbol'>a</span></sub><sub><span
+	lang=EN-US> i</span></sub><span lang=EN-US> , TiempoInicio + </span><span
+	lang=ES-TRAD style='font-family:Symbol'>s</span><sub><span lang=ES-TRAD
+	style='font-family:Symbol'>a</span></sub><sub><span lang=EN-US> i</span></sub><span
+	lang=EN-US>) en ListaDeActivacionesFuturas</span></p>
+
+	<p class=MsoNormal style='margin-left:70.8pt'><span lang=EN-US> If  </span><span
+	lang=ES-TRAD style='font-family:Symbol'>s</span><sub><span lang=ES-TRAD
+	style='font-family:Symbol'>a</span></sub><sub><span lang=EN-US> i</span></sub><span
+	lang=EN-US> &lt;= 0 Insertar (Proceso</span><sub><span lang=ES-TRAD
+	style='font-family:Symbol'>a</span></sub><sub><span lang=EN-US>  i</span></sub><span
+	lang=EN-US> , i</span><sub><span lang=ES-TRAD style='font-family:Symbol'>a</span></sub><sub><span
+	lang=EN-US> i</span></sub><span lang=EN-US> , TiempoInicio + </span><span
+	lang=ES-TRAD style='font-family:Symbol'>s</span><sub><span lang=ES-TRAD
+	style='font-family:Symbol'>a</span></sub><sub><span lang=EN-US> i</span></sub><span
+	lang=EN-US>) en ListaDeActivacionesActuales</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=EN-US>                        </span><span
+	lang=ES-TRAD>{Se supone que todos los procesos que insertan, también ordenan}</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=ES-TRAD>                   
+	</span><span lang=EN-US>end {For}</span></p>
+
+	<p class=MsoNormal style='margin-left:53.4pt'><span lang=EN-US>   For i=a+1,...,n
+	do e</span><sub><span lang=ES-TRAD style='font-family:Symbol'>a</span></sub><sub><span
+	lang=EN-US> i</span></sub><span lang=EN-US> = e</span><sub><span lang=ES-TRAD
+	style='font-family:Symbol'>a</span></sub><sub><span lang=EN-US> i</span></sub><sup><span
+	lang=EN-US> 0</span></sup><span lang=EN-US> </span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=EN-US>                </span><span
+	lang=ES-TRAD>{Fase de Rastreo}</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=ES-TRAD>                
+	While Reloj &lt;= TiempoFin do</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=ES-TRAD>                       begin</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=ES-TRAD>                          
+	PosibleMoverP:=True</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=ES-TRAD>                          
+	P:=Inicio de ListaDeActivacionesActuales</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=ES-TRAD>                          
+	</span><span lang=EN-US>While PosibleMoverP do</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=EN-US>                                
+	begin</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=EN-US>                                       if
+	P apunta a (Proceso</span><sub><span lang=ES-TRAD style='font-family:Symbol'>a</span></sub><span
+	lang=EN-US> , i</span><sub><span lang=ES-TRAD style='font-family:Symbol'>a</span></sub><span
+	lang=EN-US> , t</span><sub><span lang=ES-TRAD style='font-family:Symbol'>a</span></sub><span
+	lang=EN-US> ), then</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=EN-US>                                          
+	begin</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=EN-US>                                              
+	Proceso</span><sub><span lang=ES-TRAD style='font-family:Symbol'>a</span></sub><span
+	lang=EN-US> ( i</span><sub><span lang=ES-TRAD style='font-family:Symbol'>a</span></sub><sub><span
+	lang=ES-TRAD> </span></sub><span lang=EN-US>)</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=EN-US>                                              
+	If Cambios then</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=EN-US>                                                  
+	</span><span lang=ES-TRAD>begin</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=ES-TRAD>                                                        Eliminar
+	(Proceso</span><sub><span lang=ES-TRAD style='font-family:Symbol'>a</span></sub><span
+	lang=ES-TRAD> , i</span><sub><span lang=ES-TRAD style='font-family:Symbol'>a</span></sub><span
+	lang=ES-TRAD> , t</span><sub><span lang=ES-TRAD style='font-family:Symbol'>a</span></sub><span
+	lang=ES-TRAD> ) de ListaDeActivacionesActuales</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=ES-TRAD>                                                        Para
+	toda </span><span lang=ES-TRAD style='font-family:Symbol'>b</span><span
+	lang=ES-TRAD> </span><span lang=ES-TRAD style='font-family:Symbol'>Î</span><span
+	lang=ES-TRAD> Influencias(</span><span lang=ES-TRAD style='font-family:Symbol'>a</span><span
+	lang=ES-TRAD>)</span><span lang=ES-TRAD style='font-family:Math1'>È</span><span
+	lang=ES-TRAD> CompActivas</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=ES-TRAD>                                                           
+	begin</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=ES-TRAD>                                                               
+	Eliminar  (Proceso</span><sub><span lang=ES-TRAD style='font-family:Symbol'>b</span></sub><span
+	lang=ES-TRAD> , i</span><sub><span lang=ES-TRAD style='font-family:Symbol'>b</span></sub><span
+	lang=ES-TRAD> , t</span><sub><span lang=ES-TRAD style='font-family:Symbol'>b</span></sub><span
+	lang=ES-TRAD> ) de la Lista en que se encuentre</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=ES-TRAD>                                                                
+	t</span><sub><span lang=ES-TRAD style='font-family:Symbol'>b</span></sub><span
+	lang=ES-TRAD> = Reloj + </span><span lang=ES-TRAD style='font-family:Symbol'>s</span><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>b</span></sub></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=ES-TRAD>                                                                
+	if t</span><sub><span lang=ES-TRAD style='font-family:Symbol'>b</span><span
+	lang=ES-TRAD> </span></sub><span lang=ES-TRAD>&lt;= Reloj Insertar (Proceso</span><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>b</span></sub><span lang=ES-TRAD> , i</span><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>b</span></sub><span lang=ES-TRAD> , t</span><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>b</span></sub><span lang=ES-TRAD> ) en
+	ListaDeActiv...Actuales</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=ES-TRAD>                                                                
+	if t</span><sub><span lang=ES-TRAD style='font-family:Symbol'>b</span><span
+	lang=ES-TRAD> </span></sub><span lang=ES-TRAD>&gt; Reloj Insertar (Proceso</span><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>b</span></sub><span lang=ES-TRAD> , i</span><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>b</span></sub><span lang=ES-TRAD> , t</span><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>b</span></sub><span lang=ES-TRAD> ) en
+	ListaDeActiv...Futuras</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=ES-TRAD>                                                           
+	end {Para toda </span><span lang=ES-TRAD style='font-family:Symbol'>b</span><span
+	lang=ES-TRAD>}</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=ES-TRAD>                                                  
+	if ListaDeActividadesActuales</span><span lang=ES-TRAD style='font-family:Symbol'>¹</span><span
+	lang=ES-TRAD>{} MoverP al inicio de esa Lista</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=ES-TRAD>                                                   
+	end {If Cambios then}</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=ES-TRAD>                                              
+	else if P</span><span lang=ES-TRAD style='font-family:Symbol'>¹</span><span
+	lang=ES-TRAD> Fin de ListaDeActividadesActuales then Mover P en esa Lista </span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=ES-TRAD>                                                                                                                    
+	</span><span lang=EN-US>else PosibleMoverP=False</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=EN-US>                                          
+	end {If P apunta}   </span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=EN-US>                              
+	end {While PosibleMoverP}</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=EN-US>                                
+	</span><span lang=ES-TRAD>Reloj:= t</span><sub><span lang=ES-TRAD
+	style='font-family:Symbol'>n</span></sub><span lang=ES-TRAD>  donde (Proceso</span><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>n</span></sub><span lang=ES-TRAD> , i</span><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>n</span></sub><span lang=ES-TRAD> , t</span><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>n</span></sub><span lang=ES-TRAD> ) es
+	el primer elemento de ListaDeActi...Futuras</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=ES-TRAD>                                
+	Eliminar los triplos (Proceso</span><sub><span lang=ES-TRAD style='font-family:
+	Symbol'>d</span></sub><span lang=ES-TRAD> , i</span><sub><span lang=ES-TRAD
+	style='font-family:Symbol'>d</span></sub><span lang=ES-TRAD> , t</span><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>d</span></sub><span lang=ES-TRAD> ) de
+	la ListaDeActi...Futuras que t</span><sub><span lang=ES-TRAD style='font-family:
+	Symbol'>d</span></sub><span lang=ES-TRAD> = Reloj e</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=ES-TRAD>                                                       Insertarlos
+	en ListaDeActividadesActuales</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=ES-TRAD>                       end
+	{While Reloj}</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=ES-TRAD>        End {Program}</span></p>
+
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=ES-TRAD>El programa
+	general es más complicado pero los procedimientos específicos (procesos) son
+	más claros y eficientes.</span></p>
+
+	<a name="ejemplo-modelo"></a>
+	<h2>Ejemplo particular en el modelo
+	usuarios-computadora</h2>
+
+	
+
+	<p class=MsoNormal><span lang=ES-TRAD>Recuérdese que aquí teníamos </span></p>
+
+	
+
+	<p class=MsoNormal><span lang=ES-TRAD>                CompActivas = { Usu<sub>1
+	</sub>, Usu<sub>2</sub> , ..., Usu<sub>99 </sub>, Ope }</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                CompPasivas = { Comp,
+	Cola, Reja, Alm}</span></p>
+
+	
+
+	<p class=MsoNormal><span lang=ES-TRAD>Veamos el proceso para Usu<sub>i</sub></span></p>
+
+	
+
+	<p class=MsoNormal><span lang=ES-TRAD>                <sub><img width=164
+	height=31
+	src="images/Conf_10/image004.gif"></sub></span></p>
+
+	
+
+	<p class=MsoNormal><span lang=ES-TRAD>La variable de control para esta
+	componente será st<sub>i</sub> con valores posibles</span></p>
+
+	
+
+	<p class=MsoNormal><span lang=ES-TRAD><sub><img width=496 height=125
+	src="images/Conf_10/image005.gif"></sub></span></p>
+
+	<p><span lang=ES-TRAD style='font-weight:normal;font-style:normal'>Influencias(Usu<sub>i</sub>)
+	= {(Usu<sub>i</sub>, e<sub>Usu i</sub>,</span><span lang=ES-TRAD
+	style='font-family:Symbol;font-weight:normal;font-style:normal'>s</span><sub><span
+	lang=ES-TRAD style='font-weight:normal;font-style:normal'>Usu i </span></sub><span
+	lang=ES-TRAD style='font-weight:normal;font-style:normal'>), (Cola, e<sub>Cola </sub>),
+	(Comp, e<sub>Comp </sub>), (Alm, e<sub>Alm</sub>)}</span></p>
+
+	<p><span lang=ES-TRAD style='font-weight:normal;font-style:normal'>Influyentes(Usu<sub>i</sub>)
+	= {(Usu<sub>i</sub>, e<sub>Usu i</sub>,</span><span lang=ES-TRAD
+	style='font-family:Symbol;font-weight:normal;font-style:normal'>s</span><sub><span
+	lang=ES-TRAD style='font-weight:normal;font-style:normal'>Usu i </span></sub><span
+	lang=ES-TRAD style='font-weight:normal;font-style:normal'>), (Cola, e<sub>Cola </sub>),
+	(Reja, e<sub>Reja </sub>) }</span></p>
+
+	
+
+	<p class=MsoNormal><span lang=ES-TRAD>Las inluyentes sólo hacen falta para
+	recordar las variables que pueden intervenir en Cond<sub>Usu i</sub></span></p>
+
+	<p class=MsoNormal><sub><span lang=ES-TRAD>&nbsp;</span></sub></p>
+
+	<p class=MsoNormal><span lang=EN-US>Procedure Proceso<sub>Usu i</sub> (var st:
+	Integer)</span></p>
+
+	<p class=MsoNormal><span lang=EN-US>      Begin</span></p>
+
+	<p class=MsoNormal><span lang=EN-US>                Cambios:=False</span></p>
+
+	<p class=MsoNormal><span lang=EN-US>                Case st of</span></p>
+
+	<p class=MsoNormal><span lang=EN-US>                               O: begin</span></p>
+
+	<p class=MsoNormal><span lang=EN-US>                                               Cambios:=True</span></p>
+
+	<p class=MsoNormal><span lang=EN-US>                                               st<sub>i</sub>
+	:=1</span></p>
+
+	<p class=MsoNormal><span lang=EN-US>                                               </span><span
+	lang=ES-TRAD style='font-family:Symbol'>s</span><sub><span lang=EN-US>Usu i </span></sub><span
+	lang=EN-US>:= 0</span></p>
+
+	<p class=MsoNormal><span lang=EN-US>                                               Cola:=Append[Cola,Usu<sub>i</sub>]</span></p>
+
+	<p class=MsoNormal><span lang=EN-US>                                     end </span></p>
+
+	<p class=MsoNormal><span lang=EN-US>                                1:  if
+	First[Cola]=Usu<sub>i </sub>then</span></p>
+
+	<p class=MsoNormal><span lang=EN-US>                                               begin</span></p>
+
+	<p class=MsoNormal><span lang=EN-US>                                                    
+	Cambios:=True</span></p>
+
+	<p class=MsoNormal><span lang=EN-US>                                                    
+	st<sub>i</sub> :=2</span></p>
+
+	<p class=MsoNormal><span lang=EN-US>                                               </span><span
+	lang=ES-TRAD style='font-family:Symbol'>s</span><sub><span lang=EN-US>Usu i </span></sub><span
+	lang=EN-US>:= </span><span lang=ES-TRAD style='font-family:Symbol'>t</span><sub><span
+	lang=EN-US>proc i</span></sub></p>
+
+	<p class=MsoNormal><span lang=EN-US>                                               e<sub>Comp</sub>
+	:= 1</span></p>
+
+	<p class=MsoNormal><span lang=EN-US>                                         end</span></p>
+
+	<p class=MsoNormal><span lang=EN-US>                               2: begin </span></p>
+
+	<p class=MsoNormal><span lang=EN-US>                                       Cambios:=True</span></p>
+
+	<p class=MsoNormal><span lang=EN-US>                                        st<sub>i</sub>
+	:=3</span></p>
+
+	<p class=MsoNormal><span lang=EN-US>                                        </span><span
+	lang=ES-TRAD style='font-family:Symbol'>s</span><sub><span lang=ES-TRAD>Usu i </span></sub><span
+	lang=ES-TRAD>:= 0</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                                       
+	Cola:=Delete[Cola,Usu<sub>i</sub>]</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                                         </span><span
+	lang=EN-US>e<sub>Comp:</sub>=0</span></p>
+
+	<p class=MsoNormal><span lang=EN-US>                                         e<sub>Alm</sub>:=Append[e<sub>Alm</sub>,
+	Usu<sub>i</sub>]</span></p>
+
+	<p class=MsoNormal><span lang=EN-US>                                    end</span></p>
+
+	<p class=MsoNormal><span lang=EN-US>                               3: if Reja =
+	abierta then</span></p>
+
+	<p class=MsoNormal><span lang=EN-US>                                        
+	begin</span></p>
+
+	<p class=MsoNormal><span lang=EN-US>                                               Cambios:=True</span></p>
+
+	<p class=MsoNormal style='margin-left:35.4pt;text-indent:35.4pt'><span
+	lang=EN-US>               st<sub>i</sub> :=4</span></p>
+
+	<p class=MsoNormal><span lang=EN-US>                                             
+	</span><span lang=ES-TRAD style='font-family:Symbol'>s</span><sub><span
+	lang=EN-US>Usu i </span></sub><span lang=EN-US>:= </span><span lang=ES-TRAD
+	style='font-family:Symbol'>t</span><sub><span lang=EN-US>ed i</span></sub></p>
+
+	<p class=MsoNormal><span lang=EN-US>                                             
+	</span><span lang=ES-TRAD>e<sub>Alm</sub>:=Delete[e<sub>Alm</sub>, Usu<sub>i</sub>]</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                                      
+	end</span></p>
+
+	
+
+	<p class=MsoNormal><span lang=ES-TRAD>Veamos el proceso para el Operador.
+	Recuérdese que aquí e<sub>Ope</sub>= st<sub>Ope </sub>y este valor es 0 si el
+	Operador está libre o 1 si el operador está desocupado</span></p>
+
+	
+
+	<p><span lang=ES-TRAD style='font-weight:normal;font-style:normal'>Influencias(Ope)
+	= { (Ope, st<sub>Ope</sub> , </span><span lang=ES-TRAD style='font-family:Symbol;
+	font-weight:normal;font-style:normal'>s</span><sub><span lang=ES-TRAD
+	style='font-weight:normal;font-style:normal'>Ope</span></sub><span
+	lang=ES-TRAD style='font-weight:normal;font-style:normal'>) , ( Reja, e<sub>Reja</sub>)
+	}</span></p>
+
+	<p><span lang=ES-TRAD style='font-weight:normal;font-style:normal'>Influyentes(Ope)
+	= { (Ope, st<sub>Ope</sub> , </span><span lang=ES-TRAD style='font-family:Symbol;
+	font-weight:normal;font-style:normal'>s</span><sub><span lang=ES-TRAD
+	style='font-weight:normal;font-style:normal'>Ope</span></sub><span
+	lang=ES-TRAD style='font-weight:normal;font-style:normal'>) , ( Alm, e<sub>Alm</sub>)
+	}</span></p>
+
+	
+
+	<p class=MsoNormal><span lang=ES-TRAD>Recuérdese que las influyentes sirven
+	aquí solo para recordar que componentes pueden estar en Cond<sub>Ope</sub></span></p>
+
+	<p class=MsoNormal><sub><span lang=ES-TRAD>&nbsp;</span></sub></p>
+
+	<p class=MsoNormal><span lang=EN-US>Procedure Proceso<sub>Ope</sub> (var st:
+	Integer)</span></p>
+
+	<p class=MsoNormal><span lang=EN-US>                Begin</span></p>
+
+	<p class=MsoNormal><span lang=EN-US>                     Case st of</span></p>
+
+	<p class=MsoNormal><span lang=EN-US>                               O: begin</span></p>
+
+	<p class=MsoNormal><span lang=EN-US>                                               </span><span
+	lang=ES-TRAD>Cambios:=True</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                                               st<sub>Ope</sub>:=1</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                                               </span><span
+	lang=ES-TRAD style='font-family:Symbol'>s</span><sub><span lang=ES-TRAD>Ope</span></sub><span
+	lang=ES-TRAD>:=0</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                                               e<sub>Reja</sub>
+	:=&quot;abierta&quot;</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                                    </span><span
+	lang=EN-US>end</span></p>
+
+	<p class=MsoNormal><span lang=EN-US>                                1: if e<sub>Alm</sub>=
+	{} then</span></p>
+
+	<p class=MsoNormal><span lang=EN-US>                                               begin</span></p>
+
+	<p class=MsoNormal><span lang=EN-US>                                                               Cambios:=True</span></p>
+
+	<p class=MsoNormal><span lang=EN-US>                                                               </span><span
+	lang=ES-TRAD>st<sub>Ope</sub>=0</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                                                               </span><span
+	lang=ES-TRAD style='font-family:Symbol'>s</span><sub><span lang=ES-TRAD>Ope</span></sub><span
+	lang=ES-TRAD>:=480</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                                                               e<sub>Reja</sub>:=&quot;cerrada&quot;</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                                               end</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                End</span></p>
+
+	
+
+	<p class=MsoNormal><span lang=ES-TRAD>Observe que de acuerdo a la forma de
+	avance de P a través de la ListaDeActivacionesActuales, según la prioridad,
+	digamos Usu<sub>1</sub>, Usu<sub>2</sub>, ..., Usu<sub>99</sub>, Ope, todas las
+	acciones posibles de un mismo usuario y del operador que puedan activarse se
+	hacen sin avanzar efectivamente el reloj, en particular esto ocurre si un
+	usuario pasa directamente a la primera posición de la cola o el proceso de
+	vaciado del Almacén donde se produce un avance 0 del Reloj.                                            </span></p>
+
+	<a name="comparacion-estrategias"></a>
+	<h2>Comparación de las estrategias de modelación y
+	simulación basadas en eventos</h2>
+
+	
+
+	<p class=MsoNormal><span lang=ES-TRAD>Denotamos las estrategias abreviadamente
+	OE, RA, y OP. La comparación desde el punto de vista del modelo.</span></p>
+
+	
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>Tipo de componentes: las tres soportan
+	componentes activas y pasivas</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='background:yellow'>2.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='background:yellow'>Especificación del
+	estado de las componentes activas </span><span lang=ES-TRAD style='font-family:
+	Symbol;background:yellow'>a</span><span lang=ES-TRAD style='background:yellow'>:</span></p>
+
+
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol;background:yellow'>¨<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+	lang=ES-TRAD style='background:yellow'>En OE y RA se describen normalmente por
+	e</span><sub><span lang=ES-TRAD style='font-family:Symbol;background:yellow'>a</span></sub></p>
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol;background:yellow'>¨<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+	lang=ES-TRAD style='background:yellow'>En OP se describen por (i</span><sub><span
+	lang=ES-TRAD style='font-family:Symbol;background:yellow'>a</span></sub><span
+	lang=ES-TRAD style='background:yellow'> , v</span><sub><span lang=ES-TRAD
+	style='font-family:Symbol;background:yellow'>a</span></sub><span lang=ES-TRAD
+	style='background:yellow'>)</span></p>
+
+	
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD>3.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>Influencias e Influyentes</span></p>
+
+	
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>Influencias: Pueden ser activas o pasivas en
+	las tres estrategias.</span></p>
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>Influyentes: En OE no hay influyentes, o más
+	bien son solo activas. En RA y OP pueden ser activas o pasivas pero en OP solo
+	se utilizan para recordar que componentes pueden entrar en la Cond</span><sub><span
+	lang=ES-TRAD style='font-family:Symbol'>a</span></sub></p>
+
+	
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD>4.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>Dinámica del sistema</span></p>
+
+	
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=ES-TRAD>La dinámica
+	del sistema en las tres actividades se determina por la combinación de la
+	dinámica de todas sus componentes. Pero la dinámica de una componente se ve
+	distinta en cada estrategia:</span></p>
+
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>OE: los eventos que pueden ocurrir para una
+	componente activa</span></p>
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>RA: las actividades en las que toma parte una
+	componente activa</span></p>
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>OP: el movimiento de una componente activa
+	&quot;dentro&quot; de su proceso</span></p>
+
+	
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='background:yellow'>5.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='background:yellow'>Procedimientos que
+	implementan la dinámica (a programar)</span></p>
+
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol;background:yellow'>¨<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+	lang=ES-TRAD style='background:yellow'>OE: procedimientos asociados a los
+	eventos de cada componente activa</span></p>
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol;background:yellow'>¨<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+	lang=ES-TRAD style='background:yellow'>RA: procedimientos de condición y
+	actividad de cada componente activa</span></p>
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol;background:yellow'>¨<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+	lang=ES-TRAD style='background:yellow'>OP: procesos que resumen condiciones y
+	acciones por bloques</span></p>
+
+	
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD>6.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>Cantidad de procedimientos por cada componente
+	activa</span></p>
+
+	
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>OE: igual a la cantidad de eventos en los que
+	la componente participa</span></p>
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>RA: uno de condición y uno de actividad</span></p>
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>OP: una cantidad de pares condición-acción
+	igual a la cantidad de bloques o posibles valores de control de la componente y
+	resumidos en un único proceso</span></p>
+
+	
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='background:yellow'>7.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='background:yellow'>Chequeo de las
+	condiciones para determinar acción</span></p>
+
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol;background:yellow'>¨<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+	lang=ES-TRAD style='background:yellow'>OE: Solo dentro del procedimiento de los
+	eventos</span></p>
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol;background:yellow'>¨<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+	lang=ES-TRAD style='background:yellow'>RA: En cada procedimiento de condición
+	para chequear la posibilidad de realizar la actividad</span></p>
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol;background:yellow'>¨<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+	lang=ES-TRAD style='background:yellow'>OP: Solo en las condiciones de cada
+	bloque</span></p>
+
+	
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='background:yellow'>8.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='background:yellow'>Representación y
+	avance del tiempo</span></p>
+
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol;background:yellow'>¨<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+	lang=ES-TRAD style='background:yellow'>OE: El tiempo del proximo evento para la
+	componente está planificado en la ListaDeEventos. El Reloj avanza al tiempo del
+	primer evento de esta lista previamente ordenada</span></p>
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol;background:yellow'>¨<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+	lang=ES-TRAD style='background:yellow'>RA: Cada componente activa tiene un
+	reloj local (que se actualiza cuando la componente cambia de estado t</span><sub><span
+	lang=ES-TRAD style='font-family:Symbol;background:yellow'>a</span></sub><span
+	lang=ES-TRAD style='background:yellow'>:=Reloj+</span><span lang=ES-TRAD
+	style='font-family:Symbol;background:yellow'>s</span><sub><span lang=ES-TRAD
+	style='font-family:Symbol;background:yellow'>a</span></sub><span lang=ES-TRAD
+	style='background:yellow'>). El Reloj (global) avanza con saltos estrictamente
+	positivos. Si el valor del reloj local se &quot;queda atrás&quot;, esto es si t</span><sub><span
+	lang=ES-TRAD style='font-family:Symbol;background:yellow'>a</span></sub><span
+	lang=ES-TRAD style='background:yellow'>&lt;=Reloj una vez que Reloj haya
+	avanzado, esto dice que esa componente está lista internamente para cambiar de
+	estado pero hasta ahora no se han cumplido las condiciones. Si t</span><sub><span
+	lang=ES-TRAD style='font-family:Symbol;background:yellow'>a</span></sub><span
+	lang=ES-TRAD style='background:yellow'>&gt;Reloj, no se activa la componente.
+	Para conseguir avances estrictamente positivos, el Reloj avanza al menor tiempo
+	entre los relojes locales que son mayores estrictamente que él.</span></p>
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol;background:yellow'>¨<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+	lang=ES-TRAD style='background:yellow'>OP: Es análogo a RA pero el Reloj avanza
+	al menor tiempo en ListaDeActivacionesFuturas.</span></p>
+
+	
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD>9.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>Selección de procedimientos a ejecutar en el
+	tiempo actual.</span></p>
+
+	
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>OE: Si existen eventos simultáneos, el orden
+	se determina por prioridades definidas por una función Selecciona sobre una
+	lista de eventos inminentes. Seleccionar un evento implica seleccionar el
+	procedimiento.</span></p>
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>RA: Se rastrean las componentes en orden de
+	prioridades definidas por la ListaDeCondiciones. Se ejecuta el procedimiento
+	asociado a aquella componente cuyo reloj local no sea mayor que el tiempo
+	actual y que cumpla las condiciones.</span></p>
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>OP: Los elementos de la
+	ListaDeActivacionesFuturas cuyo tiempo sea igual al valor del Reloj se colocan
+	en la ListaDeActividadesActuales que reordena de acuerdo con una estrategia de
+	prioridad. Si se cumple la condición de activación del bloque actual (el
+	correspondiente a Control(</span><span lang=ES-TRAD style='font-family:Symbol'>a</span><span
+	lang=ES-TRAD>) ) se ejecutan las acciones de dicho componente</span></p>
+
+	<a name="propiedades-estrategias"></a>
+	<h2>Propiedades de las estrategias para la
+	construcción y utilización de modelos.</h2>
+
+	
+
+	<p class=MsoNormal><span lang=ES-TRAD>Las tres estrategias pueden además ser
+	comparadas desde el punto de vista de su efectividad o de su aplicabilidad
+	(grado de generalidad).</span></p>
+
+	
+
+	<p class=MsoNormal><span lang=ES-TRAD>La efectividad depende:</span></p>
+
+	
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>Del <u>esfuerzo y el tiempo requerido</u> para
+	obtener un modelo válido del sistema real</span></p>
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>Los <u>recursos computacionales</u> para
+	realizar simulaciones con este modelo</span></p>
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>La <u>facilidad con que se puedan realizar
+	cambios futuros</u> en el modelo y en el programa (por ejemplo para manejo de
+	alternativas)</span></p>
+
+	
+
+	<p class=MsoNormal><span lang=ES-TRAD>Pero además, sobre la efectividad
+	influyen otros aspectos que no tienen que ver con la estrategia, más bien con
+	el lenguaje (de propósito general u orientado a la simulación), por ejemplo,
+	facilidad de generación de números aleatorios, de recopilación de datos, de
+	preparación de reportes, etc.</span></p>
+
+	
+
+	<table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0
+	 style='border-collapse:collapse;border:none'>
+	 <tr>
+	  <td width=47 valign=top style='width:35.0pt;border:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  
+	  </td>
+	  <td width=253 valign=top style='width:189.5pt;border:solid windowtext 1.0pt;
+	  border-left:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><u><span
+	  lang=ES-TRAD style='font-size:12.0pt'>Ventajas</span></u></p>
+	  </td>
+	  <td width=23 valign=top style='width:17.5pt;border:solid windowtext 1.0pt;
+	  border-left:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  
+	  </td>
+	  <td width=276 valign=top style='width:207.0pt;border:solid windowtext 1.0pt;
+	  border-left:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal align=center style='text-align:center'><u><span
+	  lang=ES-TRAD style='font-size:12.0pt'>Desventajas</span></u></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=47 valign=top style='width:35.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal><span lang=ES-TRAD>OE</span></p>
+	  </td>
+	  <td width=253 valign=top style='width:189.5pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal><span lang=ES-TRAD>Amplia aplicabilidad</span></p>
+	  </td>
+	  <td width=23 valign=top style='width:17.5pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  
+	  </td>
+	  <td width=276 valign=top style='width:207.0pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal><span lang=ES-TRAD>Se requieren habilidades de
+	  programación en un lenguaje de propósito general</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=47 valign=top style='width:35.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  
+	  </td>
+	  <td width=253 valign=top style='width:189.5pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal><span lang=ES-TRAD>Se facilita el uso de bibliotecas
+	  estándar</span></p>
+	  </td>
+	  <td width=23 valign=top style='width:17.5pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  
+	  </td>
+	  <td width=276 valign=top style='width:207.0pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal><span lang=ES-TRAD>Brinda muy pocas facilidades al
+	  modelador para especificar la dinámica de los modelos, todo tiene que ser
+	  implementado.</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=47 valign=top style='width:35.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  
+	  </td>
+	  <td width=253 valign=top style='width:189.5pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal><span lang=ES-TRAD>Buena plataforma para implementar
+	  sistemas de propósito general</span></p>
+	  </td>
+	  <td width=23 valign=top style='width:17.5pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  
+	  </td>
+	  <td width=276 valign=top style='width:207.0pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=47 valign=top style='width:35.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  
+	  </td>
+	  <td width=253 valign=top style='width:189.5pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal><span lang=ES-TRAD>Permite aplicar metodologías estándar
+	  de Ingeniería de Software</span></p>
+	  </td>
+	  <td width=23 valign=top style='width:17.5pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  
+	  </td>
+	  <td width=276 valign=top style='width:207.0pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  
+	  </td>
+	 </tr>
+	 <tr style='page-break-inside:avoid'>
+	  <td width=599 colspan=4 valign=top style='width:449.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal><span lang=ES-TRAD>En resumen la OE es muy eficiente
+	  cuando en problemas concretos las componentes son independientes o cuando se
+	  quieren hacer plataformas generales para uso después por programadores en
+	  propósitos específicos</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=47 valign=top style='width:35.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal><span lang=ES-TRAD>RA</span></p>
+	  </td>
+	  <td width=253 valign=top style='width:189.5pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal><span lang=ES-TRAD>Aplicabilidad destacada cuando hay
+	  muchas dependencias entre componentes</span></p>
+	  </td>
+	  <td width=23 valign=top style='width:17.5pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  
+	  </td>
+	  <td width=276 valign=top style='width:207.0pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal><span lang=ES-TRAD>Aplicabilidad más restringida que OE</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=47 valign=top style='width:35.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  
+	  </td>
+	  <td width=253 valign=top style='width:189.5pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal><span lang=ES-TRAD>El programa general de la simulación es
+	  muy simple</span></p>
+	  </td>
+	  <td width=23 valign=top style='width:17.5pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  
+	  </td>
+	  <td width=276 valign=top style='width:207.0pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal><span lang=ES-TRAD>Requiere todavía de cierta experiencia
+	  de análisis para especificar la dinámica</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=47 valign=top style='width:35.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  
+	  </td>
+	  <td width=253 valign=top style='width:189.5pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal><span lang=ES-TRAD>Es una buena base para implementar
+	  sistemas de simulación de propósito específico</span></p>
+	  </td>
+	  <td width=23 valign=top style='width:17.5pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  
+	  </td>
+	  <td width=276 valign=top style='width:207.0pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal><span lang=ES-TRAD>Puede requerir todavía de cierta
+	  experiencia de programación en un lenguaje de propósito general</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=47 valign=top style='width:35.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  
+	  </td>
+	  <td width=253 valign=top style='width:189.5pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal><span lang=ES-TRAD>Brinda buen soporte de control para
+	  especificar la dinámica del sistema</span></p>
+	  </td>
+	  <td width=23 valign=top style='width:17.5pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  
+	  </td>
+	  <td width=276 valign=top style='width:207.0pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  
+	  </td>
+	 </tr>
+	 <tr style='page-break-inside:avoid'>
+	  <td width=599 colspan=4 valign=top style='width:449.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal><span lang=ES-TRAD>La estrategia RA es muy eficiente en
+	  problemas concretos donde se quiere simplificar una mezcla complicada de
+	  interdependencias</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=47 valign=top style='width:35.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal><span lang=ES-TRAD>OP</span></p>
+	  </td>
+	  <td width=253 valign=top style='width:189.5pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal><span lang=ES-TRAD>Permite una representación del modelo
+	  más cerca de lo real</span></p>
+	  </td>
+	  <td width=23 valign=top style='width:17.5pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  
+	  </td>
+	  <td width=276 valign=top style='width:207.0pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal><span lang=ES-TRAD>Aplicabilidad más dirigida a no
+	  profesionales en computación y por tanto sin la flexibilidad de éstos</span></p>
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=47 valign=top style='width:35.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  
+	  </td>
+	  <td width=253 valign=top style='width:189.5pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal><span lang=ES-TRAD>Se facilita la construcción y
+	  modificación del modelo</span></p>
+	  </td>
+	  <td width=23 valign=top style='width:17.5pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  
+	  </td>
+	  <td width=276 valign=top style='width:207.0pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=47 valign=top style='width:35.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  
+	  </td>
+	  <td width=253 valign=top style='width:189.5pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal><span lang=ES-TRAD>Buena base para implementar en
+	  lenguajes de simulación simples</span></p>
+	  </td>
+	  <td width=23 valign=top style='width:17.5pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  
+	  </td>
+	  <td width=276 valign=top style='width:207.0pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  
+	  </td>
+	 </tr>
+	 <tr>
+	  <td width=47 valign=top style='width:35.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  
+	  </td>
+	  <td width=253 valign=top style='width:189.5pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal><span lang=ES-TRAD>Brinda máximo control de la dinámica
+	  del sistema</span></p>
+	  </td>
+	  <td width=23 valign=top style='width:17.5pt;border-top:none;border-left:none;
+	  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  
+	  </td>
+	  <td width=276 valign=top style='width:207.0pt;border-top:none;border-left:
+	  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+	  padding:0cm 3.5pt 0cm 3.5pt'>
+	  
+	  </td>
+	 </tr>
+	 <tr style='page-break-inside:avoid'>
+	  <td width=599 colspan=4 valign=top style='width:449.0pt;border:solid windowtext 1.0pt;
+	  border-top:none;padding:0cm 3.5pt 0cm 3.5pt'>
+	  <p class=MsoNormal><span lang=ES-TRAD>La estrategia OP es buena cuando se
+	  tiene un lenguaje específico y se quieren repuestas rápidas a problemas
+	  concretos</span></p>
+	  </td>
+	 </tr>
+	</table>
+
+	
+	<a name="conclusiones"></a>	
+	<h2>Conclusiones</h2>
+
+	
+
+	<p class=MsoNormal><span lang=ES-TRAD>Tenemos ahora una nueva estrategia de
+	modelación y simulación, aparentemente una mezcla de las dos conocidas
+	anteriormente, pero con la marcada intención de simplificar la definición e
+	implementación de la dinámica de las componentes en procesos únicos y simples y
+	por tanto fáciles de programar en un lenguaje específico y no tan complicado
+	orientado a la simulación.</span></p>
+
+</div>
+<div class="footer">
+  <p>
+		2013 SESimula (Software Educativo de Simulación)
+  </p>
+  <p>
+     Documentación creada por: <a title="tutor" href="mailto:asalgado@csd.uo.edu.cu">Antonio Salgado Castillo</a>
+  <p>
+	 Diseño de la web por: <a title="autor" href="mailto:alejandro.labrada@csd.uo.edu.cu,aleplusplus@facebook.com">Alejandro Labrada Diaz</a></p>
+ </p>
+ <p>
+    Bajo la licencia GPL <a href="http://www.gnu.org/licenses/fdl.html">GNU
+    Free Documentation License version 1.3</a>
+ </p>
+</div>
+</body>
+</html>

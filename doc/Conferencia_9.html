@@ -1,0 +1,1343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- qalgorithms.qdoc -->
+  <title>SESimula - Sistema, Modelación y Simulación</title>
+  <link rel="stylesheet" type="text/css" href="style/offline.css" />
+</head>
+<body>
+<div class="header" id="qtdocheader">
+  <div class="content">
+    <a href="index.html" class="qtref"><span>Documentación de Simulación</span></a>
+  </div>
+  <div class="breadcrumb toolblock">
+    <ul>
+      <li class="first"><a href="index.html">Home</a></li>
+      <li>Conferencia 9</li>
+    </ul>
+  </div>
+</div>
+<div class="content mainContent">
+    <p class="naviNextPrevious headerNavi">
+          [Anterior: <a href="Conferencia_8.html">Conferencia 8</a> ]
+          [Siguiente: <a href="Conferencia_10.html">Conferencia 10</a> ]
+    </p>
+    <div class="toc">
+        <h3><a name="toc">Contenido</a></h3>
+        <ul>
+        <li class="level1"><a href="#planteamiento-problema">Planteamiento de un problema ejemplo</a></li>
+        <li class="level2"><a href="#estrategia-simulacion">Solución mediante la estrategia clásica de simulación orientada a eventos (OE)</a></li>
+        <li class="level2"><a href="#ideas-oe">Ideas básicas de la estrategia OE con rastreo de actividades RA</a></li>
+        <li class="level2"><a href="#estructura-general">Estructura general del modelo OE con RA</a></li>
+        <li class="level2"><a href="#aplicacion-ejemplo">Aplicación al ejemplo. Programa General</a></li>
+        <li class="level2"><a href="#conclusiones">Conclusiones</a></li>
+        </ul>
+    </div>
+
+    <h1 class="title">Estrategia de Simulación Orientada a Eventos con Rastreo de Actividades</h1>
+
+	<h3>Introducción</h3>
+
+	<p class=MsoNormal>En esta Conferencia trataremos una modificación de la
+	Estrategia de modelación-Simulación Orientada a Eventos a una nueva estrategia
+	que se conoce como Orientación a Eventos con Rastreo de Actividades. El
+	objetivo final es hacer el modelo general más claro y simple de implementar.</p>
+	
+	<a name="planteamiento-problema"></a>
+	<h2>Planteamiento de un problema ejemplo</h2>
+
+
+	<p class=MsoNormal>Para ilustrar la estrategia OE con rastreo de actividades
+	(RA) y su comparación con la estrategia OE clásica comenzaremos planteando un
+	problema que será resuelto por ambas vias. Se trata de una versión simplificada
+	del funcionamiento de un Centro de Cálculo donde hay una única computadora
+	(mainframe) que atiende un número finito de posibles usuarios (digamos, para
+	fijar un número, 99 usuarios). Cada usuario (Usu<sub>i</sub> para i=1,2,...99)
+	está trabajando simultáneamente en un solo programa. Tiene un tiempo de
+	preparación (en su mesa de trabajo) o de edición del programa <span
+	style='font-family:Symbol'>t</span><sub>ed i</sub>, con una distribución
+	conocida; tiene además un tiempo de procesamiento <span style='font-family:
+	Symbol'>t</span><sub>proc i</sub> que es también específico de el. Se supone
+	que cuando un usuario termina una versión de la edición, se incorpora a la cola
+	de la computadora. Esta computadora atiende a los usuarios por disciplina FIFO,
+	de manera que el primero en la cola es el que se supone que está procesando.
+	Cuando termine el procesamiento, el programa pasa directamente a un Almacén.
+	Este Almacén es controlado por un Operador, que cada 6 horas (480) extrae los
+	resultados de los programas y se los entrega a los usuarios correspondientes,
+	quienes inician entonces de nuevo la fase de edición y así se repite el ciclo.</p>
+
+
+	<p class=MsoNormal>El problema puede intentar resumirse en un esquema como el
+	siguiente:</p>
+
+	<p align="center">
+	<img width=582 height=474
+	  src="images/Conf_9/image001.gif"></td>	
+	</p>
+
+	<br clear=ALL>
+
+	<a name="estrategia-simulacion"></a>
+	<h2>Solución mediante la estrategia clásica de simulación orientada a
+	eventos (OE)</h2>
+
+
+	<p class=MsoBodyText><span style='font-weight:normal;font-style:normal'>Un
+	enfoque con OE supone en este caso consideraciones como las siguientes: Serán
+	componentes activas cada uno de los 99 usuarios, la computadora y el operador.</span></p>
+
+	<p class=MsoBodyText style='margin-left:36.0pt;text-indent:-18.0pt'><span
+	style='font-family:Symbol;font-weight:normal;font-style:normal'>·<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span style='font-weight:normal;font-style:normal'>El Usu<sub>i</sub>
+	cambiará internamente de estado cuando termine el estado de edición. Otros
+	cambios de estado de Usu<sub>i</sub> dependen de la computadora y del operador.
+	El cambio de estado de Usu<sub>i </sub>genera a su vez un cambio en la
+	computadora porque incrementa la cola, e incluso la pone activa si estaba
+	ociosa porque la cola estaba vacía.</span></p>
+
+	<p class=MsoBodyText style='margin-left:36.0pt;text-indent:-18.0pt'><span
+	style='font-family:Symbol;font-weight:normal;font-style:normal'>·<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span style='font-weight:normal;font-style:normal'>La computadora
+	cambiara internamente de estado cuando termine un procesamiento (el primero de
+	la cola), por un momento se pondría ociosa y volvería a cambiar de estado
+	(ocupada) si hay algún elemento en la cola. El primer cambio de estado supone
+	una influencia sobre el usuario que estaba procesando y sobre el almacén. En
+	efecto se quita de la cola de la computadora, se pasa al usuario al estado de
+	espera por el operador  y se incrementa su programa al almacén. El segundo
+	cambio de estado (inicio de un procesamiento) cambia el estado de otro usuario
+	aquel que pasa a la posición de ser procesado.</span></p>
+
+	<p class=MsoBodyText style='margin-left:36.0pt;text-indent:-18.0pt'><span
+	style='font-family:Symbol;font-weight:normal;font-style:normal'>·<span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span style='font-weight:normal;font-style:normal'>El operador
+	cambiará internamente de estado, libre a ocupado, cada 480 minutos. En ese
+	momento vacía el almacén y entrega los programas a los usuarios, definiendo por
+	tanto influencias sobre este. Inmediatamente pasa al estado libre para esperar
+	de nuevo 480 minutos.</span></p>
+
+
+	<p class=MsoNormal>En resumen nuestro modelo OE considerará como componentes
+	activas los usuarios, la computadora y el operador y como componentes pasivas
+	el almacén. Consideraremos que un Usuario se activa cuando termina un proceso
+	de edición (los otros cambios de estado son derivados de la activación de la
+	computadora o el Operador). Consideramos que la Computadora se activa cuando
+	termina el procesamiento del primero que está en la cola y que el  Operador se
+	activa cuando se decide a abrir el Almacén.</p>
+
+
+	<ol style='margin-top:0cm' start=1 type=1>
+	 <li class=MsoNormal><b>Definición de componentes</b></li>
+	</ol>
+
+
+	<p class=MsoNormal style='margin-left:18.0pt'>ComponentesActivas={Usu1, Usu2,
+	...,Usu99,Computadora, Operador}</p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'>ComponentesPasivas={Almacen}</p>
+
+
+	<ol style='margin-top:0cm' start=2 type=1>
+	 <li class=MsoNormal><b>y 3.</b> <b>Definición de estados para todas las
+		 componentes y de tiempo remanente para las componentes activas</b></li>
+	</ol>
+
+
+	<p class=MsoNormal style='margin-left:18.0pt'><i>Para cada usuario:</i></p>
+
+
+	<p class=MsoNormal style='margin-left:18.0pt'><sub><img width=525 height=152
+	src="images/Conf_9/image002.gif"></sub></p>
+
+
+	<p class=MsoNormal><span lang=EN-US><sub><img width=600 height=27
+	src="images/Conf_9/image003.gif"></sub></span></p>
+
+	<p class=MsoNormal><span lang=EN-US><sub><img width=477 height=53
+	src="images/Conf_9/image004.gif"></sub></span></p>
+
+
+	<p class=MsoNormal>En la expresión anterior, <span style='font-family:Symbol'>D</span>t
+	representa el intervalo de tiempo que transcurre en el reloj de la simulación
+	desde que el usuario i-ésimo pasó al estado de edición y hasta el momento
+	actual (mientras esté editando). Deberia llamarse más exactamente  <span
+	style='font-family:Symbol'>D</span>t<sub>ed i</sub>   pues así  se precisa
+	teóricamente el tiempo remanente durante toda la edición pero en la práctica
+	este tiempo remanente solo se fijará en el momento en que el usuario inicia la
+	edición (<span style='font-family:Symbol'>s</span><sub>Usu i</sub> =<span
+	style='font-family:Symbol'>t</span><sub>edi i</sub>)   y no tendrá que ser
+	actualizado hasta que termine la edición porque en la lista de eventos quedará
+	registrado y actualizado el momento en que termina la edición y este momento no
+	se afecta por ningún otro evento. </p>
+
+
+	<p class=MsoNormal><i>Para la computadora:</i></p>
+
+
+	<p class=MsoNormal><sub><img width=12 height=23
+	src="images/Conf_9/image005.gif"></sub><sub><img
+	width=401 height=29
+	src="images/Conf_9/image006.gif"></sub></p>
+
+
+	<p class=MsoNormal>donde</p>
+
+	<p class=MsoNormal><sub><img width=679 height=107
+	src="images/Conf_9/image007.gif"></sub></p>
+
+	<p class=MsoNormal>y</p>
+
+
+	<p class=MsoNormal><sub><img width=609 height=77
+	src="images/Conf_9/image008.gif"></sub></p>
+
+	<p class=MsoNormal>Aquí como antes <span style='font-family:Symbol'>D</span>t
+	debió ser precisado como <span style='font-family:Symbol'>D</span>t<sub>proc k
+	1 </sub> pues se refiere al tiempo transcurrido desde que <i>Usu<sub>k 1</sub> </i>comenzó
+	a procesar y hasta que terminó, pero en la práctica este tiempo remanente solo
+	se actualiza en el momento en que se inicia el procesamiento y se incluye en la
+	lista de eventos el momento en que lo terminará.</p>
+
+
+	<p class=MsoNormal><i>Para el operador:</i></p>
+
+
+	<p class=MsoNormal><sub><img width=191 height=48
+	src="images/Conf_9/image009.gif"></sub></p>
+
+
+	<p class=MsoNormal><sub><img width=517 height=56
+	src="images/Conf_9/image010.gif"></sub></p>
+
+
+	<p class=MsoNormal>Vale aquí también la aclaración sobre el <span
+	style='font-family:Symbol'>D</span>t (realmente <span style='font-family:Symbol'>D</span>t<sub>Operador</sub>)
+	como en el caso de las otras componentes activas.</p>
+
+
+	<p class=MsoNormal>Por último, para la <i>Componente Pasiva Almacén</i>, su
+	estado se define simplemente como un listado de usuarios (programas)</p>
+
+
+	<p class=MsoNormal><sub><img width=160 height=31
+	src="images/Conf_9/image011.gif"></sub></p>
+
+
+	<ol style='margin-top:0cm' start=4 type=1>
+	 <li class=MsoNormal><b>Precisamos ahora las Influencias de cada componente
+		 activa. </b></li>
+	</ol>
+
+
+
+	<p class=MsoBodyTextIndent>Recuédese que un Usuario se activa cuando termina
+	una edición. Entonces las influencias de cada usuario son el mismo y la
+	computadora (porque incrementa la cola). La computadora se activa cuando
+	termina un procesamiento. Por tanto sus influencias son ella misma, los
+	usuarios (el que pasa a esperar que su programa sale del almacén y los que se
+	mueven en la cola) y el propio almacén. Por su parte una activación del
+	operador influye sobre el mismo, sobre el almacén (que vacía) y sobre los
+	usuarios, que eventualmente reciben su programa. Entonces:</p>
+
+
+	<p class=MsoNormal><span style='font-family:Symbol'>&quot;</span>i=1,2,...,99 </p>
+
+
+	<p class=MsoNormal>Influencias(<b>Usu</b><sub>i</sub>)={ (<b>Usu</b><sub>i</sub>,
+	<b>e</b><sub>Usu i</sub>,<b><span style='font-family:Symbol'>s</span></b><sub>Usu
+	i</sub>), (<b>Computadora, e</b><sub>Computadora</sub>,<b> </b><b><span
+	style='font-family:Symbol'>s</span></b><sub>Computadora</sub>) }</p>
+
+
+	<p class=MsoNormal>Influencias(<b>Computadora</b>)={ (<b>Computadora, e</b><sub>Computadora</sub>,<b>
+	</b><b><span style='font-family:Symbol'>s</span></b><sub>Computadora</sub>),</p>
+
+	<p class=MsoNormal>                                   (<b>Usu</b><sub>1</sub>, <b>e</b><sub>Usu
+	1</sub>,<b><span style='font-family:Symbol'>s</span></b><sub>Usu 1</sub>), (<b>Usu</b><sub>2</sub>,
+	<b>e</b><sub>Usu 2</sub>,<b><span style='font-family:Symbol'>s</span></b><sub>Usu
+	2</sub>), ..., (<b>Usu</b><sub>99</sub>, <b>e</b><sub>Usu 99</sub>,<b><span
+	style='font-family:Symbol'>s</span></b><sub>Usu 99</sub>),</p>
+
+	<p class=MsoNormal>                                   (<b>Almacen, e</b><sub>Almacen</sub>,<b>
+	</b><b><span style='font-family:Symbol'>s</span></b><sub>Almacen</sub>)}</p>
+
+
+	<p class=MsoNormal>Influencias(<b>Operador</b>) = {(<b>Operador</b>,<b>e</b><sub>Operado<b>r</b></sub><b>,
+	</b><b><span style='font-family:Symbol'>s</span></b><sub>Operador</sub>), (<b>Almacen,
+	e</b><sub>Almacen</sub>,<b> </b><b><span style='font-family:Symbol'>s</span></b><sub>Almacen</sub>),
+	</p>
+
+	<p class=MsoNormal style='margin-left:70.8pt;text-indent:35.4pt'>(<b>Usu</b><sub>1</sub>,
+	<b>e</b><sub>Usu 1</sub>,<b><span style='font-family:Symbol'>s</span></b><sub>Usu
+	1</sub>), (<b>Usu</b><sub>2</sub>, <b>e</b><sub>Usu 2</sub>,<b><span
+	style='font-family:Symbol'>s</span></b><sub>Usu 2</sub>), ..., (<b>Usu</b><sub>99</sub>,
+	<b>e</b><sub>Usu 99</sub>,<b><span style='font-family:Symbol'>s</span></b><sub>Usu
+	99</sub>)}</p>
+
+
+
+	<ol style='margin-top:0cm' start=5 type=1>
+	 <li class=MsoNormal><b>Ahora precisamos las reglas de interacción que definen
+		 las transiciones durante los eventos principales: </b></li>
+	</ol>
+
+
+	<p class=MsoNormal style='margin-left:18.0pt'>La terminación del trabajo de
+	edición de un Usuario, la terminación del tiempo de procesamiento en la
+	computadora y la extracción de trabajos del Almacén por el operador</p>
+
+
+	<p class=MsoNormal style='text-indent:35.4pt'><span style='font-family:Symbol'>d</span><sub>Usu
+	i</sub>: Influencias(<b>Usu</b><sub>i</sub>) <span style='font-family:Symbol'>¾¾¾¾</span>&gt;
+	Influencias(<b>Usu</b><sub>i</sub>)</p>
+
+
+	<p class=MsoNormal style='text-indent:35.4pt'>Mediante esta regla </p>
+
+
+	<p class=MsoNormal style='margin-left:35.4pt;text-indent:35.4pt'>(<b>Usu</b><sub>i</sub>,
+	<b>e</b><sub>Usu i</sub>,<b><span style='font-family:Symbol'>s</span></b><sub>Usu
+	i</sub>) , (<b>Computadora, e</b><sub>Computadora</sub>,<b> </b><b><span
+	style='font-family:Symbol'>s</span></b><sub>Computadora</sub>)</p>
+
+
+	<p class=MsoNormal style='text-indent:35.4pt'>se transforma en  </p>
+
+
+	<p class=MsoNormal style='margin-left:35.4pt;text-indent:35.4pt'>(<b>Usu</b><sub>i</sub>,
+	<b>e<sup>*</sup></b><sub>Usu i</sub>,<b><span style='font-family:Symbol'>s</span><sup>*</sup></b><sub>Usu
+	i</sub>) ,  (<b>Computadora, e*</b><sub>Computadora</sub>,<b> </b><b><span
+	style='font-family:Symbol'>s</span><sup>*</sup> </b><sub>Computadora</sub>)</p>
+
+
+
+	<p class=MsoNormal>            donde </p>
+
+
+
+	<p class=MsoNormal><sub><img width=388 height=77
+	src="images/Conf_9/image012.gif"></sub></p>
+
+
+	<p class=MsoNormal><sub><img width=376 height=53
+	src="images/Conf_9/image013.gif"></sub>   </p>
+
+
+	<p class=MsoNormal>                        <sub><img width=560 height=56
+	src="images/Conf_9/image014.gif"></sub> </p>
+
+
+	<p class=MsoNormal>            <sub><img width=571 height=56
+	src="images/Conf_9/image015.gif"></sub></p>
+
+
+
+	<p class=MsoNormal><sub><img width=287 height=59
+	src="images/Conf_9/image016.gif"></sub></p>
+
+
+
+	<p class=MsoNormal>De manera análoga, cuando se activa la computadora se
+	producen las transiciones determinadas por la función</p>
+
+
+	<p class=MsoNormal><span style='font-family:Symbol'>d</span><sub>Computadora</sub>:
+	Influencias(<b>Computadora</b>) <span style='font-family:Symbol'>¾¾¾¾</span>&gt;
+	Influencias(<b>Computadora</b>)</p>
+
+
+	<p class=MsoNormal>la cual aplica</p>
+
+
+	<p class=MsoNormal style='text-indent:35.4pt'>(<b>Computadora, e</b><sub>Computadora</sub>,<b>
+	</b><b><span style='font-family:Symbol'>s</span></b><sub>Computadora</sub>),</p>
+
+	<p class=MsoNormal style='text-indent:35.4pt'>(<b>Usu</b><sub>1</sub>, <b>e</b><sub>Usu
+	1</sub>,<b><span style='font-family:Symbol'>s</span></b><sub>Usu 1</sub>), (<b>Usu</b><sub>2</sub>,
+	<b>e</b><sub>Usu 2</sub>,<b><span style='font-family:Symbol'>s</span></b><sub>Usu
+	2</sub>), ..., (<b>Usu</b><sub>99</sub>, <b>e</b><sub>Usu 99</sub>,<b><span
+	style='font-family:Symbol'>s</span></b><sub>Usu 99</sub>),</p>
+
+	<p class=MsoNormal style='text-indent:35.4pt'>(<b>Almacen, e</b><sub>Almacen</sub>,<b>
+	</b><b><span style='font-family:Symbol'>s</span></b><sub>Almacen</sub>)</p>
+
+
+	<p class=MsoNormal>en</p>
+
+
+	<p class=MsoNormal style='text-indent:35.4pt'>(<b>Computadora, e*</b><sub>Computadora</sub>,<b>
+	</b><b><span style='font-family:Symbol'>s</span>*</b><sub>Computadora</sub>),</p>
+
+	<p class=MsoNormal>            (<b>Usu</b><sub>1</sub>, <b>e*</b><sub>Usu 1</sub>,<b><span
+	style='font-family:Symbol'>s</span>*</b><sub>Usu 1</sub>), (<b>Usu</b><sub>2</sub>,
+	<b>e*</b><sub>Usu 2</sub>,<b><span style='font-family:Symbol'>s</span>*</b><sub>Usu
+	2</sub>), ..., (<b>Usu</b><sub>99</sub>, <b>e*</b><sub>Usu 99</sub>,<b><span
+	style='font-family:Symbol'>s</span>*</b><sub>Usu 99</sub>),</p>
+
+	<p class=MsoNormal>            (<b>Almacen, e*</b><sub>Almacen</sub>,<b> </b><b><span
+	style='font-family:Symbol'>s</span>*</b><sub>Almacen</sub>)</p>
+
+
+	<p class=MsoNormal><sub><img width=412 height=115
+	src="images/Conf_9/image017.gif"></sub> </p>
+
+
+	<p class=MsoNormal>            <sub><img width=485 height=131
+	src="images/Conf_9/image018.gif"></sub></p>
+
+
+
+	<p class=MsoNormal><sub><img width=451 height=83
+	src="images/Conf_9/image019.gif"></sub></p>
+
+
+	<p class=MsoNormal>Para  todos los usuarios (i=1,2,...99)</p>
+
+
+	<p class=MsoNormal><sub><img width=571 height=77
+	src="images/Conf_9/image020.gif"></sub></p>
+
+
+	<p class=MsoNormal><sub><img width=188 height=29
+	src="images/Conf_9/image021.gif"></sub>   </p>
+
+
+	<p class=MsoNormal>Y sobre el Almacén:</p>
+
+
+	<p class=MsoNormal><sub><img width=316 height=53
+	src="images/Conf_9/image022.gif"></sub></p>
+
+
+	<p class=MsoNormal>Por último definimos las transiciones que se ejecutan cuando
+	se activa el operador</p>
+
+
+	<p class=MsoNormal style='text-indent:35.4pt'><span style='font-family:Symbol'>d</span><sub>Operador</sub>:
+	Influencias(<b>Operador</b>) <span style='font-family:Symbol'>¾¾¾¾</span>&gt;
+	Influencias(<b>Operador</b>)</p>
+
+
+
+	<p class=MsoNormal>que aplica</p>
+
+
+	<p class=MsoNormal style='text-indent:35.4pt'>(<b>Operador</b>,<b>e</b><sub>Operado<b>r</b></sub><b>,
+	</b><b><span style='font-family:Symbol'>s</span></b><sub>Operador</sub>), </p>
+
+	<p class=MsoNormal style='text-indent:35.4pt'>(<b>Almacen, e</b><sub>Almacen</sub>,<b>
+	</b><b><span style='font-family:Symbol'>s</span></b><sub>Almacen</sub>), </p>
+
+	<p class=MsoNormal style='text-indent:35.4pt'>(<b>Usu</b><sub>1</sub>, <b>e</b><sub>Usu
+	1</sub>,<b><span style='font-family:Symbol'>s</span></b><sub>Usu 1</sub>), (<b>Usu</b><sub>2</sub>,
+	<b>e</b><sub>Usu 2</sub>,<b><span style='font-family:Symbol'>s</span></b><sub>Usu
+	2</sub>), ..., (<b>Usu</b><sub>99</sub>, <b>e</b><sub>Usu 99</sub>,<b><span
+	style='font-family:Symbol'>s</span></b><sub>Usu 99</sub>)</p>
+
+
+	<p class=MsoNormal>en</p>
+
+
+	<p class=MsoNormal style='text-indent:35.4pt'>(<b>Operador</b>,<b>e*</b><sub>Operado<b>r</b></sub><b>,
+	</b><b><span style='font-family:Symbol'>s</span>*</b><sub>Operador</sub>), </p>
+
+	<p class=MsoNormal style='text-indent:35.4pt'>(<b>Almacen, e*</b><sub>Almacen</sub>,<b>
+	</b><b><span style='font-family:Symbol'>s</span>*</b><sub>Almacen</sub>), </p>
+
+	<p class=MsoNormal style='text-indent:35.4pt'>(<b>Usu</b><sub>1</sub>, <b>e*</b><sub>Usu
+	1</sub>,<b><span style='font-family:Symbol'>s</span>*</b><sub>Usu 1</sub>), (<b>Usu</b><sub>2</sub>,
+	<b>e*</b><sub>Usu 2</sub>,<b><span style='font-family:Symbol'>s</span>*</b><sub>Usu
+	2</sub>), ..., (<b>Usu</b><sub>99</sub>, <b>e*</b><sub>Usu 99</sub>,<b><span
+	style='font-family:Symbol'>s</span>*</b><sub>Usu 99</sub>)</p>
+
+
+	<p class=MsoNormal><sub><img width=312 height=56
+	src="images/Conf_9/image023.gif"></sub></p>
+
+
+	<p class=MsoNormal><sub><img width=320 height=56
+	src="images/Conf_9/image024.gif"></sub></p>
+
+
+	<p class=MsoNormal><sub><img width=212 height=56
+	src="images/Conf_9/image025.gif"></sub></p>
+
+
+	<p class=MsoNormal><sub><img width=549 height=53
+	src="images/Conf_9/image026.gif"></sub></p>
+
+
+	<p class=MsoNormal><sub><img width=324 height=53
+	src="images/Conf_9/image027.gif"></sub></p>
+
+	<a name="ideas-oe"></a>
+	<h2>Ideas básicas de la estrategia OE con rastreo de actividades RA</h2>
+
+
+	<p class=MsoNormal>La solución del problema anterior puede ser mejorada desde
+	el punto de vista de claridad y de implementación computacional con una
+	modificación de la estrategia como rastreo de actividades. La idea es tratar de
+	simplificar las Influencias de las componentes activas y las funciones de
+	transición, en particular el cambio de los tiempos remanentes mediante el
+	concepto rastreo de actividades.</p>
+
+
+	<p class=MsoNormal>Supongamos que separamos la “Cola” como componente de la
+	computadora. En este caso cada usuario puede “rastrear” como se mueve su programa
+	en la cola y cuando termina de ser procesado, puede gobernar entonces los
+	cambios de estado “1 al 2” y “2 al 3” y de hecho la computadora puede dejar de
+	ser componente activa. Supongamos también que la acción del operador cada 8
+	horas es abrir la reja del almacén y cada usuario busca su programa. Entonces
+	le bastaría “rastrear” la reja, en el sentido que esté abierta. Por su parte el
+	operador también “rastrea” el almacén, tan pronto se vacíe el almacén, cierra
+	la reja y se pone a esperar.</p>
+
+	<p class=MsoNormal>Esta forma de razonamiento en la que constantemente se
+	verifican condiciones para realizar un cambio de estado se denomina <b>actividad.
+	</b>Son actividades en el ejemplo las que realiza el Usuario i cuando pasa su
+	programa a la  posición 1, o cuando una vez procesado lo pasa al almacén, o lo
+	recoge de este. Formalmente, una <b>actividad </b>es un cambio de estado que
+	requiere ciertas condiciones. El cambio de estado no se ejecuta cuando el
+	tiempo remanente anterior se hace cero, sino cuando además de eso se cumplen
+	las condiciones.</p>
+
+
+	<p class=MsoNormal>Para lograr esto, permitimos en esta estrategia que los
+	tiempos remanentes sigan decreciendo por debajo de cero en la medida que avance
+	el reloj. Esto debe ser interpretado como que una vez que <span
+	style='font-family:Symbol'>s</span><sub><span style='font-family:Symbol'>a</span>
+	</sub><span style='font-family:Symbol'>£</span> 0, la componente activa <span
+	style='font-family:Symbol'>a</span> está internamente lista para cambiar de
+	estado, por ejemplo cuando Usu<sub>i</sub> esta en st = 1 (en cola), que está
+	esperando. El cambio al estado 2 no depende de él internamente, sino de que la
+	Cola haya avanzado hasta llevarlo a la posición 1. Las funciones de condición
+	se expresan como funciones boolenas y llegan a formar parte de las reglas de
+	transición. Tales funciones de condición se expresan sobre ciertas componentes
+	activas o pasivas que son las que pueden influir sobre <span style='font-family:
+	Symbol'>a</span>, aparece así  el concepto de <i>Influyentes(</i><i><span
+	style='font-family:Symbol'>a</span>)</i> además de <i>Influencias(</i><i><span
+	style='font-family:Symbol'>a</span>).</i></p>
+
+
+	<p class=MsoNormal>En definitiva en cada momento se analizan todas las
+	componentes activas con tiempo remanente <span style='font-family:Symbol'>£</span>
+	0 y para cada una de ellas se precisan si se cumplen las condiciones en función
+	de las influyentes. Si se cumplen, se hace el cambio de estado, en caso
+	contrario todo se mantiene excepto que se reduce el tiempo remanente en una
+	cantidad igual al incremento del reloj.</p>
+
+	<a name="estructura-general"></a>
+	<h2>Estructura general del modelo OE con RA</h2>
+
+
+	<ol style='margin-top:0cm' start=1 type=1>
+	 <li class=MsoNormal>Separemos como antes, las Componentes={<span
+		 style='font-family:Symbol'>a</span><sub>1</sub>, <span style='font-family:
+		 Symbol'>a</span><sub>2</sub>,..., <span style='font-family:Symbol'>a</span><sub>n</sub>} 
+		 en dos subconjuntos disjuntos uno que contiene las “a” primeras
+		 componentes y que son las ComponentesActivas y otro con las “n-a”
+		 restantes componentes que son las ComponentesPasivas </li>
+	</ol>
+
+
+	<ol style='margin-top:0cm' start=2 type=1>
+	 <li class=MsoNormal><span style='font-family:Symbol'>&quot;</span> 
+		 i=1,2,...,n definimos <b>e</b><sub><span style='font-family:Symbol'>a</span>
+		 i</sub> = Estado(<span style='font-family:Symbol'>a</span><sub>i</sub>)</li>
+	</ol>
+
+
+	<ol style='margin-top:0cm' start=3 type=1>
+	 <li class=MsoNormal><span style='font-family:Symbol'>&quot;</span> 
+		 i=1,2,...,a definimos <b><span style='font-family:Symbol'>s</span></b><sub><span
+		 style='font-family:Symbol'>a</span> i</sub> = TiempoRemanente(<span
+		 style='font-family:Symbol'>a</span><sub>i</sub>), considerado como el
+		 tiempo necesario para que la componente activa <span style='font-family:
+		 Symbol'>a</span><sub>i</sub> esté lista para cambiar de estado, cuando se
+		 den las condiciones. Nota importante: ahora <b><span style='font-family:
+		 Symbol'>s</span></b><sub><span style='font-family:Symbol'>a</span> i</sub>
+		 es un número real, que puede ser negativo</li>
+	</ol>
+
+
+	<ol style='margin-top:0cm' start=4 type=1>
+	 <li class=MsoNormal><span style='font-family:Symbol'>&quot;</span> 
+		 i=1,2,...,a    definimos </li>
+	</ol>
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:17.4pt'>Influencias(<span
+	style='font-family:Symbol'>a</span><sub>i</sub>)={ (<span style='font-family:
+	Symbol'>b</span><sub>1</sub>,<b>e</b><sub><span style='font-family:Symbol'>b</span>
+	1</sub>,<b> </b><b><span style='font-family:Symbol'>s</span></b><sub><span
+	style='font-family:Symbol'>b</span> 1</sub>), (<span style='font-family:Symbol'>b</span><sub>2</sub>,<b>e</b><sub><span
+	style='font-family:Symbol'>b</span> 2</sub>,<b> </b><b><span style='font-family:
+	Symbol'>s</span></b><sub><span style='font-family:Symbol'>b</span> 2</sub>),
+	..., (<span style='font-family:Symbol'>b</span><sub>k</sub>,<b>e</b><sub><span
+	style='font-family:Symbol'>b</span> k</sub>,<b> </b><b><span style='font-family:
+	Symbol'>s</span></b><sub><span style='font-family:Symbol'>b</span> k</sub>), </p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:17.4pt'>                            
+	(<span style='font-family:Symbol'>b</span><sub>k+1</sub>,<b>e</b><sub><span
+	style='font-family:Symbol'>b</span> k+1</sub>), (<span style='font-family:Symbol'>b</span><sub>k+2</sub>,<b>e</b><sub><span
+	style='font-family:Symbol'>b</span> k+2</sub>), ..., (<span style='font-family:
+	Symbol'>b</span><sub>m</sub>,<b>e</b><sub><span style='font-family:Symbol'>b</span>
+	m</sub>)<b> </b>}</p>
+
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-indent:-.6pt'>como el
+	conjunto de componentes (activas o pasivas) que pueden cambiar de estado como
+	consecuencia de una activación de <span style='font-family:Symbol'>a</span><sub>i</sub>
+	Recordar que (<span style='font-family:Symbol'>a</span><sub>i</sub>,<b> e</b><sub><span
+	style='font-family:Symbol'>a</span> i</sub>,<b> </b><b><span style='font-family:
+	Symbol'>s</span></b><sub><span style='font-family:Symbol'>a</span> i</sub>)
+	pertenece a Influencias(<span style='font-family:Symbol'>a</span><sub>i</sub>).</p>
+
+
+	<ol style='margin-top:0cm' start=5 type=1>
+	 <li class=MsoNormal><span style='font-family:Symbol'>&quot;</span> 
+		 i=1,2,...,a    definimos ahora</li>
+	</ol>
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:17.4pt'>Influyentes(<span
+	style='font-family:Symbol'>a</span><sub>i</sub>)={ (<span style='font-family:
+	Symbol'>g</span><sub>1</sub>,<b>e</b><sub><span style='font-family:Symbol'>g</span>
+	1</sub>,<b> </b><b><span style='font-family:Symbol'>s</span></b><sub><span
+	style='font-family:Symbol'>g</span> 1</sub>), (<span style='font-family:Symbol'>g</span><sub>2</sub>,<b>e</b><sub><span
+	style='font-family:Symbol'>g</span> 2</sub>,<b> </b><b><span style='font-family:
+	Symbol'>s</span></b><sub><span style='font-family:Symbol'>g</span> 2</sub>),
+	..., (<span style='font-family:Symbol'>g</span><sub>l</sub>,<b>e</b><sub><span
+	style='font-family:Symbol'>g</span> l</sub>,<b> </b><b><span style='font-family:
+	Symbol'>s</span></b><sub><span style='font-family:Symbol'>g</span> l</sub>), </p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:17.4pt'>                            
+	(<span style='font-family:Symbol'>g</span><sub>l+1</sub>,<b>e</b><sub><span
+	style='font-family:Symbol'>g</span> k+1</sub>), (<span style='font-family:Symbol'>g</span><sub>k+2</sub>,<b>e</b><sub><span
+	style='font-family:Symbol'>g</span> k+2</sub>), ..., (<span style='font-family:
+	Symbol'>g</span><sub>p</sub>,<b>e</b><sub><span style='font-family:Symbol'>g</span>
+	p</sub>)<b> </b>}</p>
+
+
+	<p class=MsoNormal style='margin-left:36.0pt;text-indent:-.6pt'>como el
+	conjunto de componentes (activas o pasivas) que son capaces de provocar un
+	cambio en la componente <span style='font-family:Symbol'>a</span><sub>i</sub>
+	porque intervienen en las condiciones para que <span style='font-family:Symbol'>a</span><sub>i</sub>
+	cambie de estado. También se tiene que (<span style='font-family:Symbol'>a</span><sub>i</sub>,<b>
+	e</b><sub><span style='font-family:Symbol'>a</span> i</sub>,<b> </b><b><span
+	style='font-family:Symbol'>s</span></b><sub><span style='font-family:Symbol'>a</span>
+	i</sub>) pertenece a Influyentes(<span style='font-family:Symbol'>a</span><sub>i</sub>).</p>
+
+
+	<ol style='margin-top:0cm' start=6 type=1>
+	 <li class=MsoNormal>Existirá también una función Selecciona, implementada en
+		 la forma que se dirá posteriormente y que determinará ahora no un evento,
+		 sino una componente para la cual se verificará si se cumplen las
+		 condiciones de activación.</li>
+	</ol>
+
+
+	<ol style='margin-top:0cm' start=7 type=1>
+	 <li class=MsoNormal>Las funciones de transición se transforman desde la OE
+		 clásica a esta estrategia con RA así:</li>
+	</ol>
+
+
+	<p class=MsoNormal style='margin-left:35.4pt'> <span style='font-family:Symbol'>d</span><sub><span
+	style='font-family:Symbol'>a</span></sub><sub><span lang=EN-US> i </span></sub><span
+	lang=EN-US>: Influencias(</span><span style='font-family:Symbol'>a</span><sub><span
+	lang=EN-US>i</span></sub><span lang=EN-US>) </span><span lang=EN-US
+	style='font-family:Symbol'>C</span><span lang=EN-US> </span>Influyentes(<span
+	style='font-family:Symbol'>a</span><sub>i</sub>) <span style='font-family:Symbol'>¾¾</span>&gt;<span
+	lang=EN-US> Influencias(</span><span style='font-family:Symbol'>a</span><sub><span
+	lang=EN-US>i</span></sub><span lang=EN-US>)</span></p>
+
+	<p class=MsoNormal style='margin-left:35.4pt'><span lang=EN-US>&nbsp;</span></p>
+
+	<p class=MsoNormal style='margin-left:35.4pt'><span lang=EN-US>para i=1,2,…,a</span></p>
+
+	<p class=MsoNormal style='margin-left:35.4pt'><span lang=EN-US>&nbsp;</span></p>
+
+	<p class=MsoNormal><span style='font-family:Symbol'>d</span><sub><span
+	style='font-family:Symbol'>a</span> I</sub> ( (<span style='font-family:Symbol'>b</span><sub>1</sub>,<b>e</b><sub><span
+	style='font-family:Symbol'>b</span> 1</sub>,<b> </b><b><span style='font-family:
+	Symbol'>s</span></b><sub><span style='font-family:Symbol'>b</span> 1</sub>), (<span
+	style='font-family:Symbol'>b</span><sub>2</sub>,<b>e</b><sub><span
+	style='font-family:Symbol'>b</span> 2</sub>,<b> </b><b><span style='font-family:
+	Symbol'>s</span></b><sub><span style='font-family:Symbol'>b</span> 2</sub>),
+	..., (<span style='font-family:Symbol'>b</span><sub>k</sub>,<b>e</b><sub><span
+	style='font-family:Symbol'>b</span> k</sub>,<b> </b><b><span style='font-family:
+	Symbol'>s</span></b><sub><span style='font-family:Symbol'>b</span> k</sub>), (<span
+	style='font-family:Symbol'>b</span><sub>k+1</sub>,<b>e</b><sub><span
+	style='font-family:Symbol'>b</span> k+1</sub>), (<span style='font-family:Symbol'>b</span><sub>k+2</sub>,<b>e</b><sub><span
+	style='font-family:Symbol'>b</span> k+2</sub>), ..., (<span style='font-family:
+	Symbol'>b</span><sub>m</sub>,<b>e</b><sub><span style='font-family:Symbol'>b</span>
+	m</sub>),</p>
+
+	<p class=MsoNormal>        (<span style='font-family:Symbol'>g</span><sub>1</sub>,<b>e</b><sub><span
+	style='font-family:Symbol'>g</span> 1</sub>,<b> </b><b><span style='font-family:
+	Symbol'>s</span></b><sub><span style='font-family:Symbol'>g</span> 1</sub>), (<span
+	style='font-family:Symbol'>g</span><sub>2</sub>,<b>e</b><sub><span
+	style='font-family:Symbol'>g</span> 2</sub>,<b> </b><b><span style='font-family:
+	Symbol'>s</span></b><sub><span style='font-family:Symbol'>g</span> 2</sub>),
+	..., (<span style='font-family:Symbol'>g</span><sub>l</sub>,<b>e</b><sub><span
+	style='font-family:Symbol'>g</span> l</sub>,<b> </b><b><span style='font-family:
+	Symbol'>s</span></b><sub><span style='font-family:Symbol'>g</span> l</sub>), (<span
+	style='font-family:Symbol'>g</span><sub>l+1</sub>,<b>e</b><sub><span
+	style='font-family:Symbol'>g</span> k+1</sub>), (<span style='font-family:Symbol'>g</span><sub>k+2</sub>,<b>e</b><sub><span
+	style='font-family:Symbol'>g</span> k+2</sub>), ..., (<span style='font-family:
+	Symbol'>g</span><sub>p</sub>,<b>e</b><sub><span style='font-family:Symbol'>g</span>
+	p</sub>) )</p>
+
+
+	<p class=MsoNormal>= (<span style='font-family:Symbol'>b</span><sub>1</sub>,<b>e*</b><sub><span
+	style='font-family:Symbol'>b</span> 1</sub>,<b> </b><b><span style='font-family:
+	Symbol'>s</span>*</b><sub><span style='font-family:Symbol'>b</span> 1</sub>), (<span
+	style='font-family:Symbol'>b</span><sub>2</sub>,<b>e*</b><sub><span
+	style='font-family:Symbol'>b</span> 2</sub>,<b> </b><b><span style='font-family:
+	Symbol'>s</span>*</b><sub><span style='font-family:Symbol'>b</span> 2</sub>),
+	..., (<span style='font-family:Symbol'>b</span><sub>k</sub>,<b>e*</b><sub><span
+	style='font-family:Symbol'>b</span> k</sub>,<b> </b><b><span style='font-family:
+	Symbol'>s</span>*</b><sub><span style='font-family:Symbol'>b</span> k</sub>), </p>
+
+	<p class=MsoNormal>    (<span style='font-family:Symbol'>b</span><sub>k+1</sub>,<b>e*</b><sub><span
+	style='font-family:Symbol'>b</span> k+1</sub>), (<span style='font-family:Symbol'>b</span><sub>k+2</sub>,<b>e*</b><sub><span
+	style='font-family:Symbol'>b</span> k+2</sub>), ..., (<span style='font-family:
+	Symbol'>b</span><sub>m</sub>,<b>e*</b><sub><span style='font-family:Symbol'>b</span>
+	m</sub>)</p>
+
+
+	<ol style='margin-top:0cm' start=8 type=1>
+	 <li class=MsoNormal>Los nuevos valores </li>
+	</ol>
+
+
+	<p class=MsoNormal style='text-indent:35.4pt'><b>e*</b><sub><span
+	style='font-family:Symbol'>b</span> 1</sub>,<b> </b><b><span style='font-family:
+	Symbol'>s</span>*</b><sub><span style='font-family:Symbol'>b</span> 1</sub> ,<b>e*</b><sub><span
+	style='font-family:Symbol'>b</span> 2</sub>,<b> </b><b><span style='font-family:
+	Symbol'>s</span>*</b><sub><span style='font-family:Symbol'>b</span> 2</sub>,
+	..., <b>e*</b><sub><span style='font-family:Symbol'>b</span> k</sub>,<b> </b><b><span
+	style='font-family:Symbol'>s</span>*</b><sub><span style='font-family:Symbol'>b</span>
+	k</sub>, <b>e*</b><sub><span style='font-family:Symbol'>b</span> k+1</sub>, <b>e*</b><sub><span
+	style='font-family:Symbol'>b</span> k+2</sub>, ...,<b>e*</b><sub><span
+	style='font-family:Symbol'>b</span> m</sub></p>
+
+
+	<p class=MsoNormal style='text-indent:35.4pt'>determinados por <span
+	style='font-family:Symbol'>d</span><sub><span style='font-family:Symbol'>a</span>
+	I</sub> se caracterizan por dos funciones:</p>
+
+
+	<p class=MsoNormal style='margin-left:0cm;text-indent:0cm'><span lang=EN-US><span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><b><span lang=EN-US>Cond</span></b><sub><span style='font-family:
+	Symbol'>a</span></sub><sub><span lang=EN-US> i </span></sub><span lang=EN-US>:
+	Influyentes(</span><span style='font-family:Symbol'>a</span><sub><span
+	lang=EN-US>i</span></sub><span lang=EN-US>) </span><span lang=EN-US
+	style='font-family:Symbol'>¾¾</span><span lang=EN-US>&gt; {True,False }</span></p>
+
+
+	<p class=MsoNormal style='margin-left:56.4pt'>que es un predicado que define en
+	términos de las Influyentes de <span style='font-family:Symbol'>a</span><sub>i</sub></p>
+
+
+	<p class=MsoNormal style='margin-left:56.4pt'>(<span style='font-family:Symbol'>g</span><sub>1</sub>,<b>e</b><sub><span
+	style='font-family:Symbol'>g</span> 1</sub>,<b> </b><b><span style='font-family:
+	Symbol'>s</span></b><sub><span style='font-family:Symbol'>g</span> 1</sub>), (<span
+	style='font-family:Symbol'>g</span><sub>2</sub>,<b>e</b><sub><span
+	style='font-family:Symbol'>g</span> 2</sub>,<b> </b><b><span style='font-family:
+	Symbol'>s</span></b><sub><span style='font-family:Symbol'>g</span> 2</sub>),
+	..., (<span style='font-family:Symbol'>g</span><sub>l</sub>,<b>e</b><sub><span
+	style='font-family:Symbol'>g</span> l</sub>,<b> </b><b><span style='font-family:
+	Symbol'>s</span></b><sub><span style='font-family:Symbol'>g</span> l</sub>), (<span
+	style='font-family:Symbol'>g</span><sub>l+1</sub>,<b>e</b><sub><span
+	style='font-family:Symbol'>g</span> k+1</sub>), (<span style='font-family:Symbol'>g</span><sub>k+2</sub>,<b>e</b><sub><span
+	style='font-family:Symbol'>g</span> k+2</sub>), ..., (<span style='font-family:
+	Symbol'>g</span><sub>p</sub>,<b>e</b><sub><span style='font-family:Symbol'>g</span>
+	p</sub>)</p>
+
+
+	<p class=MsoNormal style='margin-left:56.4pt'>si se cumplen (o no) las
+	condiciones para la activación de <span style='font-family:Symbol'>a</span><sub>i
+	</sub> (suponiendo que <span style='font-family:Symbol'>s</span><sub><span
+	style='font-family:Symbol'>a</span> i</sub> <span style='font-family:Symbol'>£</span>
+	0.</p>
+
+
+	<p class=MsoNormal style='margin-left:0cm;text-indent:0cm'><span
+	style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span>Accion<sub><span lang=EN-US style='font-family:Symbol'>a</span> i</sub>
+	: Influencias(<span lang=EN-US style='font-family:Symbol'>a</span>i) <span
+	lang=EN-US style='font-family:Symbol'>C</span> Influyentes(<span lang=EN-US
+	style='font-family:Symbol'>a</span>i) <span lang=EN-US style='font-family:Symbol'>¾¾</span>&gt;
+	Influencias(<span lang=EN-US style='font-family:Symbol'>a</span>i)</p>
+
+	<p class=MsoNormal style='margin-left:35.4pt'>&nbsp;</p>
+
+	<p class=MsoNormal style='margin-left:56.4pt'>que como se puede ver tiene el
+	mismo dominio e imagen de <span style='font-family:Symbol'>d</span><sub><span
+	style='font-family:Symbol'>a</span> i</sub></p>
+
+
+	<p class=MsoNormal>En esencia, si <b>X </b>define un vector de Influencias y <b>Y
+	</b>define un vector de Influyentes</p>
+
+
+	<p class=MsoNormal><sub><img width=323 height=53
+	src="images/Conf_9/image028.gif"></sub>   </p>
+
+
+	<p class=MsoNormal>X<sup>*</sup>, el nuevo vector de Influencias es el mismo
+	que X desde el punto de vista de las variables de estado:</p>
+
+
+	<p class=MsoNormal><b>e*</b><sub><span style='font-family:Symbol'>b</span> 1</sub>=<b>
+	e</b><sub><span style='font-family:Symbol'>b</span> 1</sub>,    <b>e*</b><sub><span
+	style='font-family:Symbol'>b</span> 2</sub>=<b> e</b><sub><span
+	style='font-family:Symbol'>b</span> 2</sub>, ..., <b>e*</b><sub><span
+	style='font-family:Symbol'>b</span> k</sub>=<b> e</b><sub><span
+	style='font-family:Symbol'>b</span> k</sub>,   <b>e*</b><sub><span
+	style='font-family:Symbol'>b</span> k+1</sub>=<b> e</b><sub><span
+	style='font-family:Symbol'>b</span> k+1</sub>,   <b>e*</b><sub><span
+	style='font-family:Symbol'>b</span> k+2</sub>=<b> e</b><sub><span
+	style='font-family:Symbol'>b</span> k+2</sub>, ...,<b>e*</b><sub><span
+	style='font-family:Symbol'>b</span> m</sub>=<b> e</b><sub><span
+	style='font-family:Symbol'>b</span> m</sub></p>
+
+
+	<p class=MsoNormal>pero se reduce en <span style='font-family:Symbol'>D</span>t
+	los tiempos remanentes de las componentes activas </p>
+
+
+	<p class=MsoNormal style='text-indent:35.4pt'><b><span style='font-family:Symbol'>s</span></b><b><span
+	lang=EN-US>*</span></b><sub><span style='font-family:Symbol'>b</span></sub><sub><span
+	lang=EN-US> 1</span></sub><span lang=EN-US>=</span><b><span style='font-family:
+	Symbol'>s</span></b><sub><span style='font-family:Symbol'>b</span></sub><sub><span
+	lang=EN-US> 1</span></sub><span lang=EN-US> - </span><span style='font-family:
+	Symbol'>D</span><span lang=EN-US>t,<b>       </b></span><b><span
+	style='font-family:Symbol'>s</span></b><b><span lang=EN-US>*</span></b><sub><span
+	style='font-family:Symbol'>b</span></sub><sub><span lang=EN-US> 2</span></sub><span
+	lang=EN-US>=</span><b><span style='font-family:Symbol'>s</span></b><sub><span
+	style='font-family:Symbol'>b</span></sub><sub><span lang=EN-US> 2</span></sub><span
+	lang=EN-US>- </span><span style='font-family:Symbol'>D</span><span lang=EN-US>t,
+	..., </span><b><span style='font-family:Symbol'>s</span></b><b><span
+	lang=EN-US>*</span></b><sub><span style='font-family:Symbol'>b</span></sub><sub><span
+	lang=EN-US> k</span></sub><span lang=EN-US>=</span><b><span style='font-family:
+	Symbol'>s</span></b><sub><span style='font-family:Symbol'>b</span></sub><sub><span
+	lang=EN-US> k</span></sub><span lang=EN-US>- </span><span style='font-family:
+	Symbol'>D</span><span lang=EN-US>t    </span></p>
+
+
+	<p class=MsoNormal>Esto es, si <b>Cond</b><sub><span style='font-family:Symbol'>a</span>
+	i</sub> = True, se aplica <b>Accion</b><sub><span style='font-family:Symbol'>a</span>
+	i</sub> para obtener los próximos estados. En caso contrario no se realiza
+	ninguna acción salvo el decremento de los tiempos remanentes en un valor <span
+	style='font-family:Symbol'>D</span>t correspondiente al incremento de tiempo</p>
+
+
+	<p class=MsoNormal>Antes de ver como se precisa la función selecciona y el avance
+	del reloj, miremos como estas definiciones se concretan en el ejemplo</p>
+
+	<a name="aplicacion-ejemplo"></a>
+	<h2>Aplicación al ejemplo. Programa General</h2>
+
+
+	<p class=MsoNormal style='margin-left:18.0pt'>ComponentesActivas ={ Usu1, Usu2,
+	...,Usu99, Operador}</p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'>ComponentesPasivas ={Cola, Computadora,
+	Almacen, Reja}</p>
+
+
+	<p class=MsoNormal style='margin-left:18.0pt'>Vea que la Computadora pasa a ser
+	una componente pasiva y que las componentes activas son más “reales”</p>
+
+
+
+	<p class=MsoNormal style='margin-left:18.0pt'><sub><img width=525 height=155
+	src="images/Conf_9/image029.gif"></sub></p>
+
+
+	<p class=MsoNormal>Cuando <b><i>st</i></b><sub>i</sub> = 1 el usuario está
+	esperando en la cola para iniciar el procesamiento (la espera depende del
+	tiempo de procesamiento de otros usuarios en la cola antes que él). Cuando <b><i>st</i></b><sub>i</sub>
+	= 3 el usuario ya procesó y está esperando que abran la reja (esta espera
+	depende del tiempo que falta por abrir la Reja por parte del Operador)</p>
+
+
+	<p class=MsoNormal><span lang=EN-US><sub><img width=957 height=99
+	src="images/Conf_9/image030.gif"></sub></span></p>
+
+	<p class=MsoNormal>En otras palabras, cuando el usuario <i>i</i> llega a la cola,
+	el tiempo remanente para cambiar de estado (comenzar a procesar su programa)
+	depende de los tiempos de procesamiento de usuarios de la Cola (influyente) y
+	cuando ya está procesado depende del tiempo en que el operador abre la Reja
+	(otra influyente). En este sentido, el usuario “rastrea” condiciones para hacer
+	dos actividades: la condición de llegar a la posición 1 de la Cola (la
+	actividad es el inicio del procesamiento) y la condición de abrir la Reja  (la
+	actividad correspondiente se define en términos de que usuario recoge su
+	programa y pasa al estado 0). </p>
+
+
+	<p class=MsoNormal>Lo importantes que nos evitamos complicaciones algebraicas
+	es definir el tiempo remanente cuando el Usuario i está en los estados 1 y 3,
+	cuestiones que dependen de que otras componentes cumplan ciertas condiciones.</p>
+
+
+	<p class=MsoNormal>La otra componente activa es aún más simple:</p>
+
+
+	<p class=MsoNormal><sub><img width=191 height=48
+	src="images/Conf_9/image009.gif"></sub></p>
+
+
+	<p class=MsoNormal><sub><img width=559 height=56
+	src="images/Conf_9/image031.gif"></sub></p>
+
+
+	<p class=MsoNormal>Y para las componentes pasivas:</p>
+
+
+	<p class=MsoNormal><sub><img width=235 height=27
+	src="images/Conf_9/image032.gif"></sub></p>
+
+
+	<p class=MsoNormal><sub><img width=209 height=48
+	src="images/Conf_9/image033.gif"></sub></p>
+
+
+	<p class=MsoNormal><sub><img width=160 height=31
+	src="images/Conf_9/image011.gif"></sub></p>
+
+
+	<p class=MsoNormal><sub><img width=415 height=48
+	src="images/Conf_9/image034.gif"></sub></p>
+
+
+	<p class=MsoNormal>Veamos ahora las influencias de cada componente activa:</p>
+
+
+	<p class=MsoNormal><span style='font-family:Symbol'>&quot;</span>i=1,2,...,99 </p>
+
+
+	<p class=MsoNormal>Influencias(<b>Usu</b><sub>i</sub>)={ (<b>Usu</b><sub>i</sub>,
+	<b>e</b><sub>Usu i</sub>,<b><span style='font-family:Symbol'>s</span></b><sub>Usu
+	i</sub>), (<b>Cola, e</b><sub>Cola</sub>), </p>
+
+	<p class=MsoNormal style='margin-left:70.8pt'>(<b>Computadora, e</b><sub>Computadora</sub>),
+	(<b>Almacén, e</b><sub>Almacen</sub>)  }</p>
+
+
+	<p class=MsoNormal>Influencias(<b>Operador</b>) = {(<b>Operador</b>,<b>e</b><sub>Operado<b>r</b></sub><b>,
+	</b><b><span style='font-family:Symbol'>s</span></b><sub>Operador</sub>), (<b>Reja,
+	e</b><sub>Reja</sub>,<b> </b><b><span style='font-family:Symbol'>s</span></b><sub>Reja</sub>)
+	}</p>
+
+
+
+	<p class=MsoNormal>Y veamos las Influyentes, de cada componente activa</p>
+
+
+
+	<p class=MsoNormal>Influyentes(<b>Usu</b><sub>i</sub>)={ (<b>Usu</b><sub>i</sub>,
+	<b>e</b><sub>Usu i</sub>,<b><span style='font-family:Symbol'>s</span></b><sub>Usu
+	i</sub>), (<b>Cola, e</b><sub>Cola</sub>), (<b>Reja, e</b><sub>Reja</sub>) }</p>
+
+
+	<p class=MsoNormal>Influyentes(<b>Operador</b>) = {(<b>Operador</b>,<b>e</b><sub>Operado<b>r</b></sub><b>,
+	</b><b><span style='font-family:Symbol'>s</span></b><sub>Operador</sub>), (<b>Almacén,
+	e</b><sub>Almacen</sub>)  </p>
+
+
+	<p class=MsoNormal>Definamos las funciones de condición y de acción para cada
+	componente activa</p>
+
+
+	<p class=MsoNormal><b>Cond</b><sub>Operador</sub> : Influyentes(<b>Operador</b>)  
+	<span style='font-family:Symbol'>¾¾</span>&gt; {True,False}</p>
+
+
+	<p class=MsoNormal>que define cuando se puede activar el Operador en términos
+	de sus influyentes:</p>
+
+
+	<p class=MsoNormal><b>Cond</b><sub>Operador</sub>(<b>Operador</b>,<b>e</b><sub>Operador</sub><b>,
+	</b><b><span style='font-family:Symbol'>s</span></b><sub>Operador</sub>), (<b>Almacén,
+	e</b><sub>Almacen</sub>) =</p>
+
+
+	<p class=MsoNormal style='margin-left:106.2pt;text-indent:35.4pt'>(<b>e</b><sub>Operador</sub>
+	= 0)<span style='font-family:Symbol'>Ú</span> (<b>e</b><sub>Operador</sub> = 1<span
+	style='font-family:Symbol'>Ù</span><b> e</b><sub>Almacen</sub>=<span
+	style='font-family:Symbol'>Æ</span>)</p>
+
+
+	<p class=MsoNormal><b>Accion</b><sub>Operador</sub> que aplica : </p>
+
+
+	<p class=MsoNormal style='text-indent:35.4pt'>Influyentes(<b>Operador</b>) x
+	Influencias(<b>Operador</b>) <span style='font-family:Symbol'>¾¾</span>&gt;Influencias(<b>Operador</b>)</p>
+
+
+	<p class=MsoNormal>Esto es, que se define con los datos de </p>
+
+
+	<p class=MsoNormal>            (<b>Operador</b>,<b>e</b><sub>Operado<b>r</b></sub><b>,
+	</b><b><span style='font-family:Symbol'>s</span></b><sub>Operador</sub>), (<b>Almacén,
+	e</b><sub>Almacen</sub>), (<b>Reja, e</b><sub>Reja</sub>) </p>
+
+
+	<p class=MsoNormal>y debe  resultar en los nuevos valores:</p>
+
+
+	<p class=MsoNormal>            (<b>Operador</b>,<b>e*</b><sub>Operado<b>r</b></sub><b>,
+	</b><b><span style='font-family:Symbol'>s</span>*</b><sub>Operador</sub>),), (<b>Reja,
+	e*</b><sub>Reja</sub>) </p>
+
+
+	<p class=MsoNormal><sub><img width=312 height=56
+	src="images/Conf_9/image023.gif"></sub></p>
+
+
+	<p class=MsoNormal><sub><img width=320 height=56
+	src="images/Conf_9/image024.gif"></sub></p>
+
+
+	<p class=MsoNormal><sub><img width=363 height=56
+	src="images/Conf_9/image035.gif"></sub></p>
+
+
+	<p class=MsoNormal>Recuérdese que teóricamente </p>
+
+
+	<p class=MsoNormal><span style='font-family:Symbol'>d</span><b><sub>Operador</sub></b>:
+	Influyentes(<b>Operador</b>) x Influencias(<b>Operador</b>) <span
+	style='font-family:Symbol'>¾¾</span>&gt;Influencias(<b>Operador</b>)</p>
+
+
+	<p class=MsoNormal>y su valor</p>
+
+
+	<p class=MsoNormal><span style='font-family:Symbol'>d</span><b><sub>Operador</sub></b>
+	( (<b>Operador</b>,<b>e</b><sub>Operado<b>r</b></sub><b>, </b><b><span
+	style='font-family:Symbol'>s</span></b><sub>Operador</sub>), (<b>Almacén, e</b><sub>Almacen</sub>),
+	(<b>Reja, e</b><sub>Reja</sub>) )=</p>
+
+
+	<p class=MsoNormal>            ( (<b>Operador</b>,<b>e*</b><sub>Operado<b>r</b></sub><b>,
+	</b><b><span style='font-family:Symbol'>s</span>*</b><sub>Operador</sub>), (<b>Reja,
+	e*</b><sub>Reja</sub>) )    si <b>Cond</b><sub>Operador</sub></p>
+
+
+	<p class=MsoNormal>y es ( (<b>Operador</b>,<b>e</b><sub>Operado<b>r</b></sub><b>,
+	</b><b><span style='font-family:Symbol'>s</span></b><sub>Operador</sub> -<span
+	style='font-family:Symbol'>D</span>Reloj), (<b>Reja, e</b><sub>Reja</sub>) )     e.o.c</p>
+
+
+	<p class=MsoNormal>pero en la práctica <span style='font-family:Symbol'>d</span><b><sub>Operador</sub>
+	</b>no se implementa y como veremos más tarde el tiempo remanente no se
+	decrementa sino que el Reloj global de la simulación adelanta relativamente a
+	un “reloj local” de la componente “operador” (y de cada componente activa), lo
+	que equivale a tener un tiempo remanente negativo.</p>
+
+
+	<p class=MsoNormal>Veamos las funciones <b>Cond</b><sub>Usu i</sub>  y <b>Accion</b><sub>Usu
+	i</sub></p>
+
+
+
+	<p class=MsoNormal><b>Cond</b><sub>Usu i</sub> : Influyentes(<b>Usu<sub>i</sub></b>)  
+	<span style='font-family:Symbol'>¾¾</span>&gt; {True,False}</p>
+
+
+	<p class=MsoNormal style='text-indent:35.4pt'><b>Cond</b><sub>Usu i</sub><b> </b>(<b>Usu</b><sub>i</sub>,
+	<b>e</b><sub>Usu i</sub>,<b><span style='font-family:Symbol'>s</span></b><sub>Usu
+	i</sub>), (<b>Cola, e</b><sub>Cola</sub>), (<b>Reja, e</b><sub>Reja</sub>) =</p>
+
+
+	<p class=MsoNormal style='text-indent:35.4pt'>            <span lang=EN-US>(<b><i>st</i></b><sub>i</sub>=0)
+	</span><span style='font-family:Symbol'>Ú</span><span lang=EN-US> (<b><i>st</i></b><sub>i</sub>=1
+	</span><span style='font-family:Symbol'>Ù</span><span lang=EN-US> First[<i>Cola</i>]=Usu<sub>i</sub>)
+	</span><span style='font-family:Symbol'>Ú</span><span lang=EN-US> (<b><i>st</i></b><sub>i</sub>=2)
+	</span><span style='font-family:Symbol'>Ú</span><span lang=EN-US> (<b><i>st</i></b><sub>i</sub>=3
+	</span><span style='font-family:Symbol'>Ù</span><span lang=EN-US>  <b>e</b><sub>Reja</sub>=1)</span></p>
+
+	<p class=MsoNormal style='text-indent:35.4pt'><span lang=EN-US>&nbsp;</span></p>
+
+	<p class=MsoNormal><b>Accion</b><sub>Usu i</sub> : Influyentes(<b>Usu<sub>i</sub></b>)
+	x Influencias(<b>Usu<sub>i</sub></b>) <span style='font-family:Symbol'>¾¾</span>&gt;Influencias(<b>Usu<sub>i</sub></b>)</p>
+
+
+	<p class=MsoNormal>Esto es, que se define con los datos de </p>
+
+
+	<p class=MsoNormal style='margin-right:-18.0pt'>(<b>Usu</b><sub>i</sub>, <b>e</b><sub>Usu
+	i</sub>,<b><span style='font-family:Symbol'>s</span></b><sub>Usu i</sub>),(<b>Cola,
+	e</b><sub>Cola</sub>),(<b>Computadora, e</b><sub>Computadora</sub>), (<b>Almacén,
+	e</b><sub>Almacen</sub>),(<b>Reja, e</b><sub>Reja</sub>)</p>
+
+
+	<p class=MsoNormal>y que debe resultar en nuevos valores para </p>
+
+
+	<p class=MsoNormal>(<b>Usu</b><sub>i</sub>, <b>e*</b><sub>Usu i</sub>,<b><span
+	style='font-family:Symbol'>s</span>*</b><sub>Usu i</sub>), (<b>Cola, e*</b><sub>Cola</sub>),
+	(<b>Computadora, e*</b><sub>Computadora</sub>), (<b>Almacén, e*</b><sub>Almacen</sub>) 
+	</p>
+
+
+	<p class=MsoNormal>Recordar que </p>
+
+
+	<p class=MsoNormal><sub><img width=156 height=32
+	src="images/Conf_9/image036.gif"></sub></p>
+
+
+	<p class=MsoNormal><sub><img width=144 height=29
+	src="images/Conf_9/image037.gif"></sub></p>
+
+
+	<p class=MsoNormal><sub><img width=419 height=56
+	src="images/Conf_9/image038.gif"></sub>   </p>
+
+
+	<p class=MsoNormal><sub><img width=183 height=123
+	src="images/Conf_9/image039.gif"></sub>   </p>
+
+
+
+	<p class=MsoNormal><sub><img width=265 height=77
+	src="images/Conf_9/image040.gif"></sub></p>
+
+
+	<p class=MsoNormal><sub><img width=272 height=83
+	src="images/Conf_9/image041.gif"></sub></p>
+
+
+
+	<p class=MsoNormal><sub><img width=260 height=80
+	src="images/Conf_9/image042.gif"></sub></p>
+
+
+	<p class=MsoNormal>La función </p>
+
+
+	<p class=MsoNormal><span style='font-family:Symbol'>d</span><b><sub>Usu i</sub></b>:
+	Influyentes(<b>Usu<sub>i</sub></b>) x Influencias(<b>Usu<sub>i</sub></b>) <span
+	style='font-family:Symbol'>¾¾</span>&gt;Influencias(<b>Usu<sub>i</sub></b>)</p>
+
+
+	<p class=MsoNormal>que en la práctica no se implementa daría los valores
+	anteriores cuando <b>Cond</b><sub>Usu i </sub> es cierta, y reduciría los
+	tiempos remanentes e.o.c.</p>
+
+
+	<p class=MsoNormal>La función <b>Selecciona </b> esta estrategia OE con RA da
+	prioridad a componentes para cheqeuar condiciones, por ejemplo,</p>
+
+
+	<p class=MsoNormal>            ListaDePrioridades={Usu1, Usu2,
+	...,Usu99,Operador}</p>
+
+
+	<p class=MsoNormal>En la versión del programa barremos esta lista con un
+	puntero, observamos para cuáles de las componentes de esta lista el tiempo
+	remanente es menor o igual a cero (o lo que es equivalente, para cuales de esta
+	componente el momento en que podían cambiar de estado es menor o igual al Reloj
+	actual) y chequeamos las condiciones para tales componentes; si se cumplen
+	ejecutamos la Acción correspondiente, en caso contrario, avanzamos el Reloj con
+	lo cual los relojes locales de las componentes activas que están listas pero no
+	cumplen las condiciones se atrasan respecto al Reloj global (esto equivale a
+	tener tiempos remanentes negativos)</p>
+
+
+	<p class=MsoNormal>Programa Principal</p>
+
+
+	<h4>Begin</h4>
+
+	<p class=MsoNormal><b>            </b>{Inicializacion}</p>
+
+	<p class=MsoNormal>            Reloj:=TiempoInicio</p>
+
+	<p class=MsoNormal>            <b><span lang=EN-US>For</span></b><span
+	lang=EN-US> i=1 to n e</span><sub><span lang=EN-US style='font-family:Symbol'>a</span></sub><sub><span
+	lang=EN-US> i</span></sub><span lang=EN-US>:=Estado(</span><span lang=EN-US
+	style='font-family:Symbol'>a</span><sub><span lang=EN-US>i</span></sub><span
+	lang=EN-US>)</span></p>
+
+	<p class=MsoNormal><span lang=EN-US>            <b>For </b>i=1 to a t</span><sub><span
+	lang=EN-US style='font-family:Symbol'>a</span></sub><sub><span lang=EN-US> i</span></sub><span
+	lang=EN-US>:=TiempoInicio+ </span><span lang=EN-US style='font-family:Symbol'>s</span><sub><span
+	lang=EN-US style='font-family:Symbol'>a</span></sub><sub><span lang=EN-US> i</span></sub></p>
+
+	<p class=MsoNormal><sub><span lang=EN-US>                </span></sub>ListaDePrioridades=Selecciona(ComponentesActivas)</p>
+
+	<p class=MsoNormal style='text-indent:35.4pt'><b>While </b>Reloj&lt;=TiempoFin </p>
+
+	<p class=MsoNormal style='text-indent:35.4pt'><b>            begin</b></p>
+
+	<p class=MsoNormal style='text-indent:35.4pt'><b>                </b>P:=Inicio
+	de ListaDePrioridades</p>
+
+	<p class=MsoNormal style='text-indent:35.4pt'>                <b>While </b>P
+	&lt;&gt; Fin de ListaDePrioridades</p>
+
+	<p class=MsoNormal style='text-indent:35.4pt'>                        <b>begin</b></p>
+
+	<p class=MsoNormal style='text-indent:35.4pt'><b>                           
+	Mover </b>P en ListaDePrioridades hasta encontrar <span style='font-family:
+	Symbol'>a</span> tal que cumpla</p>
+
+	<p class=MsoNormal style='text-indent:35.4pt'>                                   <span
+	lang=EN-US>(t</span><sub><span style='font-family:Symbol'>a</span></sub><span
+	lang=EN-US> &lt; = Reloj) </span><span style='font-family:Symbol'>Ù</span><span
+	lang=EN-US> (Cond</span><sub><span style='font-family:Symbol'>a</span></sub><span
+	lang=EN-US> )</span></p>
+
+	<p class=MsoNormal style='text-indent:35.4pt'><span lang=EN-US>                        </span><b>    
+	</b>{Transicion de Estado}</p>
+
+	<p class=MsoNormal style='text-indent:35.4pt'>                              <b>Ejecutar
+	</b><span lang=EN-US>Accion</span><sub><span style='font-family:Symbol'>a</span></sub></p>
+
+	<p class=MsoNormal style='text-indent:35.4pt'>                        <b><span
+	lang=EN-US>end </span></b><span lang=EN-US>{While P}</span></p>
+
+	<p class=MsoNormal style='text-indent:35.4pt'><span lang=EN-US>                 
+	</span>{Avance del Reloj}</p>
+
+	<p class=MsoNormal style='text-indent:35.4pt'>                   Reloj:=min{t<sub><span
+	style='font-family:Symbol'>b</span>  </sub><sub><span style='font-family:Symbol'>½</span>
+	</sub>  Reloj&lt; t<sub><span style='font-family:Symbol'>b</span>  </sub>}, <span
+	style='font-family:Symbol'>b</span><span style='font-family:Symbol'>Î</span>ComponentesActivas</p>
+
+	<p class=MsoNormal style='text-indent:35.4pt'>            <b><span lang=EN-US>end
+	</span></b><span lang=EN-US>{while Reloj}</span></p>
+
+	<p class=MsoNormal><b><span lang=EN-US>End </span></b><span lang=EN-US>(Begin)</span></p>
+
+
+	<p class=MsoNormal>Este Programa Principal se complementa con dos
+	procedimientos para cada compoente activa:</p>
+
+
+	<p class=MsoNormal><b>procedure </b>Cond<sub><span style='font-family:Symbol'>a</span></sub></p>
+
+	<p class=MsoNormal>            <b>begin</b></p>
+
+	<p class=MsoNormal>                        {devuelve el valor booleano en
+	dependencias de las Influyentes de <span style='font-family:Symbol'>a</span>}     </p>
+
+	<p class=MsoNormal style='text-indent:35.4pt'><b><span lang=EN-US>end</span></b></p>
+
+
+	<p class=MsoNormal><b><span lang=EN-US>procedure</span></b><span lang=EN-US>
+	Accion</span><sub><span style='font-family:Symbol'>a</span></sub></p>
+
+	<p class=MsoNormal><span lang=EN-US>            <b>Begin </b></span></p>
+
+	<p class=MsoNormal><b><span lang=EN-US>            </span>    </b><span
+	lang=EN-US style='font-family:Symbol'>&quot;</span><span lang=EN-US
+	style='font-family:Symbol'>b</span><span lang=EN-US> </span><span lang=EN-US
+	style='font-family:Symbol'>Î</span> Influencias(<span lang=EN-US
+	style='font-family:Symbol'>a</span>) y <span lang=EN-US style='font-family:
+	Symbol'>b</span><span lang=EN-US> </span><span lang=EN-US style='font-family:
+	Symbol'>Î</span> ComponentesActivas</p>
+
+	<p class=MsoNormal>                   <b>begin</b></p>
+
+	<p class=MsoNormal><b>                        </b>{Actualizacion}</p>
+
+	<p class=MsoNormal>                        <b>e*</b><sub><span
+	style='font-family:Symbol'>b</span></sub> </p>
+
+	<p class=MsoNormal>                        <b><span style='font-family:Symbol'>s</span>*</b><sub><span
+	style='font-family:Symbol'>b</span></sub></p>
+
+	<p class=MsoNormal><sub>                               </sub><b>t*</b><sub><span
+	style='font-family:Symbol'>b</span></sub>=Reloj+<b><span style='font-family:
+	Symbol'>s</span>*</b><sub><span style='font-family:Symbol'>b</span></sub></p>
+
+	<p class=MsoNormal><sub>                           </sub><b>end</b></p>
+
+	<p class=MsoNormal>                <span lang=EN-US style='font-family:Symbol'>&quot;</span><span
+	lang=EN-US style='font-family:Symbol'>b</span><span lang=EN-US> </span><span
+	lang=EN-US style='font-family:Symbol'>Î</span> Influencias(<span lang=EN-US
+	style='font-family:Symbol'>a</span>) y <span lang=EN-US style='font-family:
+	Symbol'>b</span><span lang=EN-US> </span><span lang=EN-US style='font-family:
+	Symbol'>Î</span> ComponentesPasivas actualizar <b>e*</b><sub><span
+	style='font-family:Symbol'>b</span></sub></p>
+
+	<p class=MsoNormal>            <b>End</b></p>
+
+
+	<p class=MsoNormal>De esta forma el Programa Principal avanza el Reloj,
+	relativamente a t<sub><span style='font-family:Symbol'>a</span></sub> cuando la
+	componente <span style='font-family:Symbol'>a</span> está internamente lista
+	para cambiar de estado pero no se puede activar porque no se cumplen las
+	condiciones. </p>
+
+	<a name="conclusiones"></a>
+	<h2>Conclusiones</h2>
+
+
+	<p class=MsoNormal>La estrategia OE con RA realmente simplifica el modelo,
+	permite lograr  muchas interpretaciones más realistas de las componentes
+	(activas y pasivas) y sobre todo facilita la implementación de las transiciones
+	de estado y en particular del cálculo de los tiempos remanentes. Desde el punto
+	de vista del modelo teórico, la idea esencial es permitir que las componentes
+	activas tengan tiempos remanentes que puedan decrecer por debajo de cero (tan
+	pronto ellas mismas estén listas internamente para cambiar de estado) pero
+	necesitan de condiciones que se formulan en términos de otras componentes.
+	Desde el punto de vista computacional esto se implementa a través de relojes
+	locales de cada componente activa, que pueden quedarse retrasados respecto al
+	Reloj general de la Simulación.</p>
+
+
+	<p class=MsoNormal>Aceptando el Programa Principal, la aplicación práctica de
+	esta estrategia exige apenas la programación de 2 procedimientos para cada
+	componente activa: un procedimiento de condición sobre las influyentes de esa
+	componente y que valora si se cumplen las condiciones para activarse la
+	componente (suponiendo ya que su tiempo remanente es menor o igual a cero) y un
+	procedimiento de acción, que describe las transiciones en esa componente y
+	todas sus influencias. Cualquiera de los ejercicios de las Clases Prácticas de
+	Simulación Orientada a Eventos puede ser utilizado para ensayar esta nueva
+	estrategia y como en el caso anterior, resultaría muy bueno, que cada
+	estudiante tuviera una implementación del Programa Principal en su lenguaje de
+	Programación favorito</p>
+
+
+	<h2><span lang=EN-US>Bibliografía</span></h2>
+
+
+	<p class=MsoNormal><span lang=EN-US>[1]  Maisel Herbert y Gnugnoli Giuliano,
+	&quot;Simulation of Discrete Stochastic Systems&quot;, Science Research
+	Associates Inc. </span>USA, 1972, Cap. 2</p>
+
+
+	<p class=MsoNormal>[2] Moreno C. R.  &quot;Modelación y Simulación&quot;, Universidad
+	de La Habana, versión en disco</p>
+
+</div>
+<div class="footer">
+  <p>
+		2013 SESimula (Software Educativo de Simulación)
+  </p>
+  <p>
+     Documentación creada por: <a title="tutor" href="mailto:asalgado@csd.uo.edu.cu">Antonio Salgado Castillo</a>
+  <p>
+	 Diseño de la web por: <a title="autor" href="mailto:alejandro.labrada@csd.uo.edu.cu,aleplusplus@facebook.com">Alejandro Labrada Diaz</a></p>
+ </p>
+ <p>
+    Bajo la licencia GPL <a href="http://www.gnu.org/licenses/fdl.html">GNU
+    Free Documentation License version 1.3</a>
+ </p>
+</div>
+</body>
+</html>

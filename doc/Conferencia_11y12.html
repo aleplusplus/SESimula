@@ -1,0 +1,2308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- qalgorithms.qdoc -->
+  <title>SESimula - Sistema, Modelación y Simulación</title>
+  <link rel="stylesheet" type="text/css" href="style/offline.css" />
+</head>
+<body>
+<div class="header" id="qtdocheader">
+  <div class="content">
+    <a href="index.html" class="qtref"><span>Documentación de Simulación</span></a>
+  </div>
+  <div class="breadcrumb toolblock">
+    <ul>
+      <li class="first"><a href="index.html">Home</a></li>
+      <li>Conferencia 11 y 12</li>
+    </ul>
+  </div>
+</div>
+<div class="content mainContent">
+    <p class="naviNextPrevious headerNavi">
+          [Anterior: <a href="Conferencia_10.html">Conferencia 10</a> ]
+          [Siguiente: <a href="indice.html">Indice</a> ]
+    </p>
+    <div class="toc">
+        <h3><a name="toc">Contenido</a></h3>
+        <ul>
+        <li class="level1"><a href="#redes-petri">Redes de Petri</a></li>
+        <li class="level2"><a href="#modelacion-petri">Modelación con Redes de Petri</a></li>
+        <li class="level2"><a href="#analisis-petri">Problemas de análisis en Redes de Petri</</a></li>
+        <li class="level2"><a href="#arbol-alacanzabilidad">Análisis de redes de Petri. El árbol de alcanzabilidad</a></li>
+        <li class="level2"><a href="#extensiones-petri">Extensiones del concepto de Red de Petri</a></li>
+        </ul>
+    </div>
+
+    <h1 class="title">Introducción a Redes de Petri</h1>
+
+	<h3><span lang=ES-TRAD style='font-size:10.0pt'>Introducción</span></h3>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>La teoría de las Redes de Petri se ha
+	desarrollado considerablemente desde sus inicios con la disertación de Carl
+	Adam Petri, en 1962 en la cual se formularon las bases de una teoría para la
+	comunicación entre componentes asíncronas de un sistema computacional.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>El diseño de estructuras de control para
+	sistemas paralelos que imponen determinadas restricciones en su funcionamiento,
+	como por ejemplo, el uso de recursos compartidos, es generalmente mucho más
+	complicado que el diseño del control para sistemas secuenciales. Este se debe
+	fundamentalmente a que en sistemas paralelos, los procesos pueden cambiar su
+	estado de forma independiente, lo cual provoca que se pierda la visión sobre el
+	estado global de tales sistemas.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>La Teoría de las Redes de Petri es en
+	esencia un lenguaje o medio de especificación general de un modelo que es
+	interpretable en cualquier campo de aplicación y que permite una fácil
+	verificación de un determinado diseño de un sistema. Su campo fundamental de
+	aplicación es la Modelación de Sistemas en los que los eventos discretos
+	ocurren de forma independiente y concurrente; pero bajo determinadas
+	restricciones.</span></p>
+
+
+	<p><span lang=ES-TRAD>Su aplicación práctica en el diseño y
+	análisis de sistemas se ha realizado de varias formas; las dos principales:</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>1.</span></p>
+
+	<p align ="center">
+	<img src="images/Conf_11y12/image001.png"></img>
+	</p>
+	<p class=MsoNormal><span lang=ES-TRAD>Esta forma convencional requiere
+	conversión constante del sistema originalmente diseñado en una Red de Petri. La
+	otra alternativa es:</span></p>
+	
+	<p class=MsoNormal><span lang=ES-TRAD>2.</span></p>
+	
+	<p align="center">
+	<img src="images/Conf_11y12/image002.png"></img>
+	</p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>En esta forma más radical se requiere la
+	conversión final de la Red de Petri ya ajustada a un sistema diseñado, digamos
+	para la Simulación (o con otro objetivo). En ambos casos el análisis de las
+	propiedades es el centro de la Teoría.</span></p>
+
+	<a name="redes-petri"></a>
+	<h2>Redes de Petri. Ejecución</h2>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Esencialmente, una Red de Petri es un
+	grafo dirigido con dos tipos de nodos: localizaciones (que representaremos por
+	círculos) y transiciones (que representaremos por barras). Los arcos del grafo
+	siempre van de uno de los tipos de nodo al otro y pueden tener una
+	multiplicidad. Los nodos tienen además un número natural asignado que se
+	denomina marcación</span></p>
+
+	<p align="center">
+	<img src="images/Conf_11y12/image003.png"></td>
+	</p>
+
+
+	<br clear=ALL>
+
+	<p class=MsoNormal><span lang=ES-TRAD>Si una localización no tiene marcas, es
+	que por defecto es 0. Si un arco no tiene multiplicidad es que por defecto es
+	1. En términos generales, en las redes de Petri que se utilizan para
+	Simulación, las transiciones (barras) significan eventos. Los nodos con sus
+	marcaciones y la multiplicidad de los arcos se utilizan para representar
+	&quot;condiciones&quot;.</span></p>
+
+
+	<p class=MsoNormal><u><span lang=ES-TRAD>Definición</span></u></p>
+
+	<p class=MsoNormal><u><span lang=ES-TRAD><span style='text-decoration:none'>&nbsp;</span></span></u></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>Una Red de Petri es un quíntuplo N = [ P
+	, T , F , M , </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><sub><span
+	lang=ES-TRAD>o </span></sub><span lang=ES-TRAD>], donde </span></p>
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>P = {p<sub>1</sub> , p<sub>2</sub> , ... , p<sub>n</sub>},
+	n &gt; 0 es un conjunto finito de localizaciones T = { t<sub>1</sub> ,t<sub>2</sub>
+	, ... , t<sub>m</sub> } , m &gt; 0 es un conjunto finito de transiciones  (P y
+	T son disjuntos)</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>F </span><span lang=ES-TRAD style='font-family:
+	Symbol'>Í</span><span lang=ES-TRAD> ( P x T ) </span><span lang=ES-TRAD
+	style='font-family:Math1'>Ç</span><span lang=ES-TRAD> ( T x P ), esto es, F es
+	un conjunto de arcos de la forma (p,t) o (t,p) con p </span><span lang=ES-TRAD
+	style='font-family:Math1'>Î</span><span lang=ES-TRAD> P y t </span><span
+	lang=ES-TRAD style='font-family:Math1'>Î</span><span lang=ES-TRAD> T, y tales
+	que dom(F) </span><span lang=ES-TRAD style='font-family:Math1'>Ç</span><span
+	lang=ES-TRAD> codom(F) = P </span><span lang=ES-TRAD style='font-family:Math1'>Ç</span><span
+	lang=ES-TRAD> T, lo que significa que en todo nodo (localización o transición)
+	llega o sale al menos un arco.</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>M : F </span><span lang=ES-TRAD
+	style='font-family:Math1'></span><span lang=ES-TRAD> </span><b><i><span
+	lang=ES-TRAD style='font-size:12.0pt'>N</span></i></b><span lang=ES-TRAD> \
+	{0}  es una función con valores naturales positivos que a cada arco de F le
+	asigna una multiplicidad (gráficamente se considera por defecto que la
+	multiplicidad es 1)</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-family:Symbol'>m</span><sub><span
+	lang=ES-TRAD>o</span></sub><span lang=ES-TRAD> : P </span><span lang=ES-TRAD
+	style='font-family:Math1'></span><span lang=ES-TRAD> </span><b><i><span
+	lang=ES-TRAD style='font-size:12.0pt'>N</span></i></b><span lang=ES-TRAD> es
+	una función de marcación inicial, que a cada localización le asigna un número
+	natural (gráficamente se considera que la marcación por defecto de un nodo es
+	0)</span></p>
+
+
+	<p class=MsoNormal><span lang=FR>En el ejemplo gráfico inicial P = {p<sub>1</sub>
+	, p<sub>2</sub> , p<sub>3</sub> , p<sub>4</sub> , p<sub>5</sub> } T= {t<sub>1</sub>
+	, t<sub>2</sub> , t<sub>3</sub> , t<sub>4</sub> } F = { (p<sub>1</sub>,t<sub>1</sub>)
+	, (t<sub>1</sub>,p<sub>3</sub>) , (t<sub>1</sub>,p<sub>2</sub>), ... }</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>M(t<sub>1</sub>,p<sub>4</sub>) = M(p<sub>4</sub>,t<sub>3</sub>)
+	= 2 y para los restantes arcos es 1. </span><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><sub><span lang=ES-TRAD>o</span></sub><span
+	lang=ES-TRAD>(p<sub>1</sub>) = </span><span lang=ES-TRAD style='font-family:
+	Symbol'>m</span><sub><span lang=ES-TRAD>o</span></sub><span lang=ES-TRAD>(p<sub>5</sub>)=1
+	, </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><sub><span
+	lang=ES-TRAD>o</span></sub><span lang=ES-TRAD>(p<sub>4</sub>)=2 , y para las
+	restantes localizaciones es 0.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Como en general Card(P) = n &lt;</span><span
+	lang=ES-TRAD style='font-family:Symbol'>¥</span><span lang=ES-TRAD> , una
+	marcación se caracteriza por un vector de </span><b><i><span lang=ES-TRAD
+	style='font-size:12.0pt'>N</span></i></b><sup><span lang=ES-TRAD>n</span></sup><span
+	lang=ES-TRAD>, en el ejemplo (1,0,0,2,1).</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Dada una transición t de la Red de Petri,
+	se llaman precondiciones de t al conjunto de localizaciones p </span><span
+	lang=ES-TRAD style='font-family:Symbol'>Î</span><span lang=ES-TRAD> P para las
+	cuales existe un arco (p,t) </span><span lang=ES-TRAD style='font-family:Symbol'>Î</span><span
+	lang=ES-TRAD> F. Se llaman poscondiciones de t al conjunto de localizaciones p </span><span
+	lang=ES-TRAD style='font-family:Symbol'>Î</span><span lang=ES-TRAD> P para las
+	cuales existe un arco (t,p) </span><span lang=ES-TRAD style='font-family:Symbol'>Î</span><span
+	lang=ES-TRAD> F. Análogamente se definen las pretransiciones y postransiciones
+	de una localización.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Una Red de Petri es dinámica. Se ejecuta
+	&quot;disparando&quot; las transiciones. Al dispararse una transición se
+	reducen marcas en sus precondiciones y se incrementan marcas en sus
+	poscondiciones. Para que una transición pueda dispararse, primero debe estar
+	&quot;capacitada&quot; o tener &quot;concesión&quot; para ello. Una transición
+	estará capacitada si para todas sus precondiciones las marca es mayor o igual
+	que la multiplicidad del arco que va desde la precondición a la transición. Al
+	dispararse se reducen tantas marcas en una precondición como multiplicidad
+	tenga el arco asociado y aparecerán tantas marcas en una poscondición de la
+	transición como multiplicidad tenga el arco de la transición a la poscondición.
+	Las restantes localizaciones que no son precondición ni poscondición de la
+	transición no se alteran con el disparo de ésta.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>En el ejemplo gráfico, digamos la
+	transición t<sub>4</sub>  está capacitada para dispararse porque </span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>                </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>(p<sub>5</sub>)
+	= 1 </span><span lang=ES-TRAD style='font-family:Symbol'>³</span><span
+	lang=ES-TRAD> M(p<sub>5</sub> , t<sub>4</sub>).</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Cuando ella se dispara resultará:</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>                </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>(p<sub>5</sub>)
+	= 0  </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>(p<sub>3</sub>) = 1 </span><span lang=ES-TRAD style='font-family:
+	Symbol'>m</span><span lang=ES-TRAD>(p<sub>2</sub>) = 3</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>El resultado es una nueva marcación en la
+	red (</span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>) que se identifica por el vector (1,0,1,3,0). En este sentido la
+	red de Petri es dinámica porque su última componente (las marcaciones) varían
+	con el disparo de las transiciones. Para poner otro ejemplo, la transición t<sub>2</sub>
+	no está capacitada porque por ejemplo </span><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><span lang=ES-TRAD>(p<sub>2</sub>) = 0 &lt;
+	M(p<sub>2</sub>,t<sub>2</sub>) = 1.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Formalmente, si </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD> es una
+	marcación de la red y t está capacitada para dispararse, el disparo de t
+	produce una nueva marcación </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>´ en la red, lo representamos escribiendo </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>  t</span><span
+	lang=ES-TRAD style='font-family:Symbol'>®</span><span lang=ES-TRAD> </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>´  y  </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>´ que
+	definida por:</span></p>
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD> </span><span lang=ES-TRAD style='font-family:
+	Symbol'>m</span><span lang=ES-TRAD>´(p) = </span><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><span lang=ES-TRAD>(p)    si p no es
+	precondición ni poscondición de t</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>´(p) = </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>(p) - M(p,t)    si p es precondición de t (y no es poscondición)</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>´(p) = </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>(p) + M(t,p)   si p es poscondición de t (y no es precondición)</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>´(p) = </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>(p) - M(p,t) + M(t,p)  si p es precondición y poscondición de t</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Las transiciones se disparan en una Red
+	de Petri en cualquier orden, esto es, en una red de Petri, no se considera el
+	tiempo. Los disparos continúan mientras existan transiciones capacitadas y
+	terminarán sólo si ninguna transición tiene concesión.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Dada una Red de Petri N con una marcación
+	inicial </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>, se denomina conjunto de alcanzabilidad de N a partir de </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD> al conjunto
+	R[N, </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>] de todas las marcaciones </span><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><span lang=ES-TRAD>´a las que se puede
+	llegar partiendo de </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD> por un número finito de disparos de transiciones:</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>                </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>   t<sub>1</sub></span><span
+	lang=ES-TRAD style='font-family:Symbol'>®</span><span lang=ES-TRAD>   </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><sub><span lang=ES-TRAD>1</span></sub><span
+	lang=ES-TRAD>   t<sub>2</sub></span><span lang=ES-TRAD style='font-family:Symbol'>®</span><span
+	lang=ES-TRAD>   </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><sub><span
+	lang=ES-TRAD>2</span></sub><span lang=ES-TRAD>   t<sub>2</sub></span><span
+	lang=ES-TRAD style='font-family:Symbol'>®</span><span lang=ES-TRAD>   . . . </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><sub><span lang=ES-TRAD>x   </span></sub><span
+	lang=ES-TRAD> t<sub>k</sub></span><span lang=ES-TRAD style='font-family:Symbol'>®</span><span
+	lang=ES-TRAD>   </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>´</span></p>
+
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Se puede representar R[N, </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>] en forma
+	de un árbol con nodo raíz </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>  y ramas que identifican las transiciones disparadas. Ejemplo:</span></p>
+
+
+	<p align="center">
+	<img src="images/Conf_11y12/image004.png"></td>
+	</p>
+
+
+	<br clear=ALL>
+
+	<p class=MsoNormal><span lang=ES-TRAD>Véase que t<sub>1</sub> puede dispararse
+	sucesivamente y lo que hace cada vez es incrementar en 1 la marca de p<sub>3</sub>
+	. En cambio, una vez que se dispare t<sub>2</sub> se reduce la marca de p<sub>1</sub>
+	en 1 y se incrementa la marca de p<sub>2</sub>; pero ya después no se puede
+	disparar ninguna otra transición. El árbol de alcanzabilidad es:</span></p>
+
+	<p align="center">
+	<img src="images/Conf_11y12/image005.png"></td>
+	</p>
+
+
+	<br clear=ALL>
+
+	<p class=MsoNormal><span lang=ES-TRAD>R[N,</span><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><span lang=ES-TRAD>] = { (1,0,n) , n </span><span
+	lang=ES-TRAD style='font-family:Symbol'>³</span><span lang=ES-TRAD> 0 } </span><span
+	lang=ES-TRAD style='font-family:Math1'>Ç</span><span lang=ES-TRAD> { (0,1,m) ,
+	m </span><span lang=ES-TRAD style='font-family:Symbol'>³</span><span
+	lang=ES-TRAD> 0 }</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Se denomina L[N,</span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>] al
+	conjunto de todas las sucesiones finitas de transiciones que pueden dispararse
+	consecutivamente a partir de </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD> en la red N. En el ejemplo:</span></p>
+
+
+	<p class=MsoNormal><span lang=FR>L[N,</span><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><span lang=FR>] = { t<sub>1</sub> , t<sub>2</sub>
+	, t<sub>1</sub>t<sub>1</sub> , t<sub>1</sub>t<sub>2</sub> , t<sub>1</sub>t<sub>1</sub>t<sub>1</sub>
+	, t<sub>1</sub>t<sub>1</sub>t<sub>2</sub> ,  . . . }</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>A partir de formalizaciones como estas,
+	se pueden demostrar propiedades de las redes de Petri, por ejemplo.</span></p>
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>Si observamos cada marcación </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD> como un
+	n-plus y q es una transición tal que  </span><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><span lang=ES-TRAD>  q</span><span
+	lang=ES-TRAD style='font-family:Math1'>®</span><span lang=ES-TRAD>  </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>´  entonces
+	para toda transición </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>´´ </span><span lang=ES-TRAD style='font-family:Math1'>Î</span><span
+	lang=ES-TRAD> </span><b><i><span lang=ES-TRAD style='font-size:12.0pt'>N<sup>n</sup></span></i></b><span
+	lang=ES-TRAD> , se tiene ( </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD> + </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>´´ ) q</span><span lang=ES-TRAD style='font-family:Math1'>®</span><span
+	lang=ES-TRAD> (</span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD> ´+ </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>´´ ). Esta propiedad se conoce como monotonía de las redes de
+	Petri respecto al disparo de transiciones.</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>Si q = (t<sub>1</sub> t<sub>2</sub> t<sub>3</sub>
+	... t<sub>k</sub> ) </span><span lang=ES-TRAD style='font-family:Math1'>Î</span><span
+	lang=ES-TRAD> L[N, </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>]  y resulta </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>  q</span><span lang=ES-TRAD style='font-family:Math1'>®</span><span
+	lang=ES-TRAD>  </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>´  en el sentido que </span></p>
+
+
+	<p class=MsoNormal style='text-indent:35.4pt'><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><span lang=FR> = </span><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><sub><span lang=FR>o</span></sub><span
+	lang=FR>  t<sub>1</sub></span><span lang=ES-TRAD style='font-family:Math1'>®</span><span
+	lang=FR>   </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><sub><span
+	lang=FR>1</span></sub><span lang=FR>   t<sub>2</sub></span><span lang=ES-TRAD
+	style='font-family:Math1'>®</span><span lang=FR>   </span><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><sub><span lang=FR>2</span></sub><span
+	lang=FR>   t<sub>2</sub></span><span lang=ES-TRAD style='font-family:Math1'>®</span><span
+	lang=FR>   </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><sub><span
+	lang=FR>3</span></sub><span lang=FR>   ... t<sub>k</sub></span><span
+	lang=ES-TRAD style='font-family:Math1'>®</span><span lang=FR>   </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><sub><span lang=FR>k </span></sub><span
+	lang=FR>= </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=FR>´   </span></p>
+
+
+	<p class=MsoNormal><span lang=FR>y   </span><span lang=ES-TRAD
+	style='font-family:Math1'>D</span><span lang=FR> q = </span><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><span lang=FR>´ - </span><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><span lang=FR>  </span><span lang=ES-TRAD
+	style='font-family:Math1'>Î</span><span lang=ES-TRAD> </span><b><i><span
+	lang=FR style='font-size:12.0pt'>Z<sup>n</sup></span></i></b><span lang=FR>  
+	entonces    </span><span lang=ES-TRAD style='font-family:Math1'>D</span><span
+	lang=ES-TRAD> </span><span lang=FR>q = </span><span lang=ES-TRAD
+	style='font-family:Math1'>D</span><span lang=FR> t<sub>1</sub> + </span><span
+	lang=ES-TRAD style='font-family:Math1'>D</span><span lang=FR> t<sub>2</sub> + .
+	. . </span><span lang=EN-US>+ </span><span lang=ES-TRAD style='font-family:
+	Math1'>D</span><span lang=EN-US> t<sub>k</sub> ,    donde </span><span
+	lang=ES-TRAD style='font-family:Math1'>D</span><span lang=EN-US> t<sub>i</sub>
+	= </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><sub><span
+	lang=EN-US>i</span></sub><span lang=EN-US> - </span><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><sub><span lang=EN-US>i-1</span></sub><span
+	lang=EN-US>  para i=1,2,...,k</span></p>
+
+	<a name="modelacion-petri"></a>
+	<h2>Modelación con Redes de
+	Petri. Ejemplos</h2>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Ejemplo de un sistema de prestación de
+	servicios: el sistema recibe un pedido, ejecuta determinado servicio y envía el
+	resultado de su ejecución al exterior.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Los eventos que ocurren en el sistema los
+	representamos por las siguientes transiciones:</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>                t<sub>1 </sub> arriba un
+	pedido al sistema</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                t<sub>2</sub>  el sistema
+	inicia la ejecución de un pedido</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                t<sub>3</sub>  el sistema
+	termina la ejecución de un pedido</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                t<sub>4</sub>  el
+	resultado de la ejecución es enviado al exterior</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Observe que realmente en el sistema real
+	hay tres eventos: arribo de un pedido, ejecución de un pedido  y envío del
+	pedido al exterior. Los eventos que no consumen tiempo como el arribo y el
+	envío al exterior, lo representamos por una transición simple. El evento que
+	consume tiempo (la ejecución como tal del pedido lo descomponemos en dos
+	transiciones (inicio de la ejecución y fin de la ejecución) con una
+	localización intermedia que es en sí la ejecución:</span></p>
+
+	<p align="center">
+	<img src="images/Conf_11y12/image006.png"></td>
+	</p>
+
+	<br clear=ALL>
+
+	<p class=MsoNormal><span lang=ES-TRAD>Las localizaciones representan lo
+	siguiente:</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>                p<sub>1     </sub>el
+	sistema está ocioso y esperando a que arribe una petición</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                p<sub>2</sub>    existe
+	un pedido que espera ser ejecutado</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                p<sub>3</sub>    el
+	sistema está ejecutando el pedido</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                p<sub>4</sub>    el
+	sistema ya terminó la ejecución del período</span></p>
+
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>La localización p<sub>3</sub> entre t<sub>2</sub>
+	y t<sub>3</sub> representa la actividad de ejecución. Las restantes
+	localizaciones son “condiciones” que se requieren para una transición. La
+	transición t<sub>1</sub> se dispara sin condiciones y echa a andar la red
+	pasando de la marcación inicial (1,0,0,0) a (1,1,0,0). Ahora pueden dispararse
+	t<sub>1</sub> (un segundo arribo) o t<sub>2</sub> inicio de la ejecución del
+	primer pedido, lo que conduciría a (1,2,0,0) o (0,0,1,0) respectivamente. Si
+	esto último ocurre, entonces se puede disparar t<sub>1</sub> o t<sub>3…</sub></span></p>
+
+
+	<p align="center"><span style='position:absolute;z-index:251615232;margin-left:
+	0px;margin-top:0px;width:578px;height:444px'><img width=578 height=444
+	src="images/Conf_11y12/image007.png"></span><span
+	lang=ES-TRAD><img width=576 height=444
+	src="images/Conf_11y12/image008.png"></span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Véase que las localizaciones p<sub>2</sub>
+	y p<sub>4</sub> pueden así tomar valores naturales que representan
+	respectivamente el número de pedidos arribados pendientes de atención y el
+	número de pedidos terminados listos para salir al exterior. En principio 
+	desde:</span></p>
+
+
+	<p class=MsoNormal style='text-indent:35.4pt'><span lang=ES-TRAD>(1,0,0,0) solo
+	se puede disparar t<sub>1</sub> </span></p>
+
+
+	<p class=MsoNormal style='text-indent:35.4pt'><span lang=ES-TRAD>(1,n,0,0) se
+	pueden disparar t<sub>1</sub> o t<sub>2</sub></span></p>
+
+
+	<p class=MsoNormal style='text-indent:35.4pt'><span lang=ES-TRAD>(0,n,1,0) se
+	pueden disparar t<sub>1</sub> o t<sub>3</sub></span></p>
+
+
+	<p class=MsoNormal style='text-indent:35.4pt'><span lang=ES-TRAD>(1,n,0,1) se
+	pueden disparar t<sub>1</sub> o t<sub>2</sub> o t<sub>4</sub></span></p>
+
+
+	<p class=MsoNormal style='text-indent:35.4pt'><span lang=ES-TRAD>(0,n,1,1) se
+	pueden disparar t<sub>1</sub> o t<sub>3</sub> o t<sub>4</sub></span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Más generalmente, si μ = (1,0,0,0),
+	R[N,μ] consta de todos los cuádruplos de la forma (1,n,0,k) o (0,n,1,k) con n y
+	k números naturales y desde:</span></p>
+
+
+	<ul style='margin-top:0cm' type=disc>
+	 <li class=MsoNormal><span lang=ES-TRAD>(0,n,1,k) se puede disparar t<sub>1</sub>
+		 para alcanzar (0,n+1,1,k), o se puede disparar t<sub>3</sub> para alcanzar
+		 (0,n,1,k+1) o se pude disparar t<sub>4</sub> para alcanzar (0,n,1,k-1)
+		 esta último siempre que k sea mayor o igual a 1.</span></li>
+	 <li class=MsoNormal><span lang=ES-TRAD>(1,n,0,k) se puede disparar t<sub>1</sub>
+		 para alcanzar (1,n+1,0,k), o si n es mayor o igual a 1 se puede disparar t<sub>2</sub>
+		 para alcanzar (0,n-1,1,k) o si k es mayor o igual a 1 se puede disparar t<sub>4</sub>
+		 para alcanzar (1,n,0,k-1)</span></li>
+	</ul>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Como las redes de Petri son sistemas
+	inherentemente paralelos o concurrentes, dos transiciones que estén capacitadas
+	y no interactúan entre si pueden dispararse de forma independiente. En estas
+	redes no es necesario “sincronizar” estos resultados a menos que esta
+	sincronización sea un requerimiento del sistema que se está modelando. </span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Las redes de Petri son asíncronas. La
+	única propiedad temporal importante, desde el punto de vista lógico es la
+	definición de un orden parcial para el disparo de las transiciones para lo cual
+	no se requiere una noción de tiempo explícita pues la red contiene toda la
+	información necesaria para definir una secuencia de disparos. En el ejemplo
+	anterior, t<sub>3</sub> sólo puede dispararse después de t<sub>2</sub>.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>El orden parcial que se establezca es uno
+	de todos los posibles pues pueden existir varias transiciones posibles lo cual
+	es un reflejo de la naturaleza no determinista del modelo de ejecución de las
+	redes de Petri. Eso se corresponde más con el sistema real.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Un ejemplo en que la concurrencia no es
+	un problema es:</span></p>
+
+	<p align="center">
+	<img src="images/Conf_11y12/image009.png">
+	</p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>Ambas transiciones están capacitadas y
+	pueden ocurrir concurrentemente. En cambio, en la siguiente hay conflicto:</span></p>
+
+
+	<p align="center">
+	<img src="images/Conf_11y12/image011.png">
+	</p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>porque el disparo de t<sub>1</sub>
+	inhibirá a t<sub>2</sub> o viceversa. </span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>El campo de aplicación más trivial para
+	la utilización de las redes de Petri es la modelación de sistemas en los que
+	los eventos ocurren asíncronos e independientemente. Pero la existencia de
+	conflictos (que violan la independencia) no es un defecto: las redes de Petri
+	pueden servir precisamente para modelar conflictos del sistema real, por
+	ejemplo en el uso de recursos compartidos. De hecho el ejemplo anterior donde
+	hay conflictos puede ser el modelo más simple de un recurso compartido y
+	necesario tanto para t<sub>1</sub> como t<sub>2</sub></span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Veamos el ejemplo del
+	productor/consumidor que involucra el uso de un recurso compartido,
+	específicamente el uso de un Buffer. El productor produce objetos uno a uno y
+	los almacena en un buffer. El consumidor los va retirando consumiendo uno a
+	uno. Por supuesto que el consumidor necesita, para realizar su trabajo, que al
+	menos haya un producto en el Buffer.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Los eventos esenciales son dos:
+	producción y consumo. Las transiciones correspondientes son:</span></p>
+
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>Inicia la producción de un objeto por el
+	productor</span></p>
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-indent:-18.0pt'><i><span
+	lang=ES-TRAD>2.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span></i><span lang=ES-TRAD>Finaliza la producción de un objeto y se
+	coloca en el buffer</span></p>
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-indent:-18.0pt'><i><span
+	lang=ES-TRAD>3.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span></i><span lang=ES-TRAD>Se retira un objeto del buffer e inicia su
+	consumo</span></p>
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-indent:-18.0pt'><i><span
+	lang=ES-TRAD>4.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span></i><span lang=ES-TRAD>Termina el consumo de un objeto</span></p>
+
+
+	<p align="center">
+	<img src="images/Conf_11y12/image013.png">
+	</p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>                - La localización marcada
+	con s significa la condición para iniciar producción. Cuando el productor está
+	ocioso y listo para comenzar a producir s=1 y cuando se inicia producción s=0
+	hasta que termine.</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                - La localización entre
+	las transiciones inicio de producción y fin de producción es la actividad de
+	producción en sí.</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                - La localización marcada
+	con t es la condición para inicial el consumo. Cuando el consumidor terminó con
+	el producto anterior y está listo para consumir t=1 y se reduce a cero cuando
+	extrae un producto del buffer e inicia su consumo.</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                - La localización entre
+	los eventos inicio y fin de consumo es la actividad de consumo en sí.</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                - La localización que se
+	identifica con una B es el buffer y puede tener como marca cualquier número
+	natural para representar la cantidad de objetos producidos y no consumidos.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Una variante interesante de este modelo
+	es aquella que responde a un sistema similar pero con un tamaño limitado del
+	buffer, digamos “n”. Entonces el productor no puede colocar en el buffer si no
+	hay capacidad en éste. Para ello el buffer se desglosa en dos localizaciones: B
+	y B´. B contiene la cantidad de objetos producidos y no consumidos y B´ la
+	capacidad disponible en el buffer (se inicializa con B=0 y B´=n)</span></p>
+
+
+	<p align="center">
+	<img src="images/Conf_11y12/image014.png">
+	</p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Observe que la actividad de producción y
+	la colocación en el buffer no se activan a menos que la capacidad disponible
+	del buffer sea mayor que 1. Cada vez que se coloca algún producto en el buffer,
+	se reduce la capacidad disponible de éste. A su vez, cuando se extrae un
+	producto del buffer para iniciar su consumo, se reduce la cantidad de productos
+	en B y se incrementa la capacidad disponible en B´.  De esta manera μ(B)+μ(B´)
+	= n y se garantiza la cota deseada.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>El problema de los lectores/escritores es
+	bastante similar al anterior, en el sentido que hay un área de datos (recurso
+	compartido) sobre el cuál pueden leer cualquier cantidad de lectores de n
+	posibles, mientras que entre los escritores (personas con derecho a escritura)
+	uno solo puede tener acceso (el inhibe a los restantes escritores y a todos los
+	lectores); pero además sólo puede tener acceso a escritura si no hay nadie
+	leyendo. </span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Implementamos en principio el buffer en
+	una localización con marca inicial “n” y que durante toda la ejecución de la
+	red puede ser interpretada como la cantidad de lectores ociosos (LO). Ella se
+	reduce tan pronto un lector inicia la lectura y se incrementa cuando termina.
+	Por otra parte, para que una persona con derecho pueda comenzar a escribir, es
+	necesario que la marca de LO sea n, esto es, todos los lectores estén ociosos.
+	En este momento se pone entonces en 0 porque trazamos un arco con este
+	multiplicidad a la transición que inicia la escritura y con ello se inhibe a
+	los lectores; también en este momento la localización que indica el estar listo
+	para la escritura y con marcación inicial 1, se pone en 0 para inhibir a los
+	demás escritores. Cuando termina de escribir se restablecen los valores “n” y
+	“1” precondiciones del inicio de escritura.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Entonces, con estas ideas, una primera
+	versión puede ser la siguiente (observe la multiplicidad de los arcos que
+	llegan al inicio de escritura o que salen del fin de escritura):</span></p>
+
+
+	<span lang=ES-TRAD style='font-size:10.0pt;font-family:"Times New Roman","serif"'><br
+	clear=all style='page-break-before:always'>
+	</span>
+
+
+	<p align="center">
+	<img src="images/Conf_11y12/image016.png">
+	</p>
+
+
+	<br clear=ALL>
+
+	<p class=MsoNormal><span lang=ES-TRAD>Ahora, después de construida una versión
+	a imagen y semejanza de los problemas anteriores, podemos observar que las dos
+	localizaciones con marcación inicial “n” juegan exactamente el mismo papel
+	desde el punto de vista de precondiciones del inicio de lectura. Entonces
+	podemos simplificar nuestra red:</span></p>
+
+
+	<p align="center">
+	<img src="images/Conf_11y12/image017.png">
+	</p>
+
+	<br clear=ALL>
+
+	<p class=MsoNormal><span lang=ES-TRAD>Si en el problema de lectores/escritores,
+	el número de lectores no está acotado, el sistema no puede modelarse, al menos
+	con una red de Petri de este tipo (después veremos una extensión del concepto
+	de red de Petri que si permite resolverlo). En cierta forma, la parte del
+	sistema que corresponde a los lectores se puede modelar implementando un
+	contador de lectores trabajando; pero la parte de los escritores no, porque la
+	localización contadora puede tener como marca cualquier número natural y las
+	redes de Petri, tal como la hemos definido hasta ahora, no tienen capacidad
+	para saber cuando una precondición no acotada tiene marca nula.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Para dar una idea de la generalidad de
+	las aplicaciones, veamos el siguiente modelo de un sistema químico
+	caracterizado por 2 ecuaciones. La primera representa la combustión del ácido
+	oxálico (H<sub>2</sub>C<sub>2</sub>O<sub>4</sub>), la segunda ecuación
+	representa la desoxigenación del peróxido de hidrógeno o agua oxigenada (H<sub>2</sub>O<sub>2</sub>).
+	De ambas ecuaciones resulta que la combustión del ácido oxálico en presencia de
+	agua oxigenada produce agua normal (H<sub>2</sub>O) además del dióxido de
+	carbono (CO<sub>2</sub>). Este tipo de combustión es bastante frecuente en
+	productos orgánicos.</span></p>
+
+
+
+	<p class=MsoNormal><span lang=ES-TRAD style='font-size:16.0pt'>         R<sub>1</sub>:        
+	H<sub>2</sub>C<sub>2</sub>O<sub>4 </sub></span><span lang=ES-TRAD
+	style='font-size:16.0pt;font-family:Symbol'>®</span><sub><span lang=ES-TRAD
+	style='font-size:16.0pt'> </span></sub><span lang=ES-TRAD style='font-size:
+	16.0pt'>2 CO<sub>2</sub> + 2 H<sup>+</sup> + 2 e<sup>-</sup> </span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD style='font-size:16.0pt'>         R<sub>2</sub>:        
+	2 H<sup>+</sup> + 2 e<sup>-</sup> + H<sub>2</sub>O<sub>2</sub>  </span><span
+	lang=ES-TRAD style='font-size:16.0pt;font-family:Symbol'>®</span><span
+	lang=ES-TRAD style='font-size:16.0pt'> 2 H<sub>2</sub>O</span></p>
+
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Químicamente esta secuencia de reacciones
+	se justifica porque cuando el  H<sub>2</sub>O<sub>2</sub> actúa como reductor
+	se &quot;oxida a O<sub>2</sub>&quot;, lo que quiere decir que </span></p>
+
+
+
+	<p class=MsoNormal style='text-indent:35.4pt'><span lang=ES-TRAD
+	style='font-size:16.0pt'>H<sub>2</sub>O<sub>2</sub> - 2 e<sup>-</sup> </span><span
+	lang=ES-TRAD style='font-size:12.0pt'> resulta en </span><span lang=ES-TRAD
+	style='font-size:16.0pt'>O<sub>2</sub> + 2 H<sup>+</sup></span></p>
+
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Y por lo tanto, frente al H<sub>2</sub>C<sub>2</sub>O<sub>4</sub>
+	el actúa como oxidante y se forma agua. Nosotros consideramos esencialmente las
+	dos reacciones R<sub>1</sub> y R<sub>2 </sub>como sistema. Cada  transición en
+	la red representará una de estas reacciones. Las localizaciones son los
+	compuestos y las multiplicidades de los arcos, las moléculas necesarias para el
+	balance de la reacción. La marcación inicial es la cantidad de moléculas de
+	cada compuesto disponibles al principio.</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD style='font-size:8.0pt'>&nbsp;</span></p>
+
+
+
+	<p align="center">
+	<img src="images/Conf_11y12/image018.png">
+	</p>
+
+
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Si la marcación inicial (H<sub>2</sub>C<sub>2</sub>O<sub>4</sub>,CO<sub>2</sub>,H<sup>+</sup>,e<sup>-</sup>,H<sub>2</sub>O<sub>2</sub>,H<sub>2</sub>O)
+	es como en el grafo (2,0,0,0,4,0), entonces el árbol de alcanzabilidad sería el
+	que aparece a continuación. </span></p>
+
+
+	<p align="center">
+	<img src="images/Conf_11y12/image020.png">
+	</p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Así, las cantidades iniciales de los
+	compuestos (marcación inicial) son suficientes para producir 2 veces la
+	reacción R<sub>1</sub> y 2 veces R<sub>2</sub> pero cada reacción R<sub>2</sub>
+	debe estar precedida por al menos una R<sub>1</sub>.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Las redes de Petri han encontrado
+	aplicación en muchos otros problemas, por ejemplo, sistemas legales,
+	verificación de programas, economía, política, modelación del cerebro humano,
+	cálculo proposicional y procesamiento de lenguaje natural [Peterson 81]. En la
+	Clase Práctica veremos como ellas sirven para analizar nuestros ejemplos
+	clásicos de simulación y en Inteligencia Artificial podrán ver como ellas
+	pueden servir para estimar los pesos de una red neuronal MLP.</span></p>
+
+	<a name="analisis-petri"></a>
+	<h2>Problemas de análisis en
+	Redes de Petri</h2>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>La teoría de las redes de Petri es sobre
+	todo útil para analizar modelos. A continuación se hace una introducción a  4
+	de los principales problemas de análisis.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>12.3.1. <b><u>Acotación</u></b></span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Uno de los primeros problemas de
+	verificación de un modelo es el de la realización del mismo, en el sentido de
+	si se diseñó un sistema que posea una cantidad finita de estados alcanzables.
+	En el caso de las redes, esto tiene que ver con la acotación de la misma.</span></p>
+
+
+	<p class=MsoNormal><u><span lang=ES-TRAD>Definiciones</span></u><span
+	lang=ES-TRAD>.  Sea N =  [ P, T, F, M, </span><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><sub><span lang=ES-TRAD>o</span></sub><span
+	lang=ES-TRAD> ]  una red de Petri.  Sea  p </span><span lang=ES-TRAD
+	style='font-family:Math1'>Î</span><span lang=ES-TRAD> P    y   </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD> una
+	marcación de N.</span></p>
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>La localización p se dice acotada en </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>  si </span><span
+	lang=ES-TRAD style='font-family:Math1'>$</span><span lang=ES-TRAD> K </span><span
+	lang=ES-TRAD style='font-family:Math1'>Î</span><span lang=ES-TRAD> </span><b><i><span
+	lang=ES-TRAD style='font-size:12.0pt'>N</span></i></b><span lang=ES-TRAD> ,  </span><span
+	lang=ES-TRAD style='font-family:Math1'>&quot;</span><span lang=ES-TRAD> </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>´ </span><span
+	lang=ES-TRAD style='font-family:Math1'>Î</span><span lang=ES-TRAD> R[ N, </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD> ] , se
+	tiene </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>´(p) </span><span lang=ES-TRAD style='font-family:Symbol'>£</span><span
+	lang=ES-TRAD> K</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>La red N se dice acotada en </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>  si todas
+	sus localizaciones son acotas en </span><span lang=ES-TRAD style='font-family:
+	Symbol'>m</span><span lang=ES-TRAD> , esto es si:</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt'><span lang=ES-TRAD
+	style='font-family:Math1'>$</span><span lang=ES-TRAD> K </span><span
+	lang=ES-TRAD style='font-family:Math1'>Î</span><span lang=ES-TRAD> </span><b><i><span
+	lang=ES-TRAD style='font-size:12.0pt'>N</span></i></b><span lang=ES-TRAD> , </span><span
+	lang=ES-TRAD style='font-family:Math1'>&quot;</span><span lang=ES-TRAD> p </span><span
+	lang=ES-TRAD style='font-family:Math1'>Î</span><span lang=ES-TRAD> P, </span><span
+	lang=ES-TRAD style='font-family:Math1'>&quot;</span><span lang=ES-TRAD> </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>´ </span><span
+	lang=ES-TRAD style='font-family:Math1'>Î</span><span lang=ES-TRAD> R[ N, </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD> ] , se
+	tiene </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>´(p) </span><span lang=ES-TRAD style='font-family:Symbol'>£</span><span
+	lang=ES-TRAD> K</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Para el caso de K = 1 esta propiedad se
+	llama <u>seguridad</u>. En una red de Petri segura se facilita la
+	interpretación de las localizaciones como condiciones booleanas. Nótese que la
+	acotación es una propiedad dinámica pues se define en base a todas las marcaciones
+	alcanzables y depende, naturalmente de la marcación inicial. En la Teoría de
+	las redes de Petri se logran resultados como los siguientes:</span></p>
+
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>Una Red de Petri es acotada en una marcación </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD> si y solo
+	si su conjunto de alcanzabilidad R[N,</span><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><span lang=ES-TRAD>] es finito.</span></p>
+
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD>2.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD> Una Red de Petri es acotada en </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>, si cada
+	transición al dispararse distribuye como máximo tantas marcas para sus
+	poscondiciones como marcas elimina de sus precondiciones (condición suficiente,
+	no necesaria).</span></p>
+
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD>3.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>Si existen sucesiones de transiciones  q  y  r
+	y marcaciones </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>  y </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>´  tales que </span></p>
+
+
+	<p class=MsoNormal style='margin-left:70.8pt'><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><sub><span lang=ES-TRAD>o</span></sub><span
+	lang=ES-TRAD>   q</span><span lang=ES-TRAD style='font-family:Symbol'>®</span><span
+	lang=ES-TRAD>   </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>   r</span><span lang=ES-TRAD style='font-family:Symbol'>®</span><span
+	lang=ES-TRAD>   </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>´ </span></p>
+
+
+	<p class=MsoNormal style='margin-left:54.0pt'><span lang=ES-TRAD>y resulta </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>´ &gt; </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>  (en el
+	sentido que todas las componentes de </span><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><span lang=ES-TRAD>´ son mayores o iguales a
+	las de </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD> y al menos una es estrictamente mayor), entonces la red no es
+	acotada en </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><sub><span
+	lang=ES-TRAD>o</span></sub></p>
+
+	<p class=MsoNormal style='margin-left:54.0pt'><span lang=ES-TRAD>&nbsp;</span></p>
+
+	<p class=MsoNormal style='margin-left:53.25pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD>4.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>Una red no es acotada en </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><sub><span lang=ES-TRAD>o</span></sub><span
+	lang=ES-TRAD> si y solo si existe una secuencia de transiciones r  y
+	marcaciones </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>  y </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>´ en R[N, </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><sub><span
+	lang=ES-TRAD>o</span></sub><span lang=ES-TRAD>]  tales que </span></p>
+
+
+	<p class=MsoNormal style='margin-left:70.8pt'><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><span lang=ES-TRAD>   r</span><span
+	lang=ES-TRAD style='font-family:Symbol'>®</span><span lang=ES-TRAD>   </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>´       
+	y        </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>´ &gt; </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>   </span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>A manera de ejemplo, la red siguiente no
+	es acotada. No lo es por ejemplo la localización p<sub>2</sub>  porque de
+	(1,0,0,0) al dispararse t resulta (1,1,0,0) &gt; (1,0,0,0)</span></p>
+
+	<p align="center">
+	<img src="images/Conf_11y12/image022.png">
+	</p>
+
+
+	<br clear=ALL>
+
+	<p class=MsoNormal><span lang=ES-TRAD>No debe confundirse la acotación de la
+	red de Petri con la acotación del árbol de alcanzabilidad. Claro que si el árbol
+	de alcanzabilidad es finito, como en el problema de las reacciones químicas, la
+	red de Petri es acotada, pero lo inverso no es cierto. Un contraejemplo es la
+	red de Petri que modelamos en el epígrafe anterior para el problema del
+	productor/consumidor con un buffer de capacidad limitada “n”. Aquí la red de
+	Petri es acotada pues el conjunto de marcaciones alcanzables es finito, pero el
+	árbol de alcanzabilidad es infinito porque eventualmente la red vuelve al
+	estado inicial o a alguno de los intermedios formándose “ciclos”. Algo similar
+	ocurre con el problema de los lectores/escritores con un número “n” de
+	lectores. </span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Estos dos problemas sirven también para
+	ilustrar por qué la condición 2 entre las formuladas anteriormente es
+	suficiente para la acotación pero no necesaria. En el problema del productor,
+	consumidor, digamos, el disparo de la transición que significa el término del
+	consumo coloca “n+1” marcas en sus poscondiciones (en particular pone “n” en la
+	capacidad disponible del buffer) y apenas retira 1 de sus precondiciones. Sin
+	embargo, la red está acotada.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>1.5.3.2. <b><u>Conservación</u></b></span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>La conservación es especialmente
+	importante cuando las Redes de Petri se utilizan para modelar sistemas en los
+	que está presente la utilización de determinados recursos, como por ejemplo,
+	sistemas en los que existe la ocupación y liberación de dichos recursos. En
+	este tipo de redes las marcas se utilizan para modelar los recursos disponibles
+	en cada localización y es deseable chequear que los recursos ni se crean ni se
+	destruyan durante la ejecución de la red.</span></p>
+
+
+	<p class=MsoNormal><u><span lang=ES-TRAD>Definición. </span></u><span
+	lang=ES-TRAD>Sea N = [ P, T, F, M, </span><span lang=ES-TRAD style='font-family:
+	Symbol'>m</span><span lang=ES-TRAD> ]  una red de Petri. Se dice que N es
+	estrictamente conservativa si </span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>                </span><span
+	lang=ES-TRAD style='font-family:Symbol'>&quot;</span><span lang=ES-TRAD> </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>´ </span><span
+	lang=ES-TRAD style='font-family:Symbol'>Î</span><span lang=ES-TRAD> R[N, </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>]  </span><span
+	lang=ES-TRAD style='font-family:Math1'>S</span><span lang=ES-TRAD> </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>´(p<sub>i</sub>)
+	= </span><span lang=ES-TRAD style='font-family:Math1'>S</span><span
+	lang=ES-TRAD> </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD> (p<sub>i</sub>)    donde ambas sumatorias se desarrollan para
+	i=1,2,...,n=Card(P)</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Esta definición es demasiado fuerte pues
+	exige que en cada transición la cantidad de precondiciones sea igual a la
+	cantidad de poscondiciones. Por otra parte no tiene que haber una
+	correspondencia biunívoca entre marcas y recursos (algunas localizaciones pueden
+	representar recursos y otras condiciones). Para resolver esto se le asigna a
+	cada localización un peso y se exige entonces que la suma ponderada de toda
+	marcación alcanzable sea constante.</span></p>
+
+
+	<p class=MsoNormal><b><span lang=ES-TRAD>Definición.  </span></b><span
+	lang=ES-TRAD>La red N = [ P, T, F, M, </span><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><span lang=ES-TRAD> ] es conservativa si
+	existe un vector de pesos (w<sub>1</sub>, w<sub>2</sub>,...,w<sub>n</sub>)  
+	(n=Card(P)) tal que </span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>                </span><span
+	lang=ES-TRAD style='font-family:Symbol'>&quot;</span><span lang=ES-TRAD> </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=EN-US>´ </span><span
+	lang=ES-TRAD style='font-family:Symbol'>Î</span><span lang=EN-US> R[N, </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=EN-US>]     </span><span
+	lang=ES-TRAD style='font-family:Math1'>S</span><span lang=EN-US> w<sub>i </sub></span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=EN-US>´(p<sub>i</sub>)
+	= </span><span lang=ES-TRAD style='font-family:Math1'>S</span><span lang=EN-US>
+	w<sub>i</sub> </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=EN-US> (p<sub>i</sub>)</span></p>
+
+	
+	<p class=MsoNormal><span lang=ES-TRAD>Veamos como ejemplo, la red de dos
+	usuarios de un recurso:</span></p>
+
+
+	<p align="center">
+	<img src="images/Conf_11y12/image023.png">
+	</p>
+
+	<br clear=ALL>
+
+	<p class=MsoNormal><span lang=ES-TRAD>Ver que el árbol de alcanzabilidad es:</span></p>
+
+
+	<p align="center">
+	<img src="images/Conf_11y12/image024.png">
+	</p>
+	
+
+	<br clear=ALL>
+
+	<p class=MsoNormal><span lang=ES-TRAD>La marcación inicial a la cual se regresa
+	cíclicamente y que permite disparar i<sub>1</sub>  o i<sub>2</sub> tiene una
+	suma de sus componentes igual a 3 y dos ceros en su tercera y cuarta
+	componente; pero cada vez que se dispara  una de las transiciones anteriores,
+	la suma se reduce a 2 y uno de los ceros de la 3ras o 4ta. componente se
+	convierte en un 1. Entonces si utilizamos como vector de ponderación 
+	(1,1,2,2,1), demostramos que la red es conservativa pues cualquiera que sea la
+	marcación alcanzable </span><span lang=ES-TRAD style='font-family:Symbol'> </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>´  resultará</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>                </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>´(p<sub>1</sub>)
+	+ </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>´(p<sub>2</sub>) + 2 </span><span lang=ES-TRAD style='font-family:
+	Symbol'>m</span><span lang=ES-TRAD>´(p<sub>3</sub>) + 2 </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>´(p<sub>4</sub>)
+	+ </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>´(p<sub>5</sub>) = 3</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>El mismo problema, con 2 recursos
+	compartidos (del mismo tipo) puede ser analizado con idéntico vector y
+	resultará ahora </span></p>
+
+
+	<p class=MsoNormal style='text-indent:35.4pt'><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><span lang=ES-TRAD>´(p<sub>1</sub>) + </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>´(p<sub>2</sub>)
+	+ 2 </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>´(p<sub>3</sub>) + 2 </span><span lang=ES-TRAD style='font-family:
+	Symbol'>m</span><span lang=ES-TRAD>´(p<sub>4</sub>) + </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>´(p<sub>5</sub>)
+	= 4</span></p>
+
+	<p class=MsoNormal style='text-indent:35.4pt'><span lang=ES-TRAD>&nbsp;</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>En general, con “n” recursos del mismo
+	tipo, la suma para ese vector de ponderación será también una constante e igual
+	a n+2.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Llamamos la atención por último que una
+	red no acotada puede ser incluso conservativa respecto a un vector de pesos,
+	con tal que el peso asignado a la localización no acotada sea cero y entre las
+	localizaciones acotadas, la suma ponderada se mantenga constante.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>12.3.3. <b><u>Existencia</u></b></span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>La motivación al considerar el problema
+	de la conservación fue la utilización de recursos. Al tener en cuenta esto
+	surge también el problema de Deadlock (bloqueo o punto muerto) que consiste en
+	que el sistema llega a un estado en el que todos los procesos están bloqueados,
+	es decir en un estado a partir del cual no pueden ocurrir más eventos. El
+	Deadlock mirado como problema no es el arribo al final natural de la ejecución
+	de la red, sino a un estado que aborta la continuación. En el caso de las redes
+	de Petri se trata de una marcación en la cual ninguna transición está
+	capacitada, una marcación que por demás no es deseable. </span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>El ejemplo más simple puede ser el
+	siguiente: un sistema con 2 tipos de recursos “q” y “r” y 2 procesos “a” y “b”
+	que necesitan compartir ambos recursos. Supongamos que el proceso “a” ocupa
+	primero el recurso “q” y luego el recurso “r”, liberándolos a ambos sólo cuando
+	termina el proceso. El proceso “b” ocupa tambi”en ambos recursos pero en un
+	orden inverso. La siguiente red de Petri modela este sistema de forma desafortunada.
+	Los recursos se modelas por las localizaciones p<sub>4</sub> y p<sub>5</sub>
+	respectivamente</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>En la marcación inicial (1,0,0,1,1,1,0,0)
+	ambos recursos están disponibles y ambos procesos están listos para comenzar a
+	trabajar. Una posible ejecución de esta red sería:</span></p>
+
+
+	<p class=MsoNormal style='text-indent:35.4pt'><span lang=ES-TRAD>Inicia a<sub>q</sub>,
+	Term a<sub>q</sub> e Inicia a<sub>r</sub>, Term a<sub>r</sub>, Inicia b<sub>r</sub>,
+	Term b<sub>r</sub> e Inicia b<sub>q</sub>, Term b<sub>q</sub>, …, </span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Otros son evidentemente posibles pero el
+	Deadlock se produce si se ejecuta:</span></p>
+
+
+	<p class=MsoNormal style='text-indent:35.4pt'><span lang=ES-TRAD>Inicia a<sub>q</sub>,
+	Inicia b<sub>r</sub>,</span></p>
+
+	<p class=MsoNormal style='text-indent:35.4pt'><span lang=ES-TRAD>&nbsp;</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>La forma de evitar este bloqueo es
+	liberando el primer recurso utilizado tan pronto sea posible, y en caso de que
+	fuera necesario disponer de los dos recursos durante todo el proceso, entonces
+	desde el inicio escogerlos a ambos.</span></p>
+
+
+	<p align="center">
+	<img src="images/Conf_11y12/image025.png">
+	</p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>El análisis de posibles Deadlock más
+	complejos puede también algoritmizarse con ayuda de la teoría de redes de Petri
+	y del árbol de alcanzabilidad, más bien de una versión finita del árbol de
+	alcanzabilidad que se conoce como &quot;árbol de cubrimiento&quot;. En ello
+	intervienen conceptos como los siguientes:</span></p>
+
+
+	<p class=MsoNormal><u><span lang=ES-TRAD>Definiciones</span></u><span
+	lang=ES-TRAD>: Sea N = [P, T, F, M, </span><span lang=ES-TRAD style='font-family:
+	Symbol'>m</span><sub><span lang=ES-TRAD>0</span></sub><span lang=ES-TRAD>] una
+	red de Petri</span></p>
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>Una marcación </span><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><span lang=ES-TRAD> del conjunto de
+	localizaciones P se dice <i><u>muerta en N</u></i> si no existe t </span><span
+	lang=ES-TRAD style='font-family:Symbol'>Î</span><span lang=ES-TRAD> T que esté
+	capacitada en </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>.</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>Una transición t </span><span lang=ES-TRAD
+	style='font-family:Symbol'>Î</span><span lang=ES-TRAD> T de la red N se
+	denomina <i><u>muerta en la marcación </u></i></span><i><u><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><span lang=ES-TRAD> </span></u></i><span
+	lang=ES-TRAD> si a partir de </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD> ninguna marcación es alcanzable en la que t esté capacitada.</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>Una transición t </span><span lang=ES-TRAD
+	style='font-family:Symbol'>Î</span><span lang=ES-TRAD> T de la red N se
+	denomina <i><u>viva en la marcación </u></i></span><i><u><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><span lang=ES-TRAD> </span></u></i><span
+	lang=ES-TRAD> si t no es muerta en ninguna marcación alcanzable a partir de </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>.</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>Una marcación </span><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><span lang=ES-TRAD> del conjunto de
+	localizaciones P se denomina <i><u>viva en la red</u></i> si todas las
+	transiciones de T son vivas en </span><span lang=ES-TRAD style='font-family:
+	Symbol'>m</span><span lang=ES-TRAD>.</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>La red N se denomina <i><u>viva</u></i> si su
+	marcación inicial </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><sub><span
+	lang=ES-TRAD>0</span></sub><span lang=ES-TRAD> es viva en la red.</span></p>
+
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>En otras palabras, la marcación </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD> está muerta
+	en la red si a partir de ella no se puede efectuar ninguna transición. Cuando
+	se alcanza un Deadlock se alcanza una marcación muerta. Por tanto las
+	marcaciones muertas dentro del conjunto de alcanzabilidad son necesarias para
+	el bloqueo, pero no suficientes, porque se puede alcanzar una marcación muerta
+	con un fin normal de la ejecución de la red si el árbol de alcanzabilidad es de
+	por si finito (recuérdese el ejemplo de las reacciones químicas).</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Análogamente, cuando se alcanza una
+	marcación que representa un Deadlock, todas las transiciones de T son muertas
+	en esa marcación; pero se puede alcanzar una transición muerta en cierta
+	marcación </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD> con un fin normal de la ejecución de tal transición, por ejemplo
+	si ella representa el inicio de un proceso que utiliza un recurso agotable,
+	incluso se puede alcanzar un estado en que todas las transiciones de T son
+	muertas en esa marcación (vale de nuevo el ejemplo de las reacciones químicas).</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>La tercera definición tiene ya un alcance
+	prospectivo. La transición es viva en </span><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><span lang=ES-TRAD>, no solo cuando no es
+	muerta en </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>, sino cuando no es muerta en ninguna marcación alcanzable a
+	partir de </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>. La cuarta definición es aún más radical desde el punto de vista
+	prospectivo, porque la marcación será viva en la red cuando todas las
+	transiciones sean vivas en esa marcación, esto es cuando todas las transiciones
+	sean posibles a partir de cualquier marcación alcanzable a partir de </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Está claro que la última definición
+	caracteriza una condición suficiente para la no existencia de Deadlock (o su
+	negación caracteriza una condición necesaria para la existencia del bloqueo).
+	Lo interesante puede ser que en el caso de redes cuyos árboles de
+	alcanzabilidad son infinitos y en términos de los árboles de cubrimiento 
+	pueden encontrarse relaciones entre las definiciones anteriores y en particular
+	con la última y condiciones necesarias y suficientes para la no existencia del
+	Deadlock. </span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Estos conceptos y resultados son
+	similares a los que se utilizan en la Teoría de Redes de Computadoras para
+	analizar los posibles bloqueos.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Existen  otros conceptos relacionados con
+	al <i>existencia</i> que pueden ser catalogados como <i>Niveles de existencia</i>
+	y que se definen de la siguiente forma para una red N=[P,T,F,M,</span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>]:</span></p>
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>Una transición t está <i>viva al nivel 0 </i>o
+	está <i>muerta</i> si nunca puede dispararse.</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>Una transición t está <i>viva al nivel 1 </i> si
+	es potencialmente disparable, es decir si existe una marcación </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>´</span><span
+	lang=ES-TRAD style='font-family:Symbol'>Î</span><span lang=ES-TRAD>R[N, </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>] en la que
+	t está capacitada.</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>Una transición t está <i>viva al nivel 2</i>
+	si para todo número entero positivo &quot;n&quot; existe una sucesión de
+	transiciones q</span><span lang=ES-TRAD style='font-family:Symbol'>Î</span><span
+	lang=ES-TRAD>L[N, </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>], en la que t ocurre n veces.</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>Una transición t está <i>viva al nivel 3 </i> si
+	existe una sucesión de transiciones q</span><span lang=ES-TRAD
+	style='font-family:Symbol'>Î</span><span lang=ES-TRAD>L[N, </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>], infinita
+	en la que t ocurre una cantidad infinita de veces-</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>Una transición t está <i>viva al nivel 4 </i> o
+	simplemente <i>viva</i> si para todo </span><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><span lang=ES-TRAD>´</span><span
+	lang=ES-TRAD style='font-family:Symbol'>Î</span><span lang=ES-TRAD>R[N, </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>] existe una
+	sucesión q</span><span lang=ES-TRAD style='font-family:Symbol'>Î</span><span
+	lang=ES-TRAD>L[N, </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>], tal que t está capacitada en </span><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><span lang=ES-TRAD>´´, con </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>´ q</span><span
+	lang=ES-TRAD style='font-family:Symbol'>®</span><span lang=ES-TRAD> </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>´´</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Por ejemplo, consideremos la red
+	siguiente:</span></p>
+
+
+	<p align="center">
+	<img src="images/Conf_11y12/image027.png">
+	</p>
+
+	<br clear=ALL>
+
+	<p class=MsoNormal><span lang=ES-TRAD>La transición t<sub>o</sub> está muerta,
+	pues nunca puede dispararse. La transición t<sub>1</sub> se puede disparar
+	exactamente 1 vez, por lo que está viva al nivel 1. La transición t<sub>2</sub>
+	puede dispararse una cantidad arbitraria de veces, pero esta cantidad dependerá
+	de las veces que t<sub>3</sub> se dispare y una vez que t<sub>1</sub> se
+	dispare, ya t<sub>3</sub> no se puede disparar más y la cantidad de veces que t<sub>2</sub>
+	puede dispararse es finita. Esto significa que t<sub>2</sub> está viva al nivel
+	2y también lo está al nivel 3 (observe que la sucesión infinita t<sub>3</sub>t<sub>2</sub>t<sub>3</sub>t<sub>2</sub>t<sub>3</sub>t<sub>2</sub>
+	.... contiene a t<sub>2</sub> un número infinito de veces); pero está viva al
+	nivel 4?. No, le pasa algo similar a la transición t<sub>3</sub> que puede ser
+	disparada una cantidad infinita de veces, por lo que está viva al nivel 3; pero
+	no al nivel 4, pues una vez que t<sub>1</sub> se dispare, t<sub>3</sub> no
+	podrá dispararse más.</span></p>
+
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>12.3.3. <b><u>Alcanzabilidad y
+	cubrimiento</u></b></span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Quizás el problema más sencillo de
+	plantear y a la vez el más importante es el problema de la alcanzabilidad de
+	una determinada marcación en una red de Petri, el cual representa el problema
+	de la alcanzabilidad de un determinado estado en el sistema modelado. Cuando
+	este estado constituye por ejemplo, un estado de alta peligrosidad, este
+	problema por si solo puede constituir la base de la modelación que se está
+	realizando.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Otro problema similar surge cuando nos
+	concentramos en verificar si una marcación determinada coincide o sobrepasa el
+	valor de otras marcaciones en las localizaciones de una red.</span></p>
+
+
+
+	<p class=MsoNormal><u><span lang=ES-TRAD>Problema de alcanzabilidad</span></u><span
+	lang=ES-TRAD>: Dada la red de Petri N=[ P, T, F, N, </span><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><sub><span lang=ES-TRAD>0</span></sub><span
+	lang=ES-TRAD>] y una marcación  </span><span lang=ES-TRAD style='font-family:
+	Symbol'>m</span><span lang=ES-TRAD>  determinar si </span><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><span lang=ES-TRAD style='font-family:Symbol'>Î</span><span
+	lang=ES-TRAD>R[N, </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><sub><span
+	lang=ES-TRAD>0</span></sub><span lang=ES-TRAD>] (se dice que </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD> es <i>alcanzable</i>
+	en N).</span></p>
+
+
+	<p class=MsoNormal><u><span lang=ES-TRAD>Problema de cubrimiento</span></u><span
+	lang=ES-TRAD>: Dada la red de Petri N=[P, T, F, N, </span><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><sub><span lang=ES-TRAD>0</span></sub><span
+	lang=ES-TRAD>] y una marcación </span><span lang=ES-TRAD style='font-family:
+	Symbol'>m</span><span lang=ES-TRAD> </span><span lang=ES-TRAD style='font-family:
+	Symbol'>Î</span><span lang=ES-TRAD> R[N, </span><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><sub><span lang=ES-TRAD>0</span></sub><span
+	lang=ES-TRAD>], determinar si existe </span><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><span lang=ES-TRAD>´ </span><span
+	lang=ES-TRAD style='font-family:Symbol'>Î</span><span lang=ES-TRAD> R[N, </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><sub><span lang=ES-TRAD>0</span></sub><span
+	lang=ES-TRAD>], tal que </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>´ </span><span lang=ES-TRAD style='font-family:Symbol'>³</span><span
+	lang=ES-TRAD> </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>. (se dice que </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>´ <i>cubre</i> <i>a</i>  </span><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><span lang=ES-TRAD> o que </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD> <i>es
+	cubierta por</i> </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>´).</span></p>
+
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Observe que en esta última definición no
+	se exige que </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>´ </span><span lang=ES-TRAD style='font-family:Symbol'>Î</span><span
+	lang=ES-TRAD> R[N, </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>], sino que </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>´ </span><span lang=ES-TRAD style='font-family:Symbol'>Î</span><span
+	lang=ES-TRAD> R[N, </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><sub><span
+	lang=ES-TRAD>0</span></sub><span lang=ES-TRAD>]. </span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Cuando es posible caracterizar
+	completamente el conjunto de alcanzabilidad R[N, </span><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><span lang=ES-TRAD>], parece clara la
+	solubilidad de ambos problemas; pero no siempre esto es &quot;posible&quot;. En
+	[Starke 90] se demuestra que ambos problemas son solubles; pero el primero no
+	es tratable (pertenece a la clase de problemas NP). De hecho ha sido demostrado
+	que el problema de la alcanzabilidad es equivalente al problema de determinar
+	si la marcación nula es alcanzable, o lo que es lo mismo, determinar si en una
+	localización no acotada, no existen marcas [Peterson 81].</span></p>
+
+	<a name="arbol-alacanzabilidad"></a>
+	<h2>Análisis de redes de
+	Petri. El árbol de alcanzabilidad</h2>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Como hemos visto, existen problemas que
+	requieren de una solución al trabajar con las Redes de Petri, por lo que se
+	hace necesario desarrollar técnicas para solucionarlos, en especial, técnicas
+	que sean fácilmente implementables, lo cual permitiría el análisis automático
+	de los sistemas modelados. A continuación presentaremos la técnica que mayor ha
+	sido utilizada con este objetivo. </span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Ya hemos visto que el <i>Árbol de
+	alcanzabilidad </i>de una red de Petri se utilizar para representar el conjunto
+	de alcanzabilidad de la misma y sus nodos serán las marcaciones alcanzables de
+	la red. Consideremos por ejemplo, la red mostrada en la siguiente figura:</span></p>
+
+
+	<p align="center">
+	<img src="images/Conf_11y12/image028.png">
+	</p>
+
+	<br clear=ALL>
+
+	<p class=MsoNormal><span lang=ES-TRAD>cuyo árbol de alcanzabilidad (realmente
+	infinito) se inicia así:</span></p>
+
+
+	<p align="center">
+	<img src="images/Conf_11y12/image029.png">
+	</p>
+	  
+	<br clear=ALL>
+
+	<p class=MsoNormal><span lang=ES-TRAD>En este árbol es interesante destacar que
+	la marcación (0,0,1) está muerta, por lo que a partir de ella no se generarán
+	más nodos. También debemos notar que la marcación (0,1,1) producida al con el
+	disparo de t<sub>3</sub> en (0,2,1) es la misma que se obtuvo al disparar t<sub>2</sub>
+	a partir de la marcación inicial y por tanto, los nodos siguientes por esa vía,
+	son similares, en otras palabras, a partir de (0,1,1) sólo se puede disparar
+	una vez t<sub>3</sub> hasta alcanzar la marcación muerta (1,0,0).</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Tenemos conciencia que esta forma de
+	trabajo produce un árbol de alcanzabilidad infinito en todos los casos en que
+	el conjunto de alcanzabilidad R[N,</span><span lang=ES-TRAD style='font-family:
+	Symbol'>m</span><span lang=ES-TRAD>] sea infinito; pero además se pueden
+	producir un árbol infinito siendo finito el conjunto R[N, </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>],
+	principalmente por la existencia de marcaciones que se repiten en el proceso de
+	generación. También sabemos que en el árbol de alcanzabilidad se representan
+	también todas las posibles sucesiones de disparos de transiciones. Cada camino
+	de la raíz a un nodo representará un elemento de L[N, </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>] para una
+	red N con marcación inicial </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Para que este árbol constituya una
+	herramienta de análisis eficiente, debemos encontrar algunos medios para
+	limitarlo a un tamaño finito, lo cual evidentemente conllevará a que haya
+	pérdida de información y por lo cual, en determinados casos, no todos los
+	problemas de análisis podrán ser resueltos, pero si una buena parte de ellos.
+	Para limitar el tamaño del árbol debemos:</span></p>
+
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>Limitar la cantidad de marcaciones o nodos
+	introducidos en cada paso. Para este propósito serán de gran ayuda las
+	marcaciones en las que ninguna transición está capacitada, pues no generarán
+	nuevos nodos en el árbol.</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>Considerar aquellas marcaciones que ya
+	aparecieron previamente en el árbol, las cuales tampoco generarán sucesores,
+	pues estos últimos serán producidos a partir de la primera ocurrencia de la
+	marcación en el árbol</span></p>
+
+	<p class=MsoNormal style='margin-left:18.0pt;text-indent:-18.0pt'><span
+	lang=ES-TRAD style='font-family:Symbol'>¨<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span></span><span lang=ES-TRAD>Considerar por último determinadas sucesiones
+	de disparos de transiciones (en lugar de transiciones individuales), esto es
+	elementos de L[N, </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><sub><span
+	lang=ES-TRAD>o</span></sub><span lang=ES-TRAD>]</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Detallemos esto último. Considere un
+	elemento q </span><span lang=ES-TRAD style='font-family:Symbol'>Î</span><span
+	lang=ES-TRAD> L[N, </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><sub><span
+	lang=ES-TRAD>o</span></sub><span lang=ES-TRAD>], que comienza a ejecutarse en
+	una marcación  </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><sub><span
+	lang=ES-TRAD> </span></sub><span lang=ES-TRAD> y finaliza en una marcación </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>´ para la
+	que se cumple </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>´ &gt; </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD> . Esto significa que </span><span lang=ES-TRAD style='font-family:
+	Symbol'>m</span><span lang=ES-TRAD>´ será igual a </span><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><span lang=ES-TRAD>, excepto en algunas (al
+	menos una) localizaciones en que las componentes de </span><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><span lang=ES-TRAD>´ serán mayores que las
+	de </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>, por lo cual obtendremos:</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>                </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD> ´ = </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD> + (</span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD> ´- </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD> ), con   </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>´- </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD> &gt; 0   
+	(0 es el vector nulo)</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>o lo que es lo mismo, el efecto de
+	ejecutar q será adicionar </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>´- </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>  marcas a la marcación en que se inicie su ejecución. A partir de
+	</span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>´, podemos ejecutar nuevamente la sucesión q para obtener una
+	nueva marcación </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>´´, para la cual, se cumplirá</span></p>
+
+
+	<p class=MsoNormal style='text-indent:35.4pt'><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><span lang=ES-TRAD> ´´ = </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>´ + (</span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD> ´- </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD> ) = </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD> + 2 (</span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD> ´- </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD> )</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Si la sucesión q se ejecuta &quot;n&quot;
+	veces, obtendremos una marcación </span><span lang=ES-TRAD style='font-family:
+	Symbol'>m</span><sup><span lang=ES-TRAD>n</span></sup><span lang=ES-TRAD> que
+	cumplirá:</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>                </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><sup><span lang=ES-TRAD>n</span></sup><span
+	lang=ES-TRAD>  = </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD> + n (</span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD> ´- </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD> )</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Esto significa que en tales casos se
+	creará una cantidad arbitrariamente de marcas en aquellas localizaciones que
+	incrementan sus marcas al ejecutar q. Por ejemplo, en la última red de Petri,
+	cuyo árbol de alcanzabilidad dibujamos, la transición t<sub>1</sub> puede
+	dispararse consecutivamente cuantas veces desee hasta alcanzar &quot;n&quot;
+	marcas en la localización 2 (marcación (1,n,0)). Entonces para representar
+	todas las marcaciones que pueden resultar de este tipo de ejecución
+	utilizaremos en el árbol de alcanzabilidad el símbolo especial &quot;</span><span
+	lang=ES-TRAD style='font-family:Symbol'>¥</span><span lang=ES-TRAD>&quot;, cuya
+	interpretación es el valor infinito y representará una cantidad de marcas que
+	puede ser arbitrariamente grande. Para operar con este símbolo seguiremos las
+	siguientes reglas para todo número natural &quot;n&quot;:</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>                n  +  </span><span
+	lang=ES-TRAD style='font-family:Symbol'>¥</span><span lang=ES-TRAD> = </span><span
+	lang=ES-TRAD style='font-family:Symbol'>¥</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                </span><span
+	lang=ES-TRAD style='font-family:Symbol'>¥</span><span lang=ES-TRAD> - n = </span><span
+	lang=ES-TRAD style='font-family:Symbol'>¥</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                n * </span><span
+	lang=ES-TRAD style='font-family:Symbol'>¥</span><span lang=ES-TRAD> = </span><span
+	lang=ES-TRAD style='font-family:Symbol'>¥</span><span lang=ES-TRAD> ,  n </span><span
+	lang=ES-TRAD style='font-family:Symbol'>¹</span><span lang=ES-TRAD> 0</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                0 * </span><span
+	lang=ES-TRAD style='font-family:Symbol'>¥</span><span lang=ES-TRAD> = 0</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                n &lt; </span><span
+	lang=ES-TRAD style='font-family:Symbol'>¥</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                </span><span
+	lang=ES-TRAD style='font-family:Symbol'>¥</span><span lang=ES-TRAD> </span><span
+	lang=ES-TRAD style='font-family:Symbol'>£</span><span lang=ES-TRAD> </span><span
+	lang=ES-TRAD style='font-family:Symbol'>¥</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Teniendo esto en cuenta, presentaremos
+	ahora un algoritmo para construir una variante finita del árbol de
+	alcanzabilidad, denominado &quot;árbol de cubrimiento&quot;. En él cada nodo
+	será una marcación que puede contener el símbolo </span><span lang=ES-TRAD
+	style='font-family:Symbol'>¥</span><span lang=ES-TRAD>  entre sus componentes,
+	por lo que las denominaremos </span><span lang=ES-TRAD style='font-family:Symbol'>¥</span><span
+	lang=ES-TRAD>-marcaciones. El algoritmo construitá un árbol (M,A) para una red
+	N=[P,T,F,M,</span><span lang=ES-TRAD style='font-family:Symbol'>m</span><sub><span
+	lang=ES-TRAD>0</span></sub><span lang=ES-TRAD>] siendo M el conjunto de </span><span
+	lang=ES-TRAD style='font-family:Symbol'>¥</span><span lang=ES-TRAD>-marcaciones
+	asociadas a la red y A el conjunto de arcos del árbol que tendrán la forma {</span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>, t, </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>´} significando
+	que </span><span lang=ES-TRAD style='font-family:Symbol'>m</span><span
+	lang=ES-TRAD>´ se obtiene a partir de </span><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><span lang=ES-TRAD> disparando la transición
+	t de T.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>El siguiente programa muestra dicho
+	algoritmo en el que utilizamos la notación <b>Antecesor[</b></span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>´]  para
+	almacenar y obtener la marcación </span><span lang=ES-TRAD style='font-family:
+	Symbol'>m</span><span lang=ES-TRAD> a partir de la cual se obtuvo </span><span
+	lang=ES-TRAD style='font-family:Symbol'>m</span><span lang=ES-TRAD>´ al
+	disparar alguna transición de la red. El programa utiliza los siguientes tipos
+	y variables:</span></p>
+
+
+
+	<p class=MsoNormal><b><span lang=ES-TRAD>Type</span></b></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>     TMarcacion;                                                 //
+	Representación de </span><span lang=ES-TRAD style='font-family:Symbol'>¥</span><span
+	lang=ES-TRAD>-marcaciones</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>     TTransicion;                                                  //
+	Representación de Transiciones</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>     TArcos;                                                           //
+	Representación de los arcos del árbol</span></p>
+
+
+	<p class=MsoNormal><b><span lang=ES-TRAD>var</span></b></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>     M :  <b>set of </b> TMarcacion;                             //
+	Nodos del árbol</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>     NP :  <b>set of </b>TMarcacion;                             //
+	Nodos que no han sido procesados</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>     A :  <b>set of  </b> TArcos;                                       //
+	Arcos del árbol</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>     C :  <b>set of  </b>Ttransicion;                                //Transiciones
+	capacitadas en cada paso</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>     T :  TTransicion;</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>     m, m1, m2 : TMarcacion;</span></p>
+
+
+	<p class=MsoNormal><b><span lang=ES-TRAD>Begin</span></b></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>     NP:={</span><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><span lang=ES-TRAD>0} ;                                                     //
+	Marcación inicial</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>     Antecesor[</span><span lang=ES-TRAD
+	style='font-family:Symbol'>m</span><span lang=ES-TRAD>0]:=<b>NIL</b>;                                   //
+	La marcación inicial no tiene antecesor</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>     M:={}; A:={};                                               //
+	Inicialización con el conjunto vacío</span></p>
+
+	<p class=MsoNormal><b><span lang=ES-TRAD>    While </span></b><span
+	lang=ES-TRAD>NP </span><span lang=ES-TRAD style='font-family:Symbol'>¹</span><span
+	lang=ES-TRAD> {}                                 // Mientras queden </span><span
+	lang=ES-TRAD style='font-family:Symbol'>¥</span><span lang=ES-TRAD>-marcaciones
+	sin procesar</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>        begin</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>            m:= Elemento de NP;                            //
+	Tomar una </span><span lang=ES-TRAD style='font-family:Symbol'>¥</span><span
+	lang=ES-TRAD>-marcación no procesada</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>            NP:= Delete[NP,m] ;                              //
+	Eliminarla de NP</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>            M:=Append[M,m];                //
+	Ponerla en M, el conjunto de nodos del árbol</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>            C:={t </span><span
+	lang=ES-TRAD style='font-family:Symbol'>ê</span><span lang=ES-TRAD> t<sup>-</sup>
+	</span><span lang=ES-TRAD style='font-family:Symbol'>£</span><span
+	lang=ES-TRAD> m };                                      // Determinar
+	transiciones capacitadas en m                </span></p>
+
+	<p class=MsoNormal><b><span lang=ES-TRAD>            for</span></b><span
+	lang=ES-TRAD> t</span><span lang=ES-TRAD style='font-family:Symbol'>Î</span><span
+	lang=ES-TRAD> C <b>do                                             // </b>Para
+	toda transición t capacitada</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                 </span><span lang=FR>begin</span></p>
+
+	<p class=MsoNormal><span lang=FR>                     m1:=m+</span><span
+	lang=ES-TRAD style='font-family:Symbol'>D</span><span lang=FR>t;                                     //
+	Disparo de t</span></p>
+
+	<p class=MsoNormal><span lang=FR>                     </span><span
+	lang=ES-TRAD>m2:=m;</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                     // Debe buscar en el
+	camino de la raíz a m si existe una </span><span lang=ES-TRAD style='font-family:
+	Symbol'>¥</span><span lang=ES-TRAD>-marcación </span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                     // que sea cubierta
+	por m1, con el objetivo de introducir el</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                     //  símbolo </span><span
+	lang=ES-TRAD style='font-family:Symbol'>¥</span><span lang=ES-TRAD>   en las
+	localizaciones no acotadas</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                     </span><b><span
+	lang=EN-GB>while </span></b><span lang=EN-GB> (m2 </span><span lang=ES-TRAD
+	style='font-family:Symbol'>¹</span><span lang=ES-TRAD> </span><b><span
+	lang=EN-GB>NIL</span></b><span lang=EN-GB>) <b> and NOT </b>(m2 </span><span
+	lang=ES-TRAD style='font-family:Symbol'>£</span><span lang=EN-GB> m1)<b> do</b></span></p>
+
+	<p class=MsoNormal><b><span lang=EN-GB>                          </span></b><span
+	lang=ES-TRAD>m2:=Antecesor[m2];</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                     <b>if </b>m2 </span><span
+	lang=ES-TRAD style='font-family:Symbol'>¹</span><span lang=ES-TRAD> <b>NIL then</b>                           //
+	m1 cubre a m2 en el camino hasta la raíz</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                          m1:=m1 +
+	(m1-m2) * </span><span lang=ES-TRAD style='font-family:Symbol'>¥</span><span
+	lang=ES-TRAD>;        // Pone  </span><span lang=ES-TRAD style='font-family:
+	Symbol'>¥</span><span lang=ES-TRAD>  en la localización no acotada</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                    
+	A:=Append[A,{m,t,m1}];            // Añade arco al árbol</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                     <b>if  </b>m1 </span><span
+	lang=ES-TRAD style='font-family:Symbol'>Ï</span><span lang=ES-TRAD> M </span><span
+	lang=ES-TRAD style='font-family:Math1'>Ç</span><span lang=ES-TRAD> NP <b>then  </b>//
+	Verifica si m1 no ha aparecido ya en el árbol</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                         <b>begin</b></span></p>
+
+	<p class=MsoNormal><b><span lang=ES-TRAD>                               </span></b><span
+	lang=ES-TRAD>NP:=Append[NP,m1];       // La almacena para su posterior
+	procesamiento</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                               Antecesor[m1]:=m;            //
+	El antecesor de m1 es m</span></p>
+
+	<p class=MsoNormal><span lang=ES-TRAD>                          </span><b><span
+	lang=EN-GB>end;                                             // </span></b><span
+	lang=EN-GB>End de if m1</span></p>
+
+	<p class=MsoNormal><span lang=EN-GB>                <b>end;                                                       //
+	</b>for</span></p>
+
+	<p class=MsoNormal><span lang=EN-GB>        </span><b><span lang=ES-TRAD>end;                                                              //
+	</span></b><span lang=ES-TRAD>while</span></p>
+
+	<p class=MsoNormal><b><span lang=ES-TRAD>End .                                                                     //
+	</span></b><span lang=ES-TRAD>Begin</span></p>
+
+
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Si se aplica el algoritmo al ejemplo,
+	planteado al inicio del epígrafe obtenemos el siguiente árbol de cubrimiento</span></p>
+
+	<p align="center">
+	<img src="images/Conf_11y12/image030.png">
+	</p>
+
+	<br clear=ALL>
+
+	<p class=MsoNormal><span lang=ES-TRAD>En [Peterson81] se demuestra que este
+	algoritmo siempre termina, esto es que el árbol de cubrimiento de cualquier Red
+	de Petri es finito, por lo que constituye una herramienta efectiva para
+	realizar análisis de los sistemas modelados como redes. Veamos como se hace:</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>12.4.1. <b>Análisis de acotación</b></span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Esta propiedad es fácilmente verificable
+	utilizando el árbol de cubrimiento, pues la red estará acotada si y solo si el
+	símbolo </span><span lang=ES-TRAD style='font-family:Math1'>¥</span><span
+	lang=ES-TRAD> no aparece en el árbol. </span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>La demostración de esta afirmación es muy
+	sencilla. La aparición del símbolo </span><span lang=ES-TRAD style='font-family:
+	Math1'>¥</span><span lang=ES-TRAD> en el árbol significa que la cantidad de
+	marcas que puede aparecer en la correspondiente localización es potencialmente
+	infinita, debido a la existencia de una sucesión de disparos arbitrariamente
+	repetible que incrementará siempre esta cantidad de marcas. Por otro lado, si
+	la red no está acotada, su conjunto de alcanzabilidad es infinito; por lo que
+	tiene que aparecer obligatoriamente el símbolo </span><span lang=ES-TRAD
+	style='font-family:Math1'>¥</span><span lang=ES-TRAD> en el árbol, que siempre
+	es finito.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Si una red de Petri está acotada, o lo
+	que es equivalente, si no aparece el símbolo infinito en su árbol de
+	cubrimiento, este último contendrá un nodo por cada marcación alcanzable en la
+	red, lo cual permitirá que todos los problemas de análisis antes mencionados
+	puedan ser resueltos mediante la simple inspección del árbol. </span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Por ejemplo para determinar la cota de
+	una localización determinada en una red acotada se debe generar el árbol de
+	cubrimiento de la misma y recorrer este último, buscando el valor máximo de la
+	componente correspondiente a la localización en las marcaciones. Si el valor de
+	esta cota es uno, se sabe además que la localización es segura. Incluso para el
+	caso de redes de Petri no acotadas, podemos determinar por esta vía la cota de
+	aquellas localizaciones que si son acotadas utilizando el árbol de cubrimiento.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>12.4.2 <b>Análisis de la Conservación</b></span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Recordamos que una red de Petri es
+	conservativa si no pierde ni gana marcas durante su ejecución sino que
+	simplemente las mueve por toda la red. En el caso de que varias marcas fueron
+	modeladas como una sola, para posteriormente crear las necesarias disparando
+	alguna transición se definió un vector de pesos para las localizaciones y la
+	red era conservativa respecto a este vector si la suma ponderada de las marcas
+	era constante en todas las marcaciones alcanzables en la red.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Esta propiedad también puede ser
+	verificada de forma efectiva utilizando el árbol de cubrimiento de una red,
+	pues recorriéndolo, puede computarse la suma ponderada para cada marcación. Si
+	todas estas sumas son iguales, la red es conservativa y en caso contrario no lo
+	es.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>En este análisis debemos considerar
+	cuidadosamente el símbolo </span><span lang=ES-TRAD style='font-family:Math1'>¥</span><span
+	lang=ES-TRAD>, pues si alguna </span><span lang=ES-TRAD style='font-family:
+	Math1'>¥</span><span lang=ES-TRAD>-marcación lo tiene en alguna de sus
+	componentes el peso asociado a la localización correspondiente debe ser igual a
+	cero para que la red sea conservativa. En caso de que no se cumpla esto, la
+	suma ponderada podrá variar para aquellas marcaciones que difieren sólo en la
+	componente igual a </span><span lang=ES-TRAD style='font-family:Math1'>¥</span><span
+	lang=ES-TRAD> y la red no será conservativa.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Pero lo más interesante tal vez, es que
+	el árbol de cubrimiento puede ser utilizado para determinar el vector de pesos
+	&quot;<i>w</i>&quot; con respecto al cual una red es conservativa. Para ello,
+	la red debe ser acotada, o se debe permitir que algunos pesos sean igual a cero
+	para las localizaciones no acotadas. Si la red es conservativa tendremos que
+	para toda </span><span lang=ES-TRAD style='font-family:Math1'>¥</span><span
+	lang=ES-TRAD>-marcación del árbol, con componentes </span><span lang=ES-TRAD
+	style='font-family:Math1'>m</span><sub><span lang=ES-TRAD>i</span></sub><span
+	lang=ES-TRAD> ,  1</span><span lang=ES-TRAD style='font-family:Math1'>£</span><span
+	lang=ES-TRAD> i </span><span lang=ES-TRAD style='font-family:Math1'>£</span><span
+	lang=ES-TRAD> n = Card(P), se cumple que para una constante s: </span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>                w<sub>1 </sub>* </span><span
+	lang=ES-TRAD style='font-family:Math1'>m</span><sub><span lang=ES-TRAD>1</span></sub><span
+	lang=ES-TRAD> + w<sub>2 </sub>* </span><span lang=ES-TRAD style='font-family:
+	Math1'>m</span><sub><span lang=ES-TRAD>2</span></sub><span lang=ES-TRAD> + w<sub>3
+	</sub>* </span><span lang=ES-TRAD style='font-family:Math1'>m</span><sub><span
+	lang=ES-TRAD>3</span></sub><span lang=ES-TRAD> + . . . + w<sub>n </sub>* </span><span
+	lang=ES-TRAD style='font-family:Math1'>m</span><sub><span lang=ES-TRAD>n</span></sub><span
+	lang=ES-TRAD> = s</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>lo cual define para un árbol de
+	cubrimiento com &quot;m&quot; nodos, un sistema de &quot;m&quot; ecuaciones
+	lineales con n+1 incógnitas, al cual se adicionan las restricciones w<sub>i</sub>
+	&gt; 0, para 1</span><span lang=ES-TRAD style='font-family:Math1'>£</span><span
+	lang=ES-TRAD> i </span><span lang=ES-TRAD style='font-family:Math1'>£</span><span
+	lang=ES-TRAD> n. La solución de este tipo de ecuaciones, si existe, puede ser
+	computada empleando técnicas bien conocidas. En cualquier caso, si esta solución
+	existe, puede ser encontrada, y si no existe, puede determinarse su no
+	existencia, resolviendo definitivamente el problema del carácter conservativo
+	de la red.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>12.4.3 <b>Análisis de cubrimiento</b></span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>En este problema, se quiere determinar,
+	si dada una marcación </span><span lang=ES-TRAD style='font-family:Math1'>m</span><span
+	lang=ES-TRAD>´ y una red, existe otra marcación </span><span lang=ES-TRAD
+	style='font-family:Math1'>m</span><span lang=ES-TRAD>´´ alcanzable en la red
+	que cubra a </span><span lang=ES-TRAD style='font-family:Math1'>m</span><span
+	lang=ES-TRAD>´. Veamos como esto puede ser resuelto utilizando el árbol de
+	cubrimiento.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Para esto dada una red N con marcación
+	inicial </span><span lang=ES-TRAD style='font-family:Math1'>m</span><span
+	lang=ES-TRAD>, construimos su árbol de cubrimiento y lo recorremos buscando un
+	nodo </span><span lang=ES-TRAD style='font-family:Math1'>m</span><span
+	lang=ES-TRAD>´´ del mismo que cubra a </span><span lang=ES-TRAD
+	style='font-family:Math1'>m</span><span lang=ES-TRAD>´. Si no existe este nodo </span><span
+	lang=ES-TRAD style='font-family:Math1'>m</span><span lang=ES-TRAD>´ no es
+	cubrible, y si se encuentra, </span><span lang=ES-TRAD style='font-family:Math1'>m</span><span
+	lang=ES-TRAD>´´ es una marcación alcanzable que cubre a </span><span
+	lang=ES-TRAD style='font-family:Math1'>m</span><span lang=ES-TRAD>´</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>El camino de la raíz del árbol a </span><span
+	lang=ES-TRAD style='font-family:Math1'>m</span><span lang=ES-TRAD>´´ definirá
+	la sucesión de transiciones que debe ser ejecutada para cubrir a </span><span
+	lang=ES-TRAD style='font-family:Math1'>m</span><span lang=ES-TRAD>´. Por
+	supuesto el símbolo </span><span lang=ES-TRAD style='font-family:Math1'>¥</span><span
+	lang=ES-TRAD> debe ser tratado nuevamente de manera especial, pues representará
+	un lazo en el camino de la raíz a </span><span lang=ES-TRAD style='font-family:
+	Math1'>m</span><span lang=ES-TRAD>´´. Será entonces necesario repetir este lazo
+	tantas veces como sea necesario para lograr que </span><span lang=ES-TRAD
+	style='font-family:Math1'>m</span><span lang=ES-TRAD>´´ sea mayor que </span><span
+	lang=ES-TRAD style='font-family:Math1'>m</span><span lang=ES-TRAD>´.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Consideremos por ejemplo, la red de la
+	figura:</span></p>
+
+
+	<p align="center">
+	<img width=456 height=205
+	  src="images/Conf_11y12/image031.png">
+	</p>
+
+	<br clear=ALL>
+
+	<p class=MsoNormal><span lang=ES-TRAD>cuyo árbol de cubrimiento es:</span></p>
+
+
+	<p align="center">
+	<img width=320 height=312
+	  src="images/Conf_11y12/image032.png">
+	</p>
+
+	<br clear=ALL>
+
+	<p class=MsoNormal><span lang=ES-TRAD>Teniendo en cuenta lo expuesto
+	anteriormente, la marcación </span><span lang=ES-TRAD style='font-family:Math1'>m</span><span
+	lang=ES-TRAD>´= (0,14,1,7) está cubierta en esta red. El camino para generar
+	una marcación que la cubra consiste en una cantidad de disparos de t<sub>1</sub>
+	seguida de un disparo de t<sub>2</sub> y luego otra cantidad de disparos de t<sub>3</sub>.
+	Debido a que debe haber al menos 14 marcas en p<sub>2</sub> y t<sub>1 </sub>siempre
+	coloca una marca en p<sub>2</sub> debemos disparar esta transición al menos 14
+	veces. Por otro lado, se necesitan al menos 7 marcas en p<sub>4</sub> por lo
+	que es necesario disparar al menos 7 veces la transición t<sub>3</sub>; la
+	cual, sin embargo elimina una marca de p<sub>2</sub>; por lo que realmente
+	debemos disparar t<sub>1</sub> no menos de 21 veces, como resultado de este
+	análisis la sucesión mínima necesaria (para alcanzar la igualdad) sería t<sub>1</sub><sup>21</sup>
+	t<sub>2</sub> t<sub>3</sub><sup>7</sup>. </span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Observando este ejemplo se hace evidente
+	que pueden formularse algoritmos para determinar la sucesión mínima de disparos
+	de transiciones necesarias para cubrir una marcación dada a partir del árbol de
+	cubrimiento de una red de Petri.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>12.4.4 <b>Limitaciones del árbol de
+	cubrimiento para el análisis de los problemas de existencia y alcanzabilidad.</b></span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Como se ha demostrado el árbol de
+	cubrimiento puede ser utilizado eficientemente para solucionar los problemas de
+	acotación, conservación y cubrimiento. Desafortunadamente, no puede ser
+	utilizando en general para resolver los problemas de existencia y
+	alcanzabilidad, lo cual está determinado por la existencia del símbolo </span><span
+	lang=ES-TRAD style='font-family:Math1'>¥</span><span lang=ES-TRAD>, el cual,
+	trae aparejado una pérdida de información pues no se tienen en cuenta las
+	cantidades individuales de marcas en las localizaciones no acotadas.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>A manera de ejemplo, considere las dos
+	redes de Petri siguiente, que aunque son diferentes tienen el mismo árbol de
+	cubrimiento:</span></p>
+
+	<p align="center">
+	<img src="images/Conf_11y12/image033.png">
+	</p>
+
+	<br clear=ALL>
+
+	<p class=MsoNormal><span lang=ES-TRAD>La diferencia sutil entre las redes es
+	que en la de la izquierda el arco que va de la transición a la localización p<sub>2</sub>
+	tiene una multiplicidad de &quot;2&quot; y en la red de la derecha tiene la
+	multiplicidad por defecto de 1. El árbol de cubrimiento de ambas es el
+	siguiente:</span></p>
+
+
+	<p class=MsoNormal>
+	<img src="images/Conf_11y12/image034.png">
+	</p>
+
+	<br clear=ALL>
+
+	<p class=MsoNormal><span lang=ES-TRAD>Así, el árbol de cubrimiento es el mismo,
+	pero estas redes tienen diferentes conjuntos de alcanzabilidad. En la primera,
+	la cantidad de marcas en la localización p<sub>2</sub> es siempre par hasta que
+	la transición t<sub>1</sub> se dispare; mientras que en la segunda, esta
+	cantidad es arbitraria.  En este caso, el símbolo </span><span lang=ES-TRAD
+	style='font-family:Math1'>¥</span><span lang=ES-TRAD> no permite que este tipo
+	de información sea detectada por lo que el Problema de Alcanzabilidad no puede
+	ser resuelto utilizando el árbol de cubrimiento.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Algo similar ocurre con el Problema de la
+	Existencia. Para ilustrarlo utilizamos las siguientes redes que son
+	esencialmente diferentes aunque tengan también un árbol de cubrimiento común:</span></p>
+
+
+	<p class=MsoNormal>
+
+	<table cellpadding=0 cellspacing=0 align=left>
+	 <tr>
+	  <td width=11 height=2></td>
+	  <td width=10></td>
+	  <td width=473></td>
+	  <td width=1></td>
+	 </tr>
+	 <tr>
+	  <td height=209></td>
+	  <td colspan=2 align=left valign=top><img width=483 height=209
+	  src="images/Conf_11y12/image035.png"></td>
+	 </tr>
+	 <tr>
+	  <td height=20></td>
+	 </tr>
+	 <tr>
+	  <td height=243></td>
+	  <td></td>
+	  <td colspan=2 align=left valign=top><img width=474 height=243
+	  src="images/Conf_11y12/image036.png"></td>
+	 </tr>
+	</table>
+
+
+	<br clear=ALL>
+
+	<p class=MsoNormal><span lang=ES-TRAD>El árbol de cubrimiento de ambas redes es
+	el siguiente:</span></p>
+
+	<p class=MsoNormal>
+
+	<table cellpadding=0 cellspacing=0 align=left>
+	 <tr>
+	  <td width=146 height=14></td>
+	 </tr>
+	 <tr>
+	  <td></td>
+	  <td><img width=321 height=215
+	  src="images/Conf_11y12/image037.png"></td>
+	 </tr>
+	</table>
+
+
+	<br clear=ALL>
+
+	<p class=MsoNormal><span lang=ES-TRAD>Se puede apreciar que la primera de las
+	redes puede alcanzar un estado de Deadlock al ejecutar, por ejemplo, la
+	sucesión t<sub>1</sub> t<sub>2</sub> t<sub>3</sub>; mientras que en la segunda
+	no ocurre esto, lo cual nuevamente no puede ser detectado a través del árbol de
+	cubrimiento.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Sin embargo, bajo ciertas condiciones, el
+	árbol de cubrimiento puede ser utilizado para resolver algunos de estos
+	problemas. Por ejemplo, una red cuyo árbol tenga un nodo sin sucesores no está
+	viva. Similarmente, una marcación </span><span lang=ES-TRAD style='font-family:
+	Math1'>m</span><span lang=ES-TRAD> puede aparecer explícitamente en el árbol de
+	cubrimiento de una red por lo que para el ella el problema de la alcanzabilidad
+	puede ser resuelto. Por otro lado si una marcación no está cubierta en el
+	árbol, entonces no es alcanzable.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Estas condiciones son suficientes para
+	solucionar algunos problemas de alcanzabilidad y existencia, pero de todas
+	formas estos problemas generalmente no pueden ser resueltos. Existen otros
+	medios, que no se tratan en esta conferencia para dar solución a los problemas
+	aquí planteados y que pueden ser consultados en [Peterson81] y [Starke90]</span></p>
+
+	<a name="extensiones-petri"></a>
+	<h2>Extensiones del concepto
+	de Red de Petri</h2>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Para tratar de solucionar el problema de
+	verificar si existe una marca nula en una localización no acotada se han hecho
+	extensiones del concepto de la Red de Petri. Una de las <u>más simples y de
+	máxima potencia</u>, se logra introduciendo los &quot;arcos inhibidores&quot;.
+	Un arco inhibidor está dirigido siempre de una localización a una transición y
+	se representa generalmente con un pequeño círculo en su extremo final en lugar
+	de una saeta. Al introducir estos arcos se modifica la dinámica de las redes de
+	Petri para obtener la siguiente regla de ejecución: </span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>&quot;Una transición está capacitada si <u>existen
+	suficientes marcas en sus precondiciones normales</u>, de manera similar a la
+	regla original, y <u>no existe ninguna marca</u> en sus precondiciones
+	inhibitorias&quot;</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>&quot;El disparo de transiciones <u>sigue
+	las mismas reglas de la definición original</u> de las redes de Petri y en
+	particular <u>no afecta a las precondiciones inhibitorias&quot;</u>.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Por ejemplo:</span></p>
+
+
+	<p class=MsoNormal>
+
+	<table cellpadding=0 cellspacing=0 align=left>
+	 <tr>
+	  <td width=21 height=0></td>
+	  <td width=42></td>
+	  <td width=5></td>
+	  <td width=97></td>
+	  <td width=33></td>
+	  <td width=85></td>
+	  <td width=7></td>
+	  <td width=42></td>
+	 </tr>
+	 <tr>
+	  <td height=1></td>
+	  <td rowspan=2 width=42 height=33 bgcolor=white style='vertical-align:top;
+	  background:white'><span style='position:absolute;z-index:251685888'>
+	  <table cellpadding=0 cellspacing=0 width="100%">
+	   <tr>
+		<td>
+		<div style='padding:3.6pt 7.2pt 3.6pt 7.2pt'>
+		<p class=MsoNormal><span lang=ES-TRAD>p<sub>1</sub></span></p>
+		</div>
+		</td>
+	   </tr>
+	  </table>
+	  </span>&nbsp;</td>
+	 </tr>
+	 <tr>
+	  <td height=32></td>
+	  <td></td>
+	  <td colspan=3 rowspan=6 align=left valign=top><img width=215 height=118
+	  src="images/Conf_11y12/image038.png"></td>
+	 </tr>
+	 <tr>
+	  <td height=14></td>
+	 </tr>
+	 <tr>
+	  <td height=30></td>
+	  <td colspan=2></td>
+	  <td></td>
+	  <td rowspan=2 width=42 height=33 bgcolor=white style='vertical-align:top;
+	  background:white'><span style='position:absolute;z-index:251687936'>
+	  <table cellpadding=0 cellspacing=0 width="100%">
+	   <tr>
+		<td>
+		<div style='padding:3.6pt 7.2pt 3.6pt 7.2pt'>
+		<p class=MsoNormal><span lang=ES-TRAD>p<sub>3</sub></span></p>
+		</div>
+		</td>
+	   </tr>
+	  </table>
+	  </span>&nbsp;</td>
+	 </tr>
+	 <tr>
+	  <td height=3></td>
+	  <td rowspan=2 width=42 height=33 bgcolor=white style='vertical-align:top;
+	  background:white'><span style='position:absolute;z-index:251686912'>
+	  <table cellpadding=0 cellspacing=0 width="100%">
+	   <tr>
+		<td>
+		<div style='padding:3.6pt 7.2pt 3.6pt 7.2pt'>
+		<p class=MsoNormal><span lang=ES-TRAD>p<sub>2</sub></span></p>
+		</div>
+		</td>
+	   </tr>
+	  </table>
+	  </span>&nbsp;</td>
+	 </tr>
+	 <tr>
+	  <td height=30></td>
+	 </tr>
+	 <tr>
+	  <td height=9></td>
+	 </tr>
+	 <tr>
+	  <td height=4></td>
+	 </tr>
+	 <tr>
+	  <td height=32></td>
+	  <td colspan=3></td>
+	  <td width=33 height=32 bgcolor=white style='vertical-align:top;background:
+	  white'><span style='position:absolute;z-index:251688960'>
+	  <table cellpadding=0 cellspacing=0 width="100%">
+	   <tr>
+		<td>
+		<div style='padding:3.6pt 7.2pt 3.6pt 7.2pt'>
+		<p class=MsoNormal><span lang=ES-TRAD>t</span></p>
+		</div>
+		</td>
+	   </tr>
+	  </table>
+	  </span>&nbsp;</td>
+	 </tr>
+	</table>
+
+	<br clear=ALL>
+
+	<p class=MsoNormal><span lang=ES-TRAD>La transición t estará capacitada si
+	existe una marca en p<sub>2</sub> y ninguna en p<sub>1</sub>, como es el caso
+	de la figura. Cuando t se dispara eliminará la marca en p<sub>2</sub> y
+	colocará una en p<sub>3</sub> sin alterar la condición inhibitoria p<sub>1</sub>.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Es obvio que con esta extensión tan
+	simple se puede solucionar el problema de la alcanzabilidad de la marcación
+	nula  pues para verificar si no hay marcas en una localización determinada
+	(acotada o no) basta crear un arco inhibidor de esta a la correspondiente
+	transición. En la clase práctica resolveremos en particular el problema
+	lectores infinitos/escritores utilizando esta extensión de las redes de Petri
+	(se sugiere a los estudiantes pensar en posibles soluciones como preparación
+	previa).</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Hay varias extensiones, como dijimos del
+	concepto de red de Petri, pero afirmamos que además de ser esta bastante simple,
+	es de <u>máxima potencia</u>. Decimos esto en el sentido de que se ha
+	demostrado que esta extensión del concepto de red de Petri puede ser utilizada
+	para modelar una máquina de Turing, lo que significa que constituye un
+	paradigma de modelación, con el cual en principio, podemos modelar cualquier
+	sistema. Pero recuérdese que varios problemas de análisis de las Redes de Petri
+	seguirán siendo no decidibles, porque no lo son para las máquinas de Turing.</span></p>
+
+
+	<p class=MsoNormal><span lang=ES-TRAD>Por último, la distinción de arcos
+	&quot;inhibidores&quot; y arcos &quot;excitantes&quot; acerca evidentemente la
+	noción de Red de Petri al de red neuronal. Este es uno de los puntos de vínculo
+	interno entre la Modelación - Simulación con la Inteligencia Artificial.</span></p>
+
+	<h3><span lang=EN-GB style='font-size:10.0pt'>Bibliografía:</span></h3>
+
+	
+	<p class=MsoNormal><span lang=EN-GB>[Starke 90]           Starke, P.H.
+	&quot;Petri Netze&quot;, Deutsher Verlag der Wissenschafften, Berlin, 1990</span></p>
+
+	
+	<p class=MsoNormal><span lang=EN-GB>[Zeigler 76]           Zeigler, P.P,
+	&quot;Theory of Modelling and Simulation&quot;, John Wiley $ Sons, 1976.</span></p>
+
+	
+	<p class=MsoNormal><span lang=EN-GB>[Peterson 81]        Peterson, J.L.
+	&quot;Petri Net Theory and the Modelling of Systems&quot;, Prentice Hall, Inc.,
+	Englewood Cliffs, N.J., 1981</span></p>
+
+</div>
+<div class="footer">
+  <p>
+		2013 SESimula (Software Educativo de Simulación)
+  </p>
+  <p>
+     Documentación creada por: <a title="tutor" href="mailto:asalgado@csd.uo.edu.cu">Antonio Salgado Castillo</a>
+  <p>
+	 Diseño de la web por: <a title="autor" href="mailto:alejandro.labrada@csd.uo.edu.cu,aleplusplus@facebook.com">Alejandro Labrada Diaz</a></p>
+ </p>
+ <p>
+    Bajo la licencia GPL <a href="http://www.gnu.org/licenses/fdl.html">GNU
+    Free Documentation License version 1.3</a>
+ </p>
+</div>
+</body>
+</html>
