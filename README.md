@@ -1,15 +1,8 @@
-<h3>Resumen:</h3>
+<h3>Summary:</h3>
 <p>
-El Software SESimula, encaminado a servir como herramienta de apoyo de la asignatura
-Introducción a la Simulación, en este sentido, se deben reconocer varios
-aspectos significativos que permiten que el nuevo software, cuente con un
-mayor número de funcionalidades que el software Sim Tuto 1.0 que sirve de
-apoyo actualmente en la asignatura.</p>
-<h3>Caracteristicas:</h3>
+The Software SESimula, designed to serve as a support tool for the course Introduction to Simulation in this sense, should recognize several significant aspects that allow the new software, expect a greater number of features that the software Sim 1.0 Tuto currently it provides support in the subject.
+</p>
+<h3>Characteristics:</h3>
 <p>
-SESimula tiene implementados 36 generadores de números aleatorios, Sobresaliendo el Marsaglia y MacLaren y de Park - Miller usando el método de barajado.
-El nuevo software brinda además de los test de Kolmogorov - Smirnov y Chi cuadrada que implementa el Sim Tuto, el de Gaps, Distancias cuadráticas y Series.
-Se han implementado un total de 36 funciones de distribución, 20 más que el Sim Tuto 1.0, lo que permite abarcar todo el contenido del primer tema de la asignatura.
-El software cuenta con un módulo que permita la modelación y diseño de procesos estocásticos discretos, usando la Estrategia de Simulación Orientada a Eventos, lo que facilita una herramienta para realizar simulaciones.
-Al desarrollar el presente sistema empleando la plataforma Qt permite que el mismo sea multiplataforma y de libre distribución, lo que facilita su utilización en otras carreras y ciencias como herramienta.
+SESimula has implemented 36 random number generators, excelling and MacLaren and Marsaglia Park - Miller shuffling using the method. Smirnov and Chi square implementing the Sim Tuto, the Gaps, quadratic and Distances Series - the new software in addition to the Kolmogorov provided. We have implemented a total of 36 distribution functions, 20 more than the Sim Tuto 1.0, which allows all the contents of the first issue of the subject. The software has a module that allows the modeling and design of discrete stochastic processes, using the strategy event-driven simulation, which provides a tool for simulations. In developing this system using the Qt platform allows the same platform and is freely distributed, which facilitates its use in other races, and science as a tool.
 </p>
